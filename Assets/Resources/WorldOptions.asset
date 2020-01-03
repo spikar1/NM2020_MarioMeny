@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da695f4502635284da87e56ca39d274b, type: 3}
   m_Name: WorldOptions
   m_EditorClassIdentifier: 
-  xDefault: {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
+  aDefault: {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
+  xDefault: {fileID: 11400000, guid: ab8a076676aa5484db56a0be35a536e8, type: 2}
+  yDefault: {fileID: 11400000, guid: 72e625e2f20ded1468d1102a045a4a60, type: 2}
+  bDefault: {fileID: 11400000, guid: e608947a9dc9d504aafd4b47635b3421, type: 2}
+  aAbilities: []
   xAbilities:
-  - {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
+  - {fileID: 11400000, guid: ab8a076676aa5484db56a0be35a536e8, type: 2}
+  yAbilities: []
+  bAbilities: []

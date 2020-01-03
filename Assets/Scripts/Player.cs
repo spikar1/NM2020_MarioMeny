@@ -40,6 +40,12 @@ public class Player : MonoBehaviour, IBumpable
             bAbility.player = this;*/
     }
 
+    private void Start() {
+        aAbility = aAbility == null ? Manager.worldOptions.aDefault : aAbility;
+        xAbility = xAbility == null ? Manager.worldOptions.xDefault : xAbility;
+        yAbility = yAbility == null ? Manager.worldOptions.yDefault : yAbility;
+        bAbility = bAbility == null ? Manager.worldOptions.bDefault : bAbility;
+    }
     void FixedUpdate() {
         Move(horInput);
     }

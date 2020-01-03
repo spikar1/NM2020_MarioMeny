@@ -88,12 +88,13 @@ public class Player : MonoBehaviour, IBumpable
         //rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
     }
 
-    public void Bumped(Player other) {
+    public void Bumped(Player other, Vector2 collisionVector) {
         print(name + " is bumped by " + other);
         Jump();
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
+
 
         Transform other = collision.collider.transform;
         float otherY = other.position.y;
@@ -102,8 +103,8 @@ public class Player : MonoBehaviour, IBumpable
             return;
 
 
-        if(otherY > transform.position.y && rb.velocity.y > 0) {
-            bumpable.Bumped(this);
+        if(otherY > transform.position.y && collision.GetContact(0).normal.y < 0) {
+            bumpable.Bumped(this, collision.relativeVelocity);          
         }
     }
 }

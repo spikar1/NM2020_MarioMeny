@@ -14,7 +14,6 @@ public class Player : MonoBehaviour, IBumpable
     #region Inputs
     public string playerIndex = "1";
     float horInput;
-    bool jumpInput;
     #endregion
 
     #region Abilities
@@ -56,9 +55,6 @@ public class Player : MonoBehaviour, IBumpable
         SendInputs("X", xAbility);
         SendInputs("Y", yAbility);
         SendInputs("B", bAbility);
-        if (jumpInput) {
-            Jump();
-        }
     }
 
     private void SendInputs(string buttonString, AbilityAsset ability) {
@@ -84,13 +80,8 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(direction * maxSpeed, rb.velocity.y);
     }
 
-    public void Jump() {
-        //rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
-    }
-
     public void Bumped(Player other) {
         print(name + " is bumped by " + other);
-        Jump();
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {

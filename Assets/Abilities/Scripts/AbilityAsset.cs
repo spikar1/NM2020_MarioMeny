@@ -11,4 +11,5 @@ abstract public class AbilityAsset : ScriptableObject
     abstract public void ButtonDown(Player player);
     abstract public void ButtonUp(Player player);
     abstract public void ButtonHeld(Player player);
+
 }

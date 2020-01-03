@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aDefault: {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
   xDefault: {fileID: 11400000, guid: ab8a076676aa5484db56a0be35a536e8, type: 2}
-  yDefault: {fileID: 0}
+  yDefault: {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
   bDefault: {fileID: 11400000, guid: e608947a9dc9d504aafd4b47635b3421, type: 2}
   aAbilities: []
   xAbilities:

@@ -12,6 +12,7 @@ public class JumpAbility : AbilityAsset
     bool held;
 
     public override void ButtonDown(Player player) {
+        Debug.Log(player);
         Jump(player);
     }
 

@@ -23,6 +23,10 @@ public class Player : MonoBehaviour, IBumpable
     public AbilityAsset bAbility;
     #endregion
 
+    #region Slots
+    public  Transform rightHand, leftHand;
+    #endregion
+
     [HideInInspector]
     public Rigidbody2D rb;
 
@@ -61,8 +65,11 @@ public class Player : MonoBehaviour, IBumpable
         string button = buttonString + "_P" + playerIndex;
         //button = "Jump_P1"; //DEBUG!!!
 
-        if (Input.GetButtonDown(button))
+        if (Input.GetButtonDown(button)) {
+            print(button + " was pressed");
             ability.ButtonDown(this);
+
+        }
         if (Input.GetButtonUp(button))
             ability.ButtonUp(this);
         if (Input.GetButton(button))

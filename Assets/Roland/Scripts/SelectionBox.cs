@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectionBox : MonoBehaviour
+public class SelectionBox : MonoBehaviour, IBumpable
 {
-    // Start is called before the first frame update
-    void Start()
+    AbilityAsset abilityDisplay;
+
+    public void Bumped(Player bumpee)
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        abilityDisplay = Manager.worldOptions.xAbilities[Random.Range(0, Manager.worldOptions.xAbilities.Count)];
+    }
+
     void Update()
     {
         

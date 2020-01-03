@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewAbilty", menuName = "MarioMenu/New Ability Asset")]
-public class AbilityAsset : ScriptableObject
+//[CreateAssetMenu(fileName = "NewAbilty", menuName = "MarioMenu/New Ability Asset")]
+abstract public class AbilityAsset : ScriptableObject
 {
-    
+    abstract public void ButtonDown(Player player);
+    abstract public void ButtonUp(Player player);
+    abstract public void ButtonHeld(Player player);
 }

@@ -17,11 +17,27 @@ public class Player : MonoBehaviour, IBumpable
     bool jumpInput;
     #endregion
 
-    Rigidbody2D rb;
+    #region Abilities
+    public AbilityAsset aAbility;
+    public AbilityAsset xAbility;
+    public AbilityAsset yAbility;
+    public AbilityAsset bAbility;
+    #endregion
+
+    [HideInInspector]
+    public Rigidbody2D rb;
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
-
+        /*
+        if(aAbility)
+            aAbility.player = this;
+        if(xAbility)
+            xAbility.player = this;
+        if(yAbility)
+            yAbility.player = this;
+        if(bAbility)
+            bAbility.player = this;*/
     }
 
     void FixedUpdate() {
@@ -30,13 +46,29 @@ public class Player : MonoBehaviour, IBumpable
 
     private void Update() {
         GetInputs();
+        SendInputs("A", aAbility);
+        SendInputs("X", xAbility);
+        SendInputs("Y", yAbility);
+        SendInputs("B", bAbility);
         if (jumpInput) {
             Jump();
         }
     }
 
+    private void SendInputs(string buttonString, AbilityAsset ability) {
+        string button = buttonString + "_P" + playerIndex;
+        //button = "Jump_P1"; //DEBUG!!!
+
+        if (Input.GetButtonDown(button))
+            ability.ButtonDown(this);
+        if (Input.GetButtonUp(button))
+            ability.ButtonUp(this);
+        if (Input.GetButton(button))
+            ability.ButtonHeld(this);
+    }
+
     void GetInputs() {
-        jumpInput = Input.GetButtonDown("Jump_P"+1);
+        //jumpInput = Input.GetButtonDown("Jump_P"+1);
 
         //TODO: Needs support for multiple players
         horInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
@@ -46,8 +78,8 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(direction * maxSpeed, rb.velocity.y);
     }
 
-    private void Jump() {
-        rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+    public void Jump() {
+        //rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
     }
 
     public void Bumped(Player other) {

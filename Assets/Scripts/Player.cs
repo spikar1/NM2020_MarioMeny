@@ -6,28 +6,40 @@ using UnityEngine;
 public class Player : MonoBehaviour, IBumpable
 {
     #region PlayerStats
-    public float maxSpeed = 1;
-    public float jumpHeight = 1;
+    public float maxSpeed = 7;
+    public float jumpHeight = 10;
     public float acceleration = 1;
+    #endregion
+
+    #region Inputs
+    public string playerIndex = "1";
+    float horInput;
+    bool jumpInput;
     #endregion
 
     Rigidbody2D rb;
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
+
     }
 
     void FixedUpdate() {
-        float horInput = 0;
-        bool jumpInput = Input.GetButtonDown("Jump");
-
-        //TODO: Needs support for multiple players
-        horInput = Input.GetAxisRaw("Horizontal");
-
         Move(horInput);
+    }
+
+    private void Update() {
+        GetInputs();
         if (jumpInput) {
             Jump();
         }
+    }
+
+    void GetInputs() {
+        jumpInput = Input.GetButtonDown("Jump_P"+1);
+
+        //TODO: Needs support for multiple players
+        horInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
     }
 
     private void Move(float direction) {
@@ -40,6 +52,7 @@ public class Player : MonoBehaviour, IBumpable
 
     public void Bumped(Player other) {
         print(name + " is bumped by " + other);
+        Jump();
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {

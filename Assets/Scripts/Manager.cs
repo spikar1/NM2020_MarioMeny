@@ -23,5 +23,7 @@ public class Manager : MonoBehaviour
     private void Awake() {
         if (Instance != this)
             Destroy(this);
+
+        DontDestroyOnLoad(gameObject);
     }
 }

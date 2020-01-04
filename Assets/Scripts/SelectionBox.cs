@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SelectionBox : MonoBehaviour, IBumpable
 {
@@ -11,15 +12,14 @@ public class SelectionBox : MonoBehaviour, IBumpable
     Vector2 offset;
     float decayingOffset;
 
+    public UnityEvent onBumped;
 
-    public void Bumped(Player bumpee, Vector2 collisionVector)
-    {
-        Debug.Log("Ouch Mah Dude!");
+    public void Bumped(Player bumpee, Vector2 collisionVector) {
+        //Invoke Unity Events
+        if(bumpee.playerIndex == "1")
+            StartCoroutine(WaitBeforeEvents());
 
-        //Do Cool Bumpy Effect:
-        decayingOffset = .3f;
-        desiredDirection = (transform.position - bumpee.transform.position).normalized;
-        offset = desiredDirection * collisionVector.magnitude;
+        BumpEffect(bumpee, collisionVector);
 
         //Play Bumped Animation
 
@@ -28,6 +28,19 @@ public class SelectionBox : MonoBehaviour, IBumpable
         //Player looses a Life but gains said Ability
 
         //Destroy this Box
+    }
+    IEnumerator WaitBeforeEvents() {
+        yield return new WaitForSeconds(.4f);
+
+        onBumped.Invoke();
+    }
+
+
+    private void BumpEffect(Player bumpee, Vector2 collisionVector) {
+        //Do Cool Bumpy Effect:
+        decayingOffset = .3f;
+        desiredDirection = (transform.position - bumpee.transform.position).normalized;
+        offset = desiredDirection * collisionVector.magnitude;
     }
 
     void Start()

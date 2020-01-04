@@ -1,37 +1,73 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 
 public class Countdown : MonoBehaviour
 {
     private TextMeshProUGUI textMesh;
     int min;
-    int sec;
+    float t;
+    bool canInvoke;
 
+    string minutes, seconds;
     public Vector2 startTime;
+    public UnityEvent onTimeOver;
 
     // Start is called before the first frame update
     void Start()
     {
         textMesh = GetComponentInChildren<TextMeshProUGUI>();
         min = (int)startTime.x;
-        sec = (int)startTime.y;
+        t = startTime.y;
+
+        canInvoke = true;
     }
 
-    float t = 0;
 
     // Update is called once per frame
     void Update()
     {
-        t += Time.deltaTime;
-        sec = (int)t;
-
-        if(sec > 0)
+        if(t > 0)
         {
-            //sec -= Time.deltaTime;
+            t -= Time.deltaTime;
+        }
+        else if(min > 0)
+        {
+            min--;
+            t = 60;
+        }
+        else
+        {
+            print("Times UP!");
         }
 
-        textMesh.text = $"{min}:{sec}";
+        if((int)t < 10)
+        {
+            seconds = "0" + ((int)t).ToString();
+        }
+        else
+        {
+            seconds = ((int)t).ToString();
+        }
+
+        if(min < 10)
+        {
+            minutes = "0" + min.ToString();
+        }
+        else
+        {
+            minutes = min.ToString();
+        }
+
+        textMesh.text = $"{minutes}:{seconds}";
+
+
+        if(min <= 0 && (int)t <= 0 && canInvoke)
+        {
+            canInvoke = false;
+            onTimeOver.Invoke();  
+        }
     }
 }

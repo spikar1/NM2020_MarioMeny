@@ -3,6 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AAbility
+{
+    DefaultJump, DoubleJump, Jetpack, BouncyShoes
+}
+public enum XAbility
+{
+    DefaultPunch, Sword, Axe, Hammer
+}
+public enum YAbility
+{
+    None, Missile, PickUp, FireShield, BubbleGun
+}
+public enum BAbility
+{
+    DefaultBlock, ReflectiveShield, Barrier, Evade
+}
+
 public class Player : MonoBehaviour, IBumpable
 {
     #region PlayerStats
@@ -18,10 +35,14 @@ public class Player : MonoBehaviour, IBumpable
     #endregion
 
     #region Abilities
-    public AbilityAsset aAbility;
-    public AbilityAsset xAbility;
-    public AbilityAsset yAbility;
-    public AbilityAsset bAbility;
+    //public AbilityAsset aAbility;
+    //public AbilityAsset xAbility;
+    //public AbilityAsset yAbility;
+    //public AbilityAsset bAbility;
+    AAbility aAbility = AAbility.DefaultJump;
+    XAbility xAbility = XAbility.DefaultPunch;
+    YAbility yAbility = YAbility.None;
+    BAbility bAbility = BAbility.DefaultBlock;
     #endregion
 
     #region Slots
@@ -48,10 +69,10 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void Start() {
-        aAbility = aAbility == null ? Manager.worldOptions.aDefault : aAbility;
+        /*aAbility = aAbility == null ? Manager.worldOptions.aDefault : aAbility;
         xAbility = xAbility == null ? Manager.worldOptions.xDefault : xAbility;
         yAbility = yAbility == null ? Manager.worldOptions.yDefault : yAbility;
-        bAbility = bAbility == null ? Manager.worldOptions.bDefault : bAbility;
+        bAbility = bAbility == null ? Manager.worldOptions.bDefault : bAbility;*/
     }
     void FixedUpdate() {
         Move(horInput);
@@ -61,31 +82,97 @@ public class Player : MonoBehaviour, IBumpable
 
     private void Update() {
         GetInputs();
-        SendInputs("A", aAbility);
-        SendInputs("X", xAbility);
-        SendInputs("Y", yAbility);
-        SendInputs("B", bAbility);
+        SendInputs("A");
+        SendInputs("X");
+        SendInputs("Y");
+        SendInputs("B");
+
+
 
         if(horInput != 0) {
             dir = (int)Mathf.Sign(horInput);
         }
         transform.localScale = new Vector3(
-            dir, transform.localScale.y, transform.localScale.z);
+            dir, 
+            transform.localScale.y, 
+            transform.localScale.z);
     }
 
-    private void SendInputs(string buttonString, AbilityAsset ability) {
+    private void SendInputs(string buttonString) {
         string button = buttonString + "_P" + playerIndex;
         //button = "Jump_P1"; //DEBUG!!!
 
+
+
         if (Input.GetButtonDown(button)) {
-            print(button + " was pressed");
-            ability.ButtonDown(this);
+
+            DoAAbilty();
+        }
+        if (Input.GetButtonUp(button)) {
 
         }
-        if (Input.GetButtonUp(button))
-            ability.ButtonUp(this);
-        if (Input.GetButton(button))
-            ability.ButtonHeld(this);
+        if (Input.GetButton(button)) {
+
+        }
+    }
+
+    void DoAAbilty() {
+        switch (aAbility) {
+            case AAbility.DefaultJump:
+                break;
+            case AAbility.DoubleJump:
+                break;
+            case AAbility.Jetpack:
+                break;
+            case AAbility.BouncyShoes:
+                break;
+            default:
+                break;
+        }
+    }
+    void DoXAbility() {
+        switch (bAbility) {
+            case BAbility.DefaultBlock:
+                break;
+            case BAbility.ReflectiveShield:
+                break;
+            case BAbility.Barrier:
+                break;
+            case BAbility.Evade:
+                break;
+            default:
+                break;
+        }
+    }
+    void DoYAbility() {
+        switch (yAbility) {
+            case YAbility.None:
+                break;
+            case YAbility.Missile:
+                break;
+            case YAbility.PickUp:
+                break;
+            case YAbility.FireShield:
+                break;
+            case YAbility.BubbleGun:
+                break;
+            default:
+                break;
+        }
+    }
+    void DoBAbility() {
+        switch (bAbility) {
+            case BAbility.DefaultBlock:
+                break;
+            case BAbility.ReflectiveShield:
+                break;
+            case BAbility.Barrier:
+                break;
+            case BAbility.Evade:
+                break;
+            default:
+                break;
+        }
     }
 
     void GetInputs() {

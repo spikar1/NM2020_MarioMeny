@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour, IBumpable
 {
+    public string playerIndex = "1";
+
     #region PlayerStats
     public float maxSpeed = 7;
     public float jumpHeight = 10;
@@ -12,20 +15,16 @@ public class Player : MonoBehaviour, IBumpable
     public int stockCount = 3;
     #endregion
 
-    #region Inputs
-    public string playerIndex = "1";
-    float horInput;
+    #region InputRelated
+    float horizontalInput;
+    public bool isattacking;
     #endregion
 
     #region Abilities
-    public AbilityAsset aAbility;
-    public AbilityAsset xAbility;
-    public AbilityAsset yAbility;
-    public AbilityAsset bAbility;
-    #endregion
-
-    #region Slots
-    public  Transform rightHand, leftHand;
+    AAbility aAbility = AAbility.DefaultJump;
+    XAbility xAbility = XAbility.DefaultPunch;
+    YAbility yAbility = YAbility.None;
+    BAbility bAbility = BAbility.DefaultBlock;
     #endregion
 
     [HideInInspector]
@@ -36,63 +35,127 @@ public class Player : MonoBehaviour, IBumpable
     private void Awake() {
         anim = gameObject.GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        /*
-        if(aAbility)
-            aAbility.player = this;
-        if(xAbility)
-            xAbility.player = this;
-        if(yAbility)
-            yAbility.player = this;
-        if(bAbility)
-            bAbility.player = this;*/
+
+    }
+
+    public void ResetPlayer() {
+        aAbility = Manager.worldOptions.aDefault;
+        xAbility = Manager.worldOptions.xDefault;
+        yAbility = Manager.worldOptions.yDefault;
+        bAbility = Manager.worldOptions.bDefault;
     }
 
     private void Start() {
-        aAbility = aAbility == null ? Manager.worldOptions.aDefault : aAbility;
-        xAbility = xAbility == null ? Manager.worldOptions.xDefault : xAbility;
-        yAbility = yAbility == null ? Manager.worldOptions.yDefault : yAbility;
-        bAbility = bAbility == null ? Manager.worldOptions.bDefault : bAbility;
+
     }
     void FixedUpdate() {
-        Move(horInput);
+        if (knockbackState) {
+            if (rb.velocity.magnitude < exitKnockbackMagnitude)
+                knockbackState = false;
+            return;
+        }
+
+        Move(horizontalInput);
     }
 
     int dir = 1;
+    private bool knockbackState;
+    public float exitKnockbackMagnitude = 3f;
+    [SerializeField]
+    private float knockbackAmount = 20;  
 
     private void Update() {
-        GetInputs();
-        SendInputs("A", aAbility);
-        SendInputs("X", xAbility);
-        SendInputs("Y", yAbility);
-        SendInputs("B", bAbility);
-
-        if(horInput != 0) {
-            dir = (int)Mathf.Sign(horInput);
+        if (knockbackState) {
+            
+            return;
         }
-        transform.localScale = new Vector3(
-            dir, transform.localScale.y, transform.localScale.z);
+        horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
+
+        if (Input.GetButtonDown("A" + "_P" + playerIndex)) {
+            DoAAbility();
+        }
+        if (Input.GetButtonDown("X" + "_P" + playerIndex)) {
+            DoXAbility();
+        }
+        //TODO: Add rest of buttons
+
+        //TODO: Reiterate upon turning method.
+        if(horizontalInput != 0) {
+            dir = (int)Mathf.Sign(horizontalInput);
+        }
+        if(!isattacking)
+            transform.localScale = new Vector3(
+                dir, 
+                transform.localScale.y, 
+                transform.localScale.z);
     }
 
-    private void SendInputs(string buttonString, AbilityAsset ability) {
-        string button = buttonString + "_P" + playerIndex;
-        //button = "Jump_P1"; //DEBUG!!!
-
-        if (Input.GetButtonDown(button)) {
-            print(button + " was pressed");
-            ability.ButtonDown(this);
-
-        }
-        if (Input.GetButtonUp(button))
-            ability.ButtonUp(this);
-        if (Input.GetButton(button))
-            ability.ButtonHeld(this);
+    public void StopAbility(string abilityString) {
+        anim.SetBool(abilityString, false);
+        isattacking = false;
     }
 
-    void GetInputs() {
-        //jumpInput = Input.GetButtonDown("Jump_P"+1);
+    void DoAAbility() {
+        switch (aAbility) {
+            case AAbility.DefaultJump:
+                Jump();
+                break;
+            case AAbility.DoubleJump:
+                break;
+            case AAbility.Jetpack:
+                break;
+            case AAbility.BouncyShoes:
+                break;
+            default:
+                break;
+        }
+    }
+    void DoXAbility() {
+        isattacking = true;
+        switch (xAbility) {
+            case XAbility.DefaultPunch:
+                anim.SetBool("DefaultAttack", true);
+                break;
+            case XAbility.Sword:
+                break;
+            case XAbility.Axe:
+                break;
+            case XAbility.Hammer:
+                break;
+            default:
+                break;
+        }
+    }
 
-        //TODO: Needs support for multiple players
-        horInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
+    void DoYAbility() {
+        switch (yAbility) {
+            case YAbility.None:
+                break;
+            case YAbility.Missile:
+                break;
+            case YAbility.PickUp:
+                break;
+            case YAbility.FireShield:
+                break;
+            case YAbility.BubbleGun:
+                break;
+            default:
+                break;
+        }
+    }
+    void DoBAbility() {
+        switch (bAbility) {
+            case BAbility.DefaultBlock:
+                break;
+            case BAbility.ReflectiveShield:
+                break;
+            case BAbility.Barrier:
+                break;
+            case BAbility.Evade:
+                break;
+            default:
+                break;
+        }
     }
 
     private void Move(float direction) {
@@ -101,10 +164,21 @@ public class Player : MonoBehaviour, IBumpable
 
     public void Bumped(Player other, Vector2 collisionVector) {
         print(name + " is bumped by " + other);
+        //TODO: Add bump method
+    }
+
+    void Jump() {
+        rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-
+        if (isattacking) {
+            var player = collision.collider.GetComponent<Player>();
+            if(player) {
+                print("Has connected attack");
+                player.Damage((transform.position - player.transform.position).normalized);
+            } 
+        }
 
         Transform other = collision.collider.transform;
         float otherY = other.position.y;
@@ -116,6 +190,22 @@ public class Player : MonoBehaviour, IBumpable
         if(otherY > transform.position.y && collision.GetContact(0).normal.y < 0) {
             bumpable.Bumped(this, collision.relativeVelocity);          
         }
+    }
+    private void OnTriggerStay2D(Collider2D col) {
+        if (!isattacking)
+            return;
+        var player = col.GetComponent<Player>();
+        if (!player)
+            return;
+
+        player.Damage((player.transform.position - transform.position).normalized);
+    }
+    private void Damage(Vector2 dir) {
+        print("Trying to damage");
+
+        rb.velocity = dir * knockbackAmount + Vector2.up;
+        //rb.velocity += Vector2.up * 100;
+        knockbackState = true;
     }
 
     public void LooseStock()

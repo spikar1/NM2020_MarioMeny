@@ -13,7 +13,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - technical_non_render
   - 
   - 
   - 
@@ -49,4 +49,7 @@ TagManager:
     locked: 0
   - name: Ledge
     uniqueID: 2850952169
+    locked: 0
+  - name: Technicals-Non-Render
+    uniqueID: 3112998853
     locked: 0

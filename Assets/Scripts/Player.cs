@@ -29,8 +29,11 @@ public class Player : MonoBehaviour, IBumpable
 
     [HideInInspector]
     public Rigidbody2D rb;
+    [HideInInspector]
+    public Animator anim;
 
     private void Awake() {
+        anim = gameObject.GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         /*
         if(aAbility)
@@ -53,12 +56,20 @@ public class Player : MonoBehaviour, IBumpable
         Move(horInput);
     }
 
+    int dir = 1;
+
     private void Update() {
         GetInputs();
         SendInputs("A", aAbility);
         SendInputs("X", xAbility);
         SendInputs("Y", yAbility);
         SendInputs("B", bAbility);
+
+        if(horInput != 0) {
+            dir = (int)Mathf.Sign(horInput);
+        }
+        transform.localScale = new Vector3(
+            dir, transform.localScale.y, transform.localScale.z);
     }
 
     private void SendInputs(string buttonString, AbilityAsset ability) {

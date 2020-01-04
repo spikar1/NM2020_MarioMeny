@@ -6,6 +6,8 @@ public class Manager : MonoBehaviour
 {
     public WorldOptions _worldOptions;
 
+
+
     public static WorldOptions worldOptions => instance._worldOptions;
 
     static Manager instance;

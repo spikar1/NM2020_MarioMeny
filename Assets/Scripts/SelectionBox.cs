@@ -40,7 +40,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
         //Do Cool Bumpy Effect:
         decayingOffset = .3f;
         desiredDirection = (transform.position - bumpee.transform.position).normalized;
-        offset = desiredDirection * collisionVector.magnitude;
+        offset = desiredDirection * (collisionVector.magnitude * .5f);
     }
 
     void Start()

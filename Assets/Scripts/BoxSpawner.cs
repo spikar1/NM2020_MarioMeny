@@ -21,7 +21,6 @@ public class BoxSpawner : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, Vector3.one);
-        Gizmos.DrawSphere(transform.position, 0.2f);
     }
 
     IEnumerator SpawnBox()

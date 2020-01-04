@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxPrefab: {fileID: 2805473018038876124, guid: 23a74348687311f44b1b22308858785c,
     type: 3}
-  spawnTime: 3
+  spawnTime: 1
 --- !u!1 &3936921384114855580
 GameObject:
   m_ObjectHideFlags: 0
@@ -4810,6 +4810,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

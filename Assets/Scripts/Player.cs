@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, IBumpable
     public float maxSpeed = 7;
     public float jumpHeight = 10;
     public float acceleration = 1;
+    public int stockCount = 3;
     #endregion
 
     #region Inputs
@@ -117,4 +118,8 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
 
+    public void LooseStock()
+    {
+        stockCount--;
+    }
 }

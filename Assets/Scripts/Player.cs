@@ -104,5 +104,6 @@ public class Player : MonoBehaviour, IBumpable
         if(otherY > transform.position.y && collision.GetContact(0).normal.y < 0) {
             bumpable.Bumped(this, collision.relativeVelocity);          
         }
-    }
+    }
+
 }

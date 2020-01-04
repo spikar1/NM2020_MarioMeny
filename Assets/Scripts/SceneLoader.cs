@@ -17,5 +17,7 @@ public class SceneLoader : MonoBehaviour
         while (!async.isDone) {
             yield return null;
         }
+
+        
     }
 }

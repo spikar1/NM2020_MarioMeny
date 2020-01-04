@@ -5,13 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="WorldOptions", menuName ="MarioMenu/New World Options")]
 public class WorldOptions : ScriptableObject
 {
-    public AbilityAsset aDefault;
-    public AbilityAsset xDefault;
-    public AbilityAsset yDefault;
-    public AbilityAsset bDefault;
+    public AAbility aDefault = AAbility.DefaultJump;
+    public XAbility xDefault = XAbility.DefaultPunch;
+    public YAbility yDefault = YAbility.None;
+    public BAbility bDefault = BAbility.DefaultBlock;
 
-    public List<AbilityAsset> aAbilities;
-    public List<AbilityAsset> xAbilities;
-    public List<AbilityAsset> yAbilities;
-    public List<AbilityAsset> bAbilities;
+    public Sprite DefaultJumpSprite;
 }

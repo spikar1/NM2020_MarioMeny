@@ -7,6 +7,7 @@ using UnityEngine;
 public class Player : MonoBehaviour, IBumpable
 {
     public string playerIndex = "1";
+    public string playerNumber = "1";
 
     #region PlayerStats
     public float maxSpeed = 7;

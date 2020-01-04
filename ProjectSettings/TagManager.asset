@@ -50,6 +50,9 @@ TagManager:
   - name: Ledge
     uniqueID: 2850952169
     locked: 0
+  - name: Level Objects
+    uniqueID: 1822943337
+    locked: 0
   - name: Technicals-Non-Render
     uniqueID: 3112998853
     locked: 0

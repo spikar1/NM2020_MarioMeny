@@ -28,4 +28,9 @@ public class Manager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
     }
+
+    public void PlayerStock(Player player)
+    {
+
+    }
 }

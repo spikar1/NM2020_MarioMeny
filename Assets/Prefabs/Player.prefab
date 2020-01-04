@@ -51,7 +51,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 746c3d41158f54e44ac990ad4f4e29e0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerIndex: 1
   maxSpeed: 7
-  jumpHeight: 5
+  jumpHeight: 10
   acceleration: 1
   stockCount: 3
   isattacking: 0
@@ -236,7 +236,7 @@ MonoBehaviour:
   - {x: -0.5071354, y: 0.50186545, z: 0}
   m_ShapePathHash: -748833776
   m_Mesh: {fileID: 0}
-  m_InstanceId: -75490
+  m_InstanceId: 41776
 --- !u!95 &588124520
 Animator:
   serializedVersion: 3

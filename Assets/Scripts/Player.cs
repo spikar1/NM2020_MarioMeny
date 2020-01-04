@@ -36,6 +36,7 @@ public class Player : MonoBehaviour, IBumpable
         anim = gameObject.GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
 
+        DontDestroyOnLoad(gameObject);
     }
 
     public void ResetPlayer() {
@@ -46,8 +47,9 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void Start() {
-
+        stockCount = 3;
     }
+
     void FixedUpdate() {
         if (knockbackState) {
             if (rb.velocity.magnitude < exitKnockbackMagnitude)
@@ -191,6 +193,7 @@ public class Player : MonoBehaviour, IBumpable
             bumpable.Bumped(this, collision.relativeVelocity);          
         }
     }
+
     private void OnTriggerStay2D(Collider2D col) {
         if (!isattacking)
             return;
@@ -200,6 +203,7 @@ public class Player : MonoBehaviour, IBumpable
 
         player.Damage((player.transform.position - transform.position).normalized);
     }
+
     private void Damage(Vector2 dir) {
         print("Trying to damage");
 
@@ -210,6 +214,7 @@ public class Player : MonoBehaviour, IBumpable
 
     public void LooseStock()
     {
+        print($"{playerIndex} Lost a Stock!");
         stockCount--;
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1984693577153315799}
   - component: {fileID: 1751896407}
   - component: {fileID: 1751896408}
-  - component: {fileID: 1751896406}
+  - component: {fileID: 1824336134}
   m_Layer: 0
   m_Name: Root
   m_TagString: Untagged
@@ -80,25 +80,32 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8218507801430226559}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!95 &1751896406
-Animator:
-  serializedVersion: 3
+--- !u!61 &1824336134
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8218507801430226559}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 18f16d0a634efbd449da452aaee1c62e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &8432251687096783399
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +119,8 @@ GameObject:
   - component: {fileID: 8432251687096783401}
   - component: {fileID: 8432251687096783397}
   - component: {fileID: 9135957874476873886}
-  m_Layer: 0
+  - component: {fileID: 588124520}
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,13 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16875395bd0e9b4409891e38e7bb3dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerIndex: 1
   maxSpeed: 7
   jumpHeight: 5
   acceleration: 1
   stockCount: 3
-  playerIndex: 1
+  isattacking: 0
   rb: {fileID: 0}
   anim: {fileID: 0}
+  exitKnockbackMagnitude: 3
+  knockbackAmount: 30
 --- !u!50 &8432251687096783401
 Rigidbody2D:
   serializedVersion: 4
@@ -225,4 +236,23 @@ MonoBehaviour:
   - {x: -0.5071354, y: 0.50186545, z: 0}
   m_ShapePathHash: -748833776
   m_Mesh: {fileID: 0}
-  m_InstanceId: 23398
+  m_InstanceId: -75490
+--- !u!95 &588124520
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432251687096783399}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 227719e26364e3f418a2b0d3a92358e9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

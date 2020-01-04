@@ -15,8 +15,9 @@ public class Player : MonoBehaviour, IBumpable
     public int stockCount = 3;
     #endregion
 
-    #region Inputs
+    #region InputRelated
     float horizontalInput;
+    public bool isattacking;
     #endregion
 
     #region Abilities
@@ -48,16 +49,33 @@ public class Player : MonoBehaviour, IBumpable
 
     }
     void FixedUpdate() {
+        if (knockbackState) {
+            if (rb.velocity.magnitude < exitKnockbackMagnitude)
+                knockbackState = false;
+            return;
+        }
+
         Move(horizontalInput);
     }
 
     int dir = 1;
+    private bool knockbackState;
+    public float exitKnockbackMagnitude = 3f;
+    [SerializeField]
+    private float knockbackAmount = 20;  
 
     private void Update() {
+        if (knockbackState) {
+            
+            return;
+        }
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
 
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) {
             DoAAbility();
+        }
+        if (Input.GetButtonDown("X" + "_P" + playerIndex)) {
+            DoXAbility();
         }
         //TODO: Add rest of buttons
 
@@ -65,13 +83,17 @@ public class Player : MonoBehaviour, IBumpable
         if(horizontalInput != 0) {
             dir = (int)Mathf.Sign(horizontalInput);
         }
-        transform.localScale = new Vector3(
-            dir, 
-            transform.localScale.y, 
-            transform.localScale.z);
+        if(!isattacking)
+            transform.localScale = new Vector3(
+                dir, 
+                transform.localScale.y, 
+                transform.localScale.z);
     }
 
-
+    public void StopAbility(string abilityString) {
+        anim.SetBool(abilityString, false);
+        isattacking = false;
+    }
 
     void DoAAbility() {
         switch (aAbility) {
@@ -89,19 +111,22 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
     void DoXAbility() {
-        switch (bAbility) {
-            case BAbility.DefaultBlock:
+        isattacking = true;
+        switch (xAbility) {
+            case XAbility.DefaultPunch:
+                anim.SetBool("DefaultAttack", true);
                 break;
-            case BAbility.ReflectiveShield:
+            case XAbility.Sword:
                 break;
-            case BAbility.Barrier:
+            case XAbility.Axe:
                 break;
-            case BAbility.Evade:
+            case XAbility.Hammer:
                 break;
             default:
                 break;
         }
     }
+
     void DoYAbility() {
         switch (yAbility) {
             case YAbility.None:
@@ -147,7 +172,13 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-
+        if (isattacking) {
+            var player = collision.collider.GetComponent<Player>();
+            if(player) {
+                print("Has connected attack");
+                player.Damage((transform.position - player.transform.position).normalized);
+            } 
+        }
 
         Transform other = collision.collider.transform;
         float otherY = other.position.y;
@@ -159,6 +190,22 @@ public class Player : MonoBehaviour, IBumpable
         if(otherY > transform.position.y && collision.GetContact(0).normal.y < 0) {
             bumpable.Bumped(this, collision.relativeVelocity);          
         }
+    }
+    private void OnTriggerStay2D(Collider2D col) {
+        if (!isattacking)
+            return;
+        var player = col.GetComponent<Player>();
+        if (!player)
+            return;
+
+        player.Damage((player.transform.position - transform.position).normalized);
+    }
+    private void Damage(Vector2 dir) {
+        print("Trying to damage");
+
+        rb.velocity = dir * knockbackAmount + Vector2.up;
+        //rb.velocity += Vector2.up * 100;
+        knockbackState = true;
     }
 
     public void LooseStock()

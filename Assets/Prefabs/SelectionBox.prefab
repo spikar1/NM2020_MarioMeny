@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1402187284518918581}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 7087412798836461355}
   m_RootOrder: 0
@@ -126,6 +126,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36f74dbe199c2744e939fc2a1f130866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: ef86c99d3403c8543a466b634a6084cd, type: 3}
+  - {fileID: 21300000, guid: 9b9647f9e51dc0844b372cc3efbd2e61, type: 3}
+  - {fileID: 21300000, guid: 64bfd3e3510902848ba1735222c5051c, type: 3}
+  - {fileID: 21300000, guid: ee1d271feb9f6ac4f9dec10b571bde09, type: 3}
+  abilitySelection: 0
+  onBumped:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &-6588523740943360522
 BoxCollider2D:
   m_ObjectHideFlags: 0

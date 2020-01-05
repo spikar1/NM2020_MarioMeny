@@ -8,6 +8,8 @@ using System;
 public class SelectionBox : MonoBehaviour, IBumpable
 {
     Vector2 desiredDirection;
+    public Sprite[] sprites;
+    SpriteRenderer rend;
 
     Vector2 startPos;
     Vector2 offset;
@@ -28,8 +30,13 @@ public class SelectionBox : MonoBehaviour, IBumpable
     void Start()
     {
         startPos = transform.position;
-        abilityType = UnityEngine.Random.Range(0, 4);
-        SetAbility();
+        if(abilitySelection)
+        {
+            abilityType = UnityEngine.Random.Range(0, 4);
+            rend = GetComponentInChildren<SpriteRenderer>();
+            rend.sprite = sprites[abilityType];
+            SetAbility();
+        }
     }
 
 
@@ -93,7 +100,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
         {
             case 0:
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(0,Enum.GetValues(typeof(AAbility)).Length);
+                abilitySubType = UnityEngine.Random.Range(1,Enum.GetValues(typeof(AAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(AAbility)))
                 {
                     if(i == abilitySubType)
@@ -106,7 +113,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
             case 1:
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(0, Enum.GetValues(typeof(XAbility)).Length);
+                abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(XAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(XAbility)))
                 {
                     if (i == abilitySubType)
@@ -119,7 +126,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
             case 2:
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(0, Enum.GetValues(typeof(YAbility)).Length);
+                abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(YAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(YAbility)))
                 {
                     if (i == abilitySubType)
@@ -132,7 +139,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
             case 3:
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(0, Enum.GetValues(typeof(BAbility)).Length);
+                abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(BAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(BAbility)))
                 {
                     if (i == abilitySubType)

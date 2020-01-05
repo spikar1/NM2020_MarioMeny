@@ -80,10 +80,17 @@ public class Player : MonoBehaviour, IBumpable
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) {
             DoXAbility();
         }
-        //TODO: Add rest of buttons
+        if (Input.GetButtonDown("Y" + "_P" + playerIndex))
+        {
+            DoYAbility();
+        }
+        if (Input.GetButtonDown("B" + "_P" + playerIndex))
+        {
+            DoBAbility();
+        }
 
         //TODO: Reiterate upon turning method.
-        if(horizontalInput != 0) {
+        if (horizontalInput != 0) {
             dir = (int)Mathf.Sign(horizontalInput);
         }
         if(!isattacking)
@@ -98,68 +105,25 @@ public class Player : MonoBehaviour, IBumpable
         isattacking = false;
     }
 
-    void DoAAbility() {
-        switch (aAbility) {
-            case AAbility.DefaultJump:
-                Jump();
-                break;
-            case AAbility.DoubleJump:
-                break;
-            case AAbility.Jetpack:
-                break;
-            case AAbility.BouncyShoes:
-                break;
-            default:
-                break;
-        }
+    #region ChangeAbilities
+    public void ChangeAAbility(AAbility newAAbility)
+    {
+        aAbility = newAAbility;
     }
-    void DoXAbility() {
-        isattacking = true;
-        switch (xAbility) {
-            case XAbility.DefaultPunch:
-                anim.SetBool("DefaultAttack", true);
-                break;
-            case XAbility.Sword:
-                break;
-            case XAbility.Axe:
-                break;
-            case XAbility.Hammer:
-                break;
-            default:
-                break;
-        }
+    public void ChangeXAbility(XAbility newXAbility)
+    {
+        xAbility = newXAbility;
     }
+    public void ChangeYAbility(YAbility newYAbility)
+    {
+        yAbility = newYAbility;
+    }
+    public void ChangeBAbility(BAbility newBAbility)
+    {
+        bAbility = newBAbility;
+    }
+    #endregion
 
-    void DoYAbility() {
-        switch (yAbility) {
-            case YAbility.None:
-                break;
-            case YAbility.Missile:
-                break;
-            case YAbility.PickUp:
-                break;
-            case YAbility.FireShield:
-                break;
-            case YAbility.BubbleGun:
-                break;
-            default:
-                break;
-        }
-    }
-    void DoBAbility() {
-        switch (bAbility) {
-            case BAbility.DefaultBlock:
-                break;
-            case BAbility.ReflectiveShield:
-                break;
-            case BAbility.Barrier:
-                break;
-            case BAbility.Evade:
-                break;
-            default:
-                break;
-        }
-    }
 
     private void Move(float direction) {
         rb.velocity = new Vector2(direction * maxSpeed, rb.velocity.y);
@@ -170,9 +134,6 @@ public class Player : MonoBehaviour, IBumpable
         //TODO: Add bump method
     }
 
-    void Jump() {
-        rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
-    }
 
     private void OnCollisionEnter2D(Collision2D collision) {
         if (isattacking) {
@@ -218,4 +179,171 @@ public class Player : MonoBehaviour, IBumpable
         print($"{playerIndex} Lost a Stock!");
         stockCount--;
     }
+
+
+    #region Do Abilities
+    void DoAAbility() {
+        switch (aAbility) {
+            case AAbility.DefaultJump:
+                DefaultJump();
+                break;
+            case AAbility.DoubleJump:
+                DoubleJump();
+                break;
+            case AAbility.Jetpack:
+                Jetpack();
+                break;
+            case AAbility.BouncyShoes:
+                BouncyShoes();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void DoXAbility() {
+        isattacking = true;
+        switch (xAbility) {
+            case XAbility.DefaultPunch:
+                DefaultPunch();
+                break;
+            case XAbility.Sword:
+                Sword();
+                break;
+            case XAbility.Axe:
+                Axe();
+                break;
+            case XAbility.Hammer:
+                Hammer();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void DoYAbility() {
+        switch (yAbility) {
+            case YAbility.None:
+                None();
+                break;
+            case YAbility.Missile:
+                Missile();
+                break;
+            case YAbility.PickUp:
+                PickUp();
+                break;
+            case YAbility.FireShield:
+                FireShield();
+                break;
+            case YAbility.BubbleGun:
+                BubbleGun();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    void DoBAbility() {
+        switch (bAbility) {
+            case BAbility.DefaultBlock:
+                DefaultBlock();
+                break;
+            case BAbility.ReflectiveShield:
+                ReflectiveShield();
+                break;
+            case BAbility.Barrier:
+                Barrier();
+                break;
+            case BAbility.Evade:
+                Evade();
+                break;
+            default:
+                break;
+        }
+    }
+    #endregion
+
+
+    #region Ability Functions
+    //A Abilities:
+    private void DefaultJump() {
+        rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+        print("Normal Jump");
+    }
+    private void DoubleJump()
+    {
+        print("Can Double Jump");
+    }
+    private void Jetpack()
+    {
+        print("Using the Jetpack so High");
+    }
+    private void BouncyShoes()
+    {
+        print("Look at me flying with these boots");
+    }
+
+
+    //X Abilities:
+    private void DefaultPunch()
+    {
+        anim.SetBool("DefaultAttack", true);
+        print("Punching the Bastard");
+    }
+    private void Sword()
+    {
+        print("Attacking with Sword");
+    }
+    private void Axe()
+    {
+        print("Swinging Axe");
+    }
+    private void Hammer()
+    {
+        print("Toss a Hammer Wil ya?");
+    }
+
+
+    //Y Abilities:
+    private void None()
+    {
+        print("You aint got nothing son");
+    }
+    private void Missile()
+    {
+        print("Shoot tha damn missile BOI");
+    }
+    private void PickUp()
+    {
+        print("He He imma pick u Up Fool");
+    }
+    private void FireShield()
+    {
+        print("Burn EveryBody around me");
+    }
+    private void BubbleGun()
+    {
+        print("You got stuck in bubble mate");
+    }
+
+
+    //B Abilities:
+    private void DefaultBlock()
+    {
+        print("You just got BLOCKED");
+    }
+    private void ReflectiveShield()
+    {
+        print("Blocked and i send it back");
+    }
+    private void Barrier()
+    {
+        print("Setting up a Barrier");
+    }
+    private void Evade()
+    {
+        print("Can't hit us, fool");
+    }
+    #endregion
 }

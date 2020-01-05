@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System;
 
 public class SelectionBox : MonoBehaviour, IBumpable
 {
-    AbilityAsset abilityDisplay;
     Vector2 desiredDirection;
 
     Vector2 startPos;
@@ -15,6 +15,23 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     public bool abilitySelection;
     public UnityEvent onBumped;
+
+    //Setting Contained Ability:
+    AAbility newAAbility;
+    XAbility newXAbility;
+    YAbility newYAbility;
+    BAbility newBAbility;
+
+    int abilityType;
+    int abilitySubType;
+
+    void Start()
+    {
+        startPos = transform.position;
+        abilityType = UnityEngine.Random.Range(0, 4);
+        SetAbility();
+    }
+
 
     public void Bumped(Player bumpee, Vector2 collisionVector) {
         //Invoke Unity Events
@@ -32,6 +49,24 @@ public class SelectionBox : MonoBehaviour, IBumpable
         if(abilitySelection)
         {
             bumpee.LooseStock();
+
+            switch (abilityType)
+            {
+                case 0:
+                    bumpee.ChangeAAbility(newAAbility);
+                    break;
+                case 1:
+                    bumpee.ChangeXAbility(newXAbility);
+                    break;
+                case 2:
+                    bumpee.ChangeYAbility(newYAbility);
+                    break;
+                case 3:
+                    bumpee.ChangeBAbility(newBAbility);
+                    break;
+                default:
+                    break;
+            }
         }
 
         BumpEffect(bumpee, collisionVector);
@@ -52,11 +87,66 @@ public class SelectionBox : MonoBehaviour, IBumpable
         offset = desiredDirection * (collisionVector.magnitude * .2f);
     }
 
-    void Start()
+    void SetAbility()
     {
-        startPos = transform.position;
-        //abilityDisplay = Manager.worldOptions.xAbilities[Random.Range(0, Manager.worldOptions.xAbilities.Count)];
+        switch (abilityType)
+        {
+            case 0:
+                //First get Enum length, then select one random:
+                abilitySubType = UnityEngine.Random.Range(0,Enum.GetValues(typeof(AAbility)).Length);
+                foreach (int i in Enum.GetValues(typeof(AAbility)))
+                {
+                    if(i == abilitySubType)
+                    {
+                        print((AAbility)i);
+                        newAAbility = (AAbility)i;
+                    }
+                }         
+                break;
+
+            case 1:
+                //First get Enum length, then select one random:
+                abilitySubType = UnityEngine.Random.Range(0, Enum.GetValues(typeof(XAbility)).Length);
+                foreach (int i in Enum.GetValues(typeof(XAbility)))
+                {
+                    if (i == abilitySubType)
+                    {
+                        print((XAbility)i);
+                        newXAbility = (XAbility)i;
+                    }
+                }
+                break;
+
+            case 2:
+                //First get Enum length, then select one random:
+                abilitySubType = UnityEngine.Random.Range(0, Enum.GetValues(typeof(YAbility)).Length);
+                foreach (int i in Enum.GetValues(typeof(YAbility)))
+                {
+                    if (i == abilitySubType)
+                    {
+                        print((YAbility)i);
+                        newYAbility = (YAbility)i;
+                    }
+                }
+                break;
+
+            case 3:
+                //First get Enum length, then select one random:
+                abilitySubType = UnityEngine.Random.Range(0, Enum.GetValues(typeof(BAbility)).Length);
+                foreach (int i in Enum.GetValues(typeof(BAbility)))
+                {
+                    if (i == abilitySubType)
+                    {
+                        print((BAbility)i);
+                        newBAbility = (BAbility)i;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
+
 
     private void Update()
     {

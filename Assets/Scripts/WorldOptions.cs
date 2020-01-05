@@ -6,7 +6,7 @@ using UnityEngine;
 public class WorldOptions : ScriptableObject
 {
     public AAbility aDefault = AAbility.DefaultJump;
-    public XAbility xDefault = XAbility.Sword;
+    public XAbility xDefault = XAbility.DefaultPunch;
     public YAbility yDefault = YAbility.None;
     public BAbility bDefault = BAbility.DefaultBlock;
 

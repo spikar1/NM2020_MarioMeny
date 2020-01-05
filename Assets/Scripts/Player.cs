@@ -58,14 +58,6 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     void FixedUpdate() {
-
-        //Grounded:
-        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-        if (hit.collider != null)
-        {
-            coyoteJump = true;
-        }
-
         if (knockbackState) {
             if (rb.velocity.magnitude < exitKnockbackMagnitude)
                 knockbackState = false;
@@ -88,13 +80,12 @@ public class Player : MonoBehaviour, IBumpable
     private float knockbackAmount = 20;  
 
     private void Update() {
-        if (knockbackState) {
-            
+        if (knockbackState) {       
             return;
         }
-        horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
 
-        
+        horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
+       
 
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) {
             DoAAbility();
@@ -110,6 +101,7 @@ public class Player : MonoBehaviour, IBumpable
         {
             DoBAbility();
         }
+
 
         //TODO: Reiterate upon turning method.
         if (horizontalInput != 0) {
@@ -165,6 +157,13 @@ public class Player : MonoBehaviour, IBumpable
                 player.Damage((transform.position - player.transform.position).normalized);
             } 
         }
+
+        if(collision.GetContact(0).normal.y > 0)
+        {
+            print("HitGround");
+            coyoteJump = true;
+        }
+
 
         Transform other = collision.collider.transform;
         float otherY = other.position.y;
@@ -291,54 +290,39 @@ public class Player : MonoBehaviour, IBumpable
     //A Abilities:
     private void DefaultJump() {
         RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-
-        if(hit.collider != null)
+        if(hit.collider != null || coyoteJump)
         {
-            print("Normal Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+            coyoteJump = false;
         }
     }
     private void DoubleJump()
     {
         RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-        if (hit.collider != null)
+        if (hit.collider != null || coyoteJump)
         {
             jumpCount = 2;
         }
 
         if(jumpCount > 0)
         {
-            coyoteJump = false;
             jumpCount--;
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
             print("Can Double Jump");
-        }
-        else if(coyoteJump)
-        {
             coyoteJump = false;
-            jumpCount--;
-            rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
-            print("Can Double Jump");
         }
     }
     private void Jetpack()
     {
         RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-        if (hit.collider != null)
+        if (hit.collider != null || coyoteJump)
         {
             canJetpack = true;
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+            coyoteJump = false;
         }
         else if(canJetpack)
         {
-            coyoteJump = false;
-            canJetpack = false;
-            StartCoroutine(JetPackBurst());
-            print("Using the Jetpack so High");
-        }
-        else if(coyoteJump)
-        {
-            coyoteJump = false;
             canJetpack = false;
             StartCoroutine(JetPackBurst());
             print("Using the Jetpack so High");
@@ -348,10 +332,11 @@ public class Player : MonoBehaviour, IBumpable
     {
         RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
 
-        if (hit.collider != null)
+        if (hit.collider != null || coyoteJump)
         {
             print("Look at me flying with these boots");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight * 2);
+            coyoteJump = false;
         }
     }
 

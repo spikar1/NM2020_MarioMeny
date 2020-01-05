@@ -91,6 +91,7 @@ public class Player : MonoBehaviour, IBumpable
             DoAAbility();
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) {
+            isattacking = true;
             DoXAbility();
         }
         if (Input.GetButtonDown("Y" + "_P" + playerIndex))
@@ -150,17 +151,8 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void OnCollisionEnter2D(Collision2D collision) {
-        if (isattacking) {
-            var player = collision.collider.GetComponent<Player>();
-            if(player) {
-                print("Has connected attack");
-                player.Damage((transform.position - player.transform.position).normalized);
-            } 
-        }
-
         if(collision.GetContact(0).normal.y > 0)
         {
-            print("HitGround");
             coyoteJump = true;
         }
 
@@ -183,15 +175,12 @@ public class Player : MonoBehaviour, IBumpable
         var player = col.GetComponent<Player>();
         if (!player)
             return;
-
+        print("Hit!");
         player.Damage((player.transform.position - transform.position).normalized);
     }
 
     private void Damage(Vector2 dir) {
-        print("Trying to damage");
-
-        rb.velocity = dir * knockbackAmount + Vector2.up;
-        //rb.velocity += Vector2.up * 100;
+        rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
         knockbackState = true;
     }
 

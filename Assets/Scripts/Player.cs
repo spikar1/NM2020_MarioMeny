@@ -26,12 +26,9 @@ public class Player : MonoBehaviour, IBumpable
     #endregion
 
     #region AbilityFunction Related
-    public Transform raycastStart;
-    float raycastLength = 1;
-    Vector3 rayStartOffset;
     int jumpCount;
     bool usingJetpack, canJetpack, coyoteJump;
-    bool canJump;
+    bool playerIsDead;
     #endregion
 
     #region Abilities
@@ -72,51 +69,30 @@ public class Player : MonoBehaviour, IBumpable
 
         rend.color = playerColors[playerNumber - 1];
 
-        //Raycast Stuff:
-        raycastLength = 1f;
-        rayStartOffset = new Vector3(0.5f, 0, 0);
+        playerIsDead = false;
     }
 
     void FixedUpdate() {
-        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position - rayStartOffset, Vector2.right, raycastLength);
-        if (hit.collider != null)
-        {
-            canJump = true;
-        }
-        else
-        {
-            canJump = false;
-
-            //Raycast Stuff:
-            raycastLength = 0.8f;
-            rayStartOffset = new Vector3(0.4f, 0, 0);
-        }
-
-        if (knockbackState) {
-            if (rb.velocity.magnitude < exitKnockbackMagnitude)
-                knockbackState = false;
+        if (playerIsDead || knockbackState)
             return;
-        }
 
         //Using JETPACK:
-        if(usingJetpack)
+        if (usingJetpack)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight * .3f);
         }
 
 
         Move(horizontalInput);
-
     }
 
     int dir = 1;
     private bool knockbackState;
-    public float exitKnockbackMagnitude = 3f;
     [SerializeField]
-    private float knockbackAmount = 20;  
+    private float knockbackAmount = 10;  
 
     private void Update() {
-        if (knockbackState) {       
+        if (playerIsDead || knockbackState) {       
             return;
         }
 
@@ -139,7 +115,6 @@ public class Player : MonoBehaviour, IBumpable
         }
 
 
-        //TODO: Reiterate upon turning method.
         if (horizontalInput != 0) {
             dir = (int)Mathf.Sign(horizontalInput);
         }  
@@ -198,10 +173,6 @@ public class Player : MonoBehaviour, IBumpable
         {
             print("Hit");
             coyoteJump = true;
-
-            //Raycast Stuff:
-            raycastLength = 1f;
-            rayStartOffset = new Vector3(0.5f, 0, 0);
         }
 
 
@@ -228,13 +199,29 @@ public class Player : MonoBehaviour, IBumpable
 
     private void Damage(Vector2 dir) {
         rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
+        StartCoroutine(KnockbackTimer());
+    }
+
+    IEnumerator KnockbackTimer()
+    {
         knockbackState = true;
+        yield return new WaitForSeconds(knockbackAmount * 0.05f);
+        knockbackState = false;
     }
 
     public void LooseStock()
     {
         print($"{playerIndex} Lost a Stock!");
         stockCount--;
+        playerIsDead = true;
+    }
+
+    public void CheckIfStillDead()
+    {
+        if(stockCount > 0)
+        {
+            playerIsDead = false;
+        }
     }
 
 
@@ -325,15 +312,16 @@ public class Player : MonoBehaviour, IBumpable
     #region Ability Functions
     //A Abilities:
     private void DefaultJump() {
-        if(canJump || coyoteJump)
+        if(coyoteJump)
         {
+            anim.SetBool("JumpAnim", true);
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
             coyoteJump = false;  
         }
     }
     private void DoubleJump()
     {
-        if (canJump || coyoteJump)
+        if (coyoteJump)
         {
             jumpCount = 2;
         }
@@ -348,7 +336,7 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void Jetpack()
     {
-        if (canJump || coyoteJump)
+        if (coyoteJump)
         {
             canJetpack = true;
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
@@ -363,7 +351,7 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void BouncyShoes()
     {
-        if (canJump || coyoteJump)
+        if (coyoteJump)
         {
             print("Look at me flying with these boots");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight * 2);

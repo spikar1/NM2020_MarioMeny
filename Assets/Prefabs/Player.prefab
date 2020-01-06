@@ -95,7 +95,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.06}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -106,38 +106,8 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.45, y: 1.05}
   m_EdgeRadius: 0
---- !u!1 &5146267167844727452
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6203743496844568784}
-  m_Layer: 0
-  m_Name: Raycast Start
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6203743496844568784
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5146267167844727452}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.55, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 3780351161671783623}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8432251687096783399
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +145,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2687339978417362781}
-  - {fileID: 6203743496844568784}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -199,25 +168,23 @@ MonoBehaviour:
   playerIndex: 1
   playerNumber: 1
   playerColors:
-  - {r: 1, g: 0, b: 0.026643753, a: 1}
-  - {r: 0.13207841, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0.4884801, b: 1, a: 1}
-  - {r: 1, g: 0.9371724, b: 0, a: 1}
+  - {r: 1, g: 0.514151, b: 0.527488, a: 1}
+  - {r: 0.57075465, g: 1, b: 0.504717, a: 1}
+  - {r: 0.5330188, g: 0.76193124, b: 1, a: 1}
+  - {r: 1, g: 0.97247505, b: 0.5613208, a: 1}
   maxSpeed: 7
   jumpHeight: 10
   acceleration: 1
-  stockCount: 3
+  stockCount: 5
   punchDistance: 15
   isattacking: 0
-  raycastStart: {fileID: 6203743496844568784}
   aAbility: 0
   xAbility: 0
   yAbility: 0
   bAbility: 0
   rb: {fileID: 0}
   anim: {fileID: 0}
-  exitKnockbackMagnitude: 3
-  knockbackAmount: 30
+  knockbackAmount: 10
 --- !u!50 &8432251687096783401
 Rigidbody2D:
   serializedVersion: 4
@@ -252,7 +219,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.06}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -263,7 +230,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.85, y: 0.85}
+  m_Size: {x: 1.45, y: 1.05}
   m_EdgeRadius: 0
 --- !u!114 &9135957874476873886
 MonoBehaviour:
@@ -290,7 +257,7 @@ MonoBehaviour:
   - {x: -0.5071354, y: 0.50186545, z: 0}
   m_ShapePathHash: -748833776
   m_Mesh: {fileID: 0}
-  m_InstanceId: 19592
+  m_InstanceId: 27938
 --- !u!95 &588124520
 Animator:
   serializedVersion: 3

@@ -14,6 +14,7 @@ public class SetPlayersPosition : MonoBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
+            players[i].GetComponent<Player>().rb.velocity = new Vector2(0, 0);
             players[i].transform.position = transforms[i].position;
         }
 
@@ -21,11 +22,5 @@ public class SetPlayersPosition : MonoBehaviour
         {
             players[i].GetComponent<Player>().CheckIfStillDead();
         }  
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

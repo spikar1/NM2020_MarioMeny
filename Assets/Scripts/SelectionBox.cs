@@ -13,6 +13,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
     SpriteRenderer rend;
     TextMeshPro textMesh;
     public string displayText;
+    GameObject manager;
 
     Vector2 startPos;
     Vector2 offset;
@@ -32,6 +33,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     void Start()
     {
+        manager = GameObject.FindGameObjectWithTag("Manage");
         textMesh = GetComponent<TextMeshPro>();
 
         startPos = transform.position;
@@ -56,6 +58,12 @@ public class SelectionBox : MonoBehaviour, IBumpable
         {
             if(bumpee.playerNumber.ToString() == "1")
                 StartCoroutine(WaitBeforeEvents());
+        }
+        else if(SceneManager.GetActiveScene().buildIndex == 5)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            Destroy(player);
+            manager.GetComponent<Manager>().sceneLoader.LoadScene(0);
         }
         else
         {

@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IBumpable
     #region AbilityFunction Related
     int jumpCount;
     bool usingJetpack, canJetpack, coyoteJump;
-    bool playerIsDead;
+    public bool playerIsDead;
     #endregion
 
     #region Abilities
@@ -65,7 +65,6 @@ public class Player : MonoBehaviour, IBumpable
     private void Start() {
         textMesh.text = "P" + playerNumber;
         textMesh.color = playerColors[playerNumber - 1];
-        stockCount = 3;
 
         rend.color = playerColors[playerNumber - 1];
 
@@ -84,6 +83,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
         Move(horizontalInput);
+        anim.SetFloat("yVelocity", rb.velocity.y);
     }
 
     int dir = 1;
@@ -171,8 +171,8 @@ public class Player : MonoBehaviour, IBumpable
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.GetContact(0).normal.y > 0)
         {
-            print("Hit");
             coyoteJump = true;
+            anim.SetBool("JumpAnim", false);
         }
 
 

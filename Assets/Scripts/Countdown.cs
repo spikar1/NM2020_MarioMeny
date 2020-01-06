@@ -13,7 +13,6 @@ public class Countdown : MonoBehaviour
 
     string minutes, seconds;
     public Vector2 startTime;
-    public UnityEvent onTimeOver;
 
     // Start is called before the first frame update
     void Start()
@@ -67,7 +66,8 @@ public class Countdown : MonoBehaviour
         if(min <= 0 && (int)t <= 0 && canInvoke)
         {
             canInvoke = false;
-            onTimeOver.Invoke();  
+            GameObject manager = GameObject.FindGameObjectWithTag("Manage");
+            manager.GetComponent<Manager>().sceneLoader.LoadScene(1);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 
 public class Player : MonoBehaviour, IBumpable
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour, IBumpable
     public float jumpHeight = 10;
     public float acceleration = 1;
     public int stockCount = 3;
+    public float punchDistance = 15;
     #endregion
 
     #region InputRelated
@@ -28,10 +30,10 @@ public class Player : MonoBehaviour, IBumpable
     #endregion
 
     #region Abilities
-    AAbility aAbility = AAbility.DefaultJump;
-    XAbility xAbility = XAbility.DefaultPunch;
-    YAbility yAbility = YAbility.None;
-    BAbility bAbility = BAbility.DefaultBlock;
+    public AAbility aAbility = AAbility.DefaultJump;
+    public XAbility xAbility = XAbility.DefaultPunch;
+    public YAbility yAbility = YAbility.None;
+    public BAbility bAbility = BAbility.DefaultBlock;
     #endregion
 
     [HideInInspector]
@@ -39,8 +41,13 @@ public class Player : MonoBehaviour, IBumpable
     [HideInInspector]
     public Animator anim;
 
+    SpriteRenderer rend;
+    TextMeshPro textMesh;
+
     private void Awake() {
         anim = gameObject.GetComponentInChildren<Animator>();
+        rend = GetComponentInChildren<SpriteRenderer>();
+        textMesh = GetComponent<TextMeshPro>();
         rb = GetComponent<Rigidbody2D>();
 
         DontDestroyOnLoad(gameObject);
@@ -54,6 +61,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void Start() {
+        textMesh.text = "P" + playerNumber;
         stockCount = 3;
     }
 
@@ -64,13 +72,15 @@ public class Player : MonoBehaviour, IBumpable
             return;
         }
 
-        Move(horizontalInput);
-
         //Using JETPACK:
         if(usingJetpack)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight * .3f);
         }
+
+
+        Move(horizontalInput);
+
     }
 
     int dir = 1;
@@ -107,12 +117,17 @@ public class Player : MonoBehaviour, IBumpable
         //TODO: Reiterate upon turning method.
         if (horizontalInput != 0) {
             dir = (int)Mathf.Sign(horizontalInput);
-        }
+        }  
+
         if(!isattacking)
-            transform.localScale = new Vector3(
-                dir, 
-                transform.localScale.y, 
-                transform.localScale.z);
+        {
+            if (dir == -1)
+            {
+                rend.flipX = true;
+            }
+            else
+                rend.flipX = false;
+        }
     }
 
     public void StopAbility(string abilityString) {
@@ -141,7 +156,10 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void Move(float direction) {
+        if (isattacking)
+            return;
         rb.velocity = new Vector2(direction * maxSpeed, rb.velocity.y);
+        anim.SetFloat("HorizontalMovement", horizontalInput);
     }
 
     public void Bumped(Player other, Vector2 collisionVector) {
@@ -341,6 +359,7 @@ public class Player : MonoBehaviour, IBumpable
     private void DefaultPunch()
     {
         anim.SetBool("DefaultAttack", true);
+        rb.velocity = new Vector2(punchDistance * dir, 0);
         print("Punching the Bastard");
     }
     private void Sword()

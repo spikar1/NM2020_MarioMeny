@@ -45,7 +45,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
-            if(bumpee.playerNumber == "1")
+            if(bumpee.playerNumber.ToString() == "1")
                 StartCoroutine(WaitBeforeEvents());
         }
         else

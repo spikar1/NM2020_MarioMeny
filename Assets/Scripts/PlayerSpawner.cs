@@ -73,6 +73,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         GameObject clone = Instantiate(playerPrefab, transform.position, Quaternion.identity);
         clone.GetComponent<Player>().playerIndex = index.ToString();
-        clone.GetComponent<Player>().playerNumber = number.ToString();
+        clone.GetComponent<Player>().playerNumber = number;
     }
 }

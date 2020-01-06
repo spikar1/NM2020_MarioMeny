@@ -8,7 +8,9 @@ using TMPro;
 public class Player : MonoBehaviour, IBumpable
 {
     public string playerIndex = "1";
-    public string playerNumber = "1";
+    public int playerNumber = 1;
+
+    public Color[] playerColors;
 
     #region PlayerStats
     public float maxSpeed = 7;
@@ -25,8 +27,11 @@ public class Player : MonoBehaviour, IBumpable
 
     #region AbilityFunction Related
     public Transform raycastStart;
+    float raycastLength = 1;
+    Vector3 rayStartOffset;
     int jumpCount;
     bool usingJetpack, canJetpack, coyoteJump;
+    bool canJump;
     #endregion
 
     #region Abilities
@@ -62,10 +67,31 @@ public class Player : MonoBehaviour, IBumpable
 
     private void Start() {
         textMesh.text = "P" + playerNumber;
+        textMesh.color = playerColors[playerNumber - 1];
         stockCount = 3;
+
+        rend.color = playerColors[playerNumber - 1];
+
+        //Raycast Stuff:
+        raycastLength = 1f;
+        rayStartOffset = new Vector3(0.5f, 0, 0);
     }
 
     void FixedUpdate() {
+        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position - rayStartOffset, Vector2.right, raycastLength);
+        if (hit.collider != null)
+        {
+            canJump = true;
+        }
+        else
+        {
+            canJump = false;
+
+            //Raycast Stuff:
+            raycastLength = 0.8f;
+            rayStartOffset = new Vector3(0.4f, 0, 0);
+        }
+
         if (knockbackState) {
             if (rb.velocity.magnitude < exitKnockbackMagnitude)
                 knockbackState = false;
@@ -101,7 +127,6 @@ public class Player : MonoBehaviour, IBumpable
             DoAAbility();
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) {
-            isattacking = true;
             DoXAbility();
         }
         if (Input.GetButtonDown("Y" + "_P" + playerIndex))
@@ -171,7 +196,12 @@ public class Player : MonoBehaviour, IBumpable
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.GetContact(0).normal.y > 0)
         {
+            print("Hit");
             coyoteJump = true;
+
+            //Raycast Stuff:
+            raycastLength = 1f;
+            rayStartOffset = new Vector3(0.5f, 0, 0);
         }
 
 
@@ -193,7 +223,6 @@ public class Player : MonoBehaviour, IBumpable
         var player = col.GetComponent<Player>();
         if (!player)
             return;
-        print("Hit!");
         player.Damage((player.transform.position - transform.position).normalized);
     }
 
@@ -296,17 +325,15 @@ public class Player : MonoBehaviour, IBumpable
     #region Ability Functions
     //A Abilities:
     private void DefaultJump() {
-        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-        if(hit.collider != null || coyoteJump)
+        if(canJump || coyoteJump)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
-            coyoteJump = false;
+            coyoteJump = false;  
         }
     }
     private void DoubleJump()
     {
-        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-        if (hit.collider != null || coyoteJump)
+        if (canJump || coyoteJump)
         {
             jumpCount = 2;
         }
@@ -321,8 +348,7 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void Jetpack()
     {
-        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-        if (hit.collider != null || coyoteJump)
+        if (canJump || coyoteJump)
         {
             canJetpack = true;
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
@@ -337,13 +363,11 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void BouncyShoes()
     {
-        RaycastHit2D hit = Physics2D.Raycast(raycastStart.position, Vector2.right * dir, 1f);
-
-        if (hit.collider != null || coyoteJump)
+        if (canJump || coyoteJump)
         {
             print("Look at me flying with these boots");
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight * 2);
-            coyoteJump = false;
+            coyoteJump = false;         
         }
     }
 
@@ -358,6 +382,7 @@ public class Player : MonoBehaviour, IBumpable
     //X Abilities:
     private void DefaultPunch()
     {
+        isattacking = true;
         anim.SetBool("DefaultAttack", true);
         rb.velocity = new Vector2(punchDistance * dir, 0);
         print("Punching the Bastard");

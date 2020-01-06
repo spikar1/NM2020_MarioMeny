@@ -132,7 +132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5146267167844727452}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.6, z: 0}
+  m_LocalPosition: {x: 0, y: -0.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3780351161671783623}
@@ -198,6 +198,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerIndex: 1
   playerNumber: 1
+  playerColors:
+  - {r: 1, g: 0, b: 0.026643753, a: 1}
+  - {r: 0.13207841, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0.4884801, b: 1, a: 1}
+  - {r: 1, g: 0.9371724, b: 0, a: 1}
   maxSpeed: 7
   jumpHeight: 10
   acceleration: 1
@@ -258,7 +263,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.85, y: 0.85}
   m_EdgeRadius: 0
 --- !u!114 &9135957874476873886
 MonoBehaviour:
@@ -285,7 +290,7 @@ MonoBehaviour:
   - {x: -0.5071354, y: 0.50186545, z: 0}
   m_ShapePathHash: -748833776
   m_Mesh: {fileID: 0}
-  m_InstanceId: 31682
+  m_InstanceId: 19592
 --- !u!95 &588124520
 Animator:
   serializedVersion: 3
@@ -359,7 +364,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
 --- !u!114 &1574768225134962703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,8 +411,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 6
-  m_fontSizeBase: 6
+  m_fontSize: 5
+  m_fontSizeBase: 5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -444,7 +449,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9, y: 0.6, z: 9, w: 3}
+  m_margin: {x: 9, y: 1.2, z: 9, w: 3}
   m_textInfo:
     textComponent: {fileID: 1574768225134962703}
     characterCount: 2

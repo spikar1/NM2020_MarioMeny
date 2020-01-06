@@ -178,6 +178,7 @@ MonoBehaviour:
   stockCount: 5
   punchDistance: 15
   isattacking: 0
+  playerIsDead: 0
   aAbility: 0
   xAbility: 0
   yAbility: 0
@@ -329,8 +330,8 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1012352507
+  m_SortingLayer: 1
   m_SortingOrder: 1
 --- !u!114 &1574768225134962703
 MonoBehaviour:

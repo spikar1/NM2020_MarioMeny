@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using System;
+using TMPro;
 
 public class SelectionBox : MonoBehaviour, IBumpable
 {
     Vector2 desiredDirection;
     public Sprite[] sprites;
     SpriteRenderer rend;
+    TextMeshPro textMesh;
+    public string displayText;
 
     Vector2 startPos;
     Vector2 offset;
@@ -29,6 +32,8 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     void Start()
     {
+        textMesh = GetComponent<TextMeshPro>();
+
         startPos = transform.position;
         if(abilitySelection)
         {
@@ -36,6 +41,10 @@ public class SelectionBox : MonoBehaviour, IBumpable
             rend = GetComponentInChildren<SpriteRenderer>();
             rend.sprite = sprites[abilityType];
             SetAbility();
+        }
+        else
+        {
+            textMesh.text = displayText;
         }
     }
 
@@ -74,6 +83,8 @@ public class SelectionBox : MonoBehaviour, IBumpable
                 default:
                     break;
             }
+
+            StartCoroutine(SelfDestruct());
         }
 
         BumpEffect(bumpee, collisionVector);
@@ -84,6 +95,12 @@ public class SelectionBox : MonoBehaviour, IBumpable
         yield return new WaitForSeconds(.4f);
 
         onBumped.Invoke();
+    }
+
+    IEnumerator SelfDestruct()
+    {
+        yield return new WaitForSeconds(.5f);
+        Destroy(gameObject);
     }
 
 
@@ -106,6 +123,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
                     if(i == abilitySubType)
                     {
                         print((AAbility)i);
+                        textMesh.text = Enum.GetName(typeof(AAbility), i);
                         newAAbility = (AAbility)i;
                     }
                 }         
@@ -119,6 +137,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
                     if (i == abilitySubType)
                     {
                         print((XAbility)i);
+                        textMesh.text = Enum.GetName(typeof(XAbility), i);
                         newXAbility = (XAbility)i;
                     }
                 }
@@ -132,6 +151,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
                     if (i == abilitySubType)
                     {
                         print((YAbility)i);
+                        textMesh.text = Enum.GetName(typeof(YAbility), i);
                         newYAbility = (YAbility)i;
                     }
                 }
@@ -145,6 +165,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
                     if (i == abilitySubType)
                     {
                         print((BAbility)i);
+                        textMesh.text = Enum.GetName(typeof(BAbility), i);
                         newBAbility = (BAbility)i;
                     }
                 }

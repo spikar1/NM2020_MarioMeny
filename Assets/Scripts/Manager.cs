@@ -12,6 +12,8 @@ public class Manager : MonoBehaviour
     int currentPlaying;
     public SceneLoader sceneLoader;
 
+    public static bool debugMode = false;
+
     public static WorldOptions worldOptions => instance._worldOptions;
 
     static Manager instance;
@@ -27,6 +29,12 @@ public class Manager : MonoBehaviour
     }
 
     private void Awake() {
+        if (Debug.isDebugBuild)
+            debugMode = true;
+        else
+            debugMode = false;
+        
+
         if (Instance != this)
             Destroy(this);
 
@@ -66,5 +74,23 @@ public class Manager : MonoBehaviour
             //Go To Victory Screen:
             sceneLoader.LoadScene(5);
         }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            debugMode = !debugMode;
+        }
+    }
+
+    private void OnGUI()
+    {
+        if (!debugMode)
+            return;
+
+        Rect buttonPos = new Rect(50, 100, 50, 50);
+
+        
     }
 }

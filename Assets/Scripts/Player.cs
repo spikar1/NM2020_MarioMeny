@@ -104,6 +104,16 @@ public class Player : MonoBehaviour, IBumpable
         }
 
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
+        if (Manager.debugMode)
+        {
+            if (Input.GetKey(KeyCode.A))
+                horizontalInput -= 1;
+            if (Input.GetKey(KeyCode.D))
+                horizontalInput += 1;
+        }
+
+        if (Manager.debugMode)
+            DebugUpdate();
        
 
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) 
@@ -140,6 +150,18 @@ public class Player : MonoBehaviour, IBumpable
             else
                 rend.flipX = false;
         }
+    }
+
+    private void DebugUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            DoAAbility();
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            DoXAbility();
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            DoYAbility();
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            DoBAbility();
     }
 
     public void StopAbility(string abilityString) {

@@ -10,6 +10,7 @@ public class PlayerSpawner : MonoBehaviour
     string stick1, stick2, stick3, stick4;
     KeyCode kc1, kc2, kc3, kc4;
     bool pla1, pla2, pla3, pla4;
+    private bool plaDebug;
 
     private void Awake()
     {
@@ -28,6 +29,8 @@ public class PlayerSpawner : MonoBehaviour
         stick4 = $"Joystick{4}Button7";
         kc4 = (KeyCode)System.Enum.Parse(typeof(KeyCode), stick4);
         pla4 = true;
+        
+        plaDebug = true;
     }
 
     private void Update()
@@ -74,5 +77,21 @@ public class PlayerSpawner : MonoBehaviour
         GameObject clone = Instantiate(playerPrefab, transform.position, Quaternion.identity);
         clone.GetComponent<Player>().playerIndex = index.ToString();
         clone.GetComponent<Player>().playerNumber = number;
+    }
+
+    private void OnGUI()
+    {
+        if (!Manager.debugMode)
+            return;
+
+        Rect buttonPos = new Rect(50, 50, 50, 50);
+
+        if (GUI.Button(buttonPos, "SpawnPlayer"))
+        {
+            print("Debug Player");
+            plaDebug = false;
+            playerCount++;
+            SpawnPlayer(1, playerCount);
+        }
     }
 }

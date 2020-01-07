@@ -47,6 +47,13 @@ public class Player : MonoBehaviour, IBumpable
     private float bubbleGunCooldown => Manager.worldOptions.bubbleGunCooldownTime;
     #endregion
 
+    #region Abilities:
+    //Abilities:
+    public AAbility aAbility = Manager.worldOptions.aDefault;
+    public XAbility xAbility = Manager.worldOptions.xDefault;
+    public YAbility yAbility = Manager.worldOptions.yDefault;
+    public BAbility bAbility = Manager.worldOptions.bDefault;
+    #endregion
 
     private void Awake() {
         //Ref:
@@ -184,19 +191,19 @@ public class Player : MonoBehaviour, IBumpable
     #region ChangeAbilities
     public void ChangeAAbility(AAbility newAAbility)
     {
-        Manager.worldOptions.aAbility = newAAbility;
+        aAbility = newAAbility;
     }
     public void ChangeXAbility(XAbility newXAbility)
     {
-        Manager.worldOptions.xAbility = newXAbility;
+        xAbility = newXAbility;
     }
     public void ChangeYAbility(YAbility newYAbility)
     {
-        Manager.worldOptions.yAbility = newYAbility;
+        yAbility = newYAbility;
     }
     public void ChangeBAbility(BAbility newBAbility)
     {
-        Manager.worldOptions.bAbility = newBAbility;
+        bAbility = newBAbility;
     }
     #endregion
 
@@ -287,7 +294,7 @@ public class Player : MonoBehaviour, IBumpable
 
     #region Do Abilities
     void DoAAbility() {
-        switch (Manager.worldOptions.aAbility) {
+        switch (aAbility) {
             case AAbility.DefaultJump:
                 DefaultJump();
                 break;
@@ -306,7 +313,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     void DoXAbility() {
-        switch (Manager.worldOptions.xAbility) {
+        switch (xAbility) {
             case XAbility.DefaultPunch:
                 DefaultPunch();
                 break;
@@ -325,7 +332,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     void DoYAbility() {
-        switch (Manager.worldOptions.yAbility) {
+        switch (yAbility) {
             case YAbility.None:
                 None();
                 break;
@@ -348,7 +355,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
     void DoBAbility() {
-        switch (Manager.worldOptions.bAbility) {
+        switch (bAbility) {
             case BAbility.DefaultBlock:
                 DefaultBlock();
                 break;

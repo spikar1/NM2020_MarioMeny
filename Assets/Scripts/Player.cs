@@ -7,88 +7,65 @@ using TMPro;
 
 public class Player : MonoBehaviour, IBumpable
 {
-    public string playerIndex = "1";
-    public int playerNumber = 1;
-
-    public Color[] playerColors;
-
-    #region PlayerStats
-    public float maxSpeed = 7;
-    public float jumpHeight = 10;
-    public float acceleration = 1;
-    public int stockCount = 3;
-    public float punchDistance = 15;
-    #endregion
-
-    #region InputRelated
+    
     float horizontalInput;
-    public bool isattacking;
-    public bool isUsingAbility;
-    public bool canUseAbility = true;
+    int dir = 1;
+
+    #region Public Variables & References
+    //Variables:
+    public string playerIndex = "1";
+    public int stockCount, playerNumber = 1;
+    public bool playerIsDead;
+
+    //Ref:
+    [HideInInspector]
+    public Rigidbody2D rb;
+    [HideInInspector]
+    public Animator anim;
+    [HideInInspector]
+    public SpriteRenderer rend;
+    [HideInInspector]
+    public TextMeshPro textMesh;
     #endregion
 
     #region AbilityFunction Related
+    private bool isUsingAbility = false;
+    private bool canUseAbility = true;
     int jumpCount;
     bool usingJetpack, canJetpack, coyoteJump;
-    public bool playerIsDead;
-    float startKnockback;
     float abilityNumber;
     bool chargingSword;
-    float swordCharge, maxSwordCharge;
+    float swordCharge;
     float startGravity;
+    private float knockbackAmount; 
+    private bool knockbackState;
     #endregion
 
-    #region Abilities
-    public AAbility aAbility = AAbility.DefaultJump;
-    public XAbility xAbility = XAbility.DefaultPunch;
-    public YAbility yAbility = YAbility.None;
-    public BAbility bAbility = BAbility.DefaultBlock;
-    #endregion
     #region Cooldown system
     private float aCooldown, xCooldown, yCooldown, bCooldown;
     private float missileCooldown => Manager.worldOptions.missileCooldownTime;
     private float bubbleGunCooldown => Manager.worldOptions.bubbleGunCooldownTime;
     #endregion
 
-    int dir = 1;
-    private bool knockbackState;
-    [SerializeField]
-    private float knockbackAmount = 10;  
-
-    [HideInInspector]
-    public Rigidbody2D rb;
-    [HideInInspector]
-    public Animator anim;
-
-    SpriteRenderer rend;
-    TextMeshPro textMesh;
 
     private void Awake() {
+        //Ref:
+        rb = GetComponent<Rigidbody2D>();
         anim = gameObject.GetComponentInChildren<Animator>();
         rend = GetComponentInChildren<SpriteRenderer>();
         textMesh = GetComponent<TextMeshPro>();
-        rb = GetComponent<Rigidbody2D>();
 
+        //Dont Destroy:
         DontDestroyOnLoad(gameObject);
     }
 
-    public void ResetPlayer() {
-        aAbility = Manager.worldOptions.aDefault;
-        xAbility = Manager.worldOptions.xDefault;
-        yAbility = Manager.worldOptions.yDefault;
-        bAbility = Manager.worldOptions.bDefault;
-    }
-
     private void Start() {
+        stockCount = Manager.worldOptions.stockCount;
         textMesh.text = "P" + playerNumber;
-        textMesh.color = playerColors[playerNumber - 1];
+        textMesh.color = Manager.worldOptions.playerColors[playerNumber - 1];
+        rend.color = Manager.worldOptions.playerColors[playerNumber - 1];
 
-        rend.color = playerColors[playerNumber - 1];
-
-        startKnockback = knockbackAmount;
         startGravity = rb.gravityScale;
-        maxSwordCharge = 10;
-
         playerIsDead = false;
     }
 
@@ -99,7 +76,7 @@ public class Player : MonoBehaviour, IBumpable
         //Using JETPACK:
         if (usingJetpack)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpHeight * .3f);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * .3f);
         }
 
         Move(horizontalInput);
@@ -126,13 +103,13 @@ public class Player : MonoBehaviour, IBumpable
        
         if(chargingSword)
         {
-            if(swordCharge < maxSwordCharge)
+            if(swordCharge < Manager.worldOptions.maxSwordCharge)
             {
                 swordCharge += Time.deltaTime;
             }
             else
             {
-                swordCharge = maxSwordCharge;
+                swordCharge = Manager.worldOptions.maxSwordCharge;
             }
         }
 
@@ -207,19 +184,19 @@ public class Player : MonoBehaviour, IBumpable
     #region ChangeAbilities
     public void ChangeAAbility(AAbility newAAbility)
     {
-        aAbility = newAAbility;
+        Manager.worldOptions.aAbility = newAAbility;
     }
     public void ChangeXAbility(XAbility newXAbility)
     {
-        xAbility = newXAbility;
+        Manager.worldOptions.xAbility = newXAbility;
     }
     public void ChangeYAbility(YAbility newYAbility)
     {
-        yAbility = newYAbility;
+        Manager.worldOptions.yAbility = newYAbility;
     }
     public void ChangeBAbility(BAbility newBAbility)
     {
-        bAbility = newBAbility;
+        Manager.worldOptions.bAbility = newBAbility;
     }
     #endregion
 
@@ -227,7 +204,7 @@ public class Player : MonoBehaviour, IBumpable
     private void Move(float direction) {
         if (isUsingAbility)
             return;
-        rb.velocity = new Vector2(direction * maxSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(direction * Manager.worldOptions.maxSpeed, rb.velocity.y);
         anim.SetFloat("HorizontalMovement", horizontalInput);
     }
 
@@ -268,7 +245,7 @@ public class Player : MonoBehaviour, IBumpable
 
     public void ResetKnockback()
     {
-        knockbackAmount = startKnockback;
+        knockbackAmount = Manager.worldOptions.KnockbackStartAmount;
     }
 
     public void Damage(Vector2 dir) {
@@ -299,9 +276,9 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
 
-    IEnumerator AbilityCoolDown(float coolDownTime)
+    IEnumerator AbilityDuration(float duration)
     {
-        yield return new WaitForSeconds(coolDownTime);
+        yield return new WaitForSeconds(duration);
         isUsingAbility = false;
         canUseAbility = true;
         anim.SetBool("UsingAbility", false);
@@ -310,7 +287,7 @@ public class Player : MonoBehaviour, IBumpable
 
     #region Do Abilities
     void DoAAbility() {
-        switch (aAbility) {
+        switch (Manager.worldOptions.aAbility) {
             case AAbility.DefaultJump:
                 DefaultJump();
                 break;
@@ -329,8 +306,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     void DoXAbility() {
-        isattacking = true;
-        switch (xAbility) {
+        switch (Manager.worldOptions.xAbility) {
             case XAbility.DefaultPunch:
                 DefaultPunch();
                 break;
@@ -349,7 +325,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     void DoYAbility() {
-        switch (yAbility) {
+        switch (Manager.worldOptions.yAbility) {
             case YAbility.None:
                 None();
                 break;
@@ -372,7 +348,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
     void DoBAbility() {
-        switch (bAbility) {
+        switch (Manager.worldOptions.bAbility) {
             case BAbility.DefaultBlock:
                 DefaultBlock();
                 break;
@@ -393,12 +369,14 @@ public class Player : MonoBehaviour, IBumpable
 
 
     #region Ability Functions
+
     //A Abilities:
+    #region A Abilities
     private void DefaultJump() {
         if(coyoteJump)
         {
             anim.SetBool("JumpAnim", true);
-            rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
             coyoteJump = false;  
         }
     }
@@ -412,7 +390,7 @@ public class Player : MonoBehaviour, IBumpable
         if(jumpCount > 0)
         {
             jumpCount--;
-            rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
             print("Can Double Jump");
             coyoteJump = false;
         }
@@ -422,7 +400,7 @@ public class Player : MonoBehaviour, IBumpable
         if (coyoteJump)
         {
             canJetpack = true;
-            rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
             coyoteJump = false;
         }
         else if(canJetpack)
@@ -437,7 +415,7 @@ public class Player : MonoBehaviour, IBumpable
         if (coyoteJump)
         {
             print("Look at me flying with these boots");
-            rb.velocity = new Vector2(rb.velocity.x, jumpHeight * 2);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * 2);
             coyoteJump = false;         
         }
     }
@@ -448,9 +426,10 @@ public class Player : MonoBehaviour, IBumpable
         yield return new WaitForSeconds(2);
         usingJetpack = false;
     }
-
+    #endregion
 
     //X Abilities:
+    #region X Abilities
     private void DefaultPunch()
     {
         //Animation:
@@ -459,10 +438,10 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
-        rb.velocity = new Vector2(punchDistance * dir, 0);
+        rb.velocity = new Vector2(Manager.worldOptions.punchDistance * dir, 0);
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(.5f));
+        StartCoroutine(AbilityDuration(.5f));
         print("DefaultPunch");
     }
     IEnumerator Sword()
@@ -484,7 +463,7 @@ public class Player : MonoBehaviour, IBumpable
         rb.gravityScale = 0;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(swordCharge * 0.5f));
+        StartCoroutine(AbilityDuration(swordCharge * 0.5f));
         yield return new WaitUntil(() => !isUsingAbility);
         rb.gravityScale = startGravity;
         print("Sword");
@@ -499,7 +478,7 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(.5f));
+        StartCoroutine(AbilityDuration(.5f));
         print("Axe");
     }
     private void Hammer()
@@ -512,12 +491,13 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(.5f));
+        StartCoroutine(AbilityDuration(.5f));
         print("Hammer");
     }
-
+    #endregion
 
     //B Abilities:
+    #region B Abilities
     private void DefaultBlock()
     {
         //Animation:
@@ -528,7 +508,7 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(0.5f));
+        StartCoroutine(AbilityDuration(0.5f));
         print("DefaultBlock");
     }
     private void ReflectiveShield()
@@ -541,7 +521,7 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(0.5f));
+        StartCoroutine(AbilityDuration(0.5f));
         print("ReflectiveShield");
     }
     private void Barrier()
@@ -554,7 +534,7 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(.5f));
+        StartCoroutine(AbilityDuration(.5f));
         print("Barrier");
     }
     private void Evade()
@@ -567,10 +547,10 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(.5f));
+        StartCoroutine(AbilityDuration(.5f));
         print("Evade");
     }
-
+    #endregion
 
 
     //Y Abilities:

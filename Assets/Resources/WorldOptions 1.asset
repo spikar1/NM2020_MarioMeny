@@ -25,6 +25,15 @@ MonoBehaviour:
     type: 3}
   missileCooldownTime: 3
   bubbleGunCooldownTime: 3
-  missileSpeed: 4
   bubbleSpeed: 1
+  missileSpeed: 4
   bubbleMaxLifetime: 12
+  maxSpeed: 7
+  jumpHeight: 10
+  stockCount: 5
+  punchDistance: 15
+  playerColors:
+  - {r: 1, g: 0.5896226, b: 0.5896226, a: 1}
+  - {r: 0.66498154, g: 1, b: 0.6462264, a: 1}
+  - {r: 0.6650944, g: 0.8102097, b: 1, a: 1}
+  - {r: 0.9986979, g: 1, b: 0.6462264, a: 1}

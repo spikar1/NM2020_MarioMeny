@@ -8,7 +8,7 @@ public class BubbleProjectile : Projectile
     {
         Player otherPlayer = collision.GetComponent<Player>();
         if (otherPlayer)
-            Instantiate(Manager.worldOptions.bubblePrefab, otherPlayer.transform.position, Quaternion.identity);
+            Instantiate(Manager.worldOptions.bubblePrefab, otherPlayer.transform.position + Vector3.up * .5f, Quaternion.identity);
 
         Destroy(gameObject);
     }

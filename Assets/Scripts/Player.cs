@@ -31,12 +31,17 @@ public class Player : MonoBehaviour, IBumpable
     #region AbilityFunction Related
     private bool isUsingAbility = false;
     private bool canUseAbility = true;
-    int jumpCount;
-    bool usingJetpack, canJetpack, coyoteJump;
     float abilityNumber;
+    float startGravity;
+
+    //A Abilities:
+    int jumpCount;
+    float jetpackAmount;
+    bool usingJetpack, canJetpack, coyoteJump;
+
+    //X Abilities:
     bool chargingSword;
     float swordCharge;
-    float startGravity;
     private float knockbackAmount; 
     private bool knockbackState;
     #endregion
@@ -80,12 +85,6 @@ public class Player : MonoBehaviour, IBumpable
         if (playerIsDead || knockbackState)
             return;
 
-        //Using JETPACK:
-        if (usingJetpack)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * .3f);
-        }
-
         Move(horizontalInput);
         anim.SetFloat("yVelocity", rb.velocity.y);
     }
@@ -95,6 +94,8 @@ public class Player : MonoBehaviour, IBumpable
         if (playerIsDead || knockbackState) {       
             return;
         }
+
+
 
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
         if (Manager.debugMode)
@@ -161,6 +162,7 @@ public class Player : MonoBehaviour, IBumpable
         }
 
         UpdateCooldowns();
+        JetPackFlying();
     }
 
 
@@ -225,6 +227,8 @@ public class Player : MonoBehaviour, IBumpable
         if(collision.GetContact(0).normal.y > 0)
         {
             coyoteJump = true;
+            usingJetpack = false;
+            jetpackAmount = Manager.worldOptions.MaxJetpackDuration;
             anim.SetBool("JumpAnim", false);
         }
 
@@ -280,6 +284,32 @@ public class Player : MonoBehaviour, IBumpable
         if(stockCount > 0)
         {
             playerIsDead = false;
+        }
+    }
+
+    private void JetPackFlying()
+    {
+        if (!canUseAbility)
+            return;
+
+        if(usingJetpack)
+        {
+            if(Input.GetButton("A" + "_P" + playerIndex))
+            {
+                jetpackAmount -= Time.deltaTime;
+                rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * .3f);
+                anim.SetBool("JumpAnim", false);
+            }
+            else
+            {
+                anim.SetBool("JumpAnim", true);
+            }
+        }
+
+        if(jetpackAmount <= 0)
+        {
+            anim.SetBool("JumpAnim", true);
+            usingJetpack = false;
         }
     }
 
@@ -397,6 +427,7 @@ public class Player : MonoBehaviour, IBumpable
         if(jumpCount > 0)
         {
             jumpCount--;
+            anim.SetBool("JumpAnim", true);
             rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
             print("Can Double Jump");
             coyoteJump = false;
@@ -406,32 +437,27 @@ public class Player : MonoBehaviour, IBumpable
     {
         if (coyoteJump)
         {
-            canJetpack = true;
+            anim.SetBool("JumpAnim", true);
             rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
             coyoteJump = false;
+            canJetpack = true;
         }
         else if(canJetpack)
         {
+            anim.SetBool("JumpAnim", false);
             canJetpack = false;
-            StartCoroutine(JetPackBurst());
-            print("Using the Jetpack so High");
+            usingJetpack = true;
         }
     }
     private void BouncyShoes()
     {
         if (coyoteJump)
         {
+            anim.SetBool("JumpAnim", true);
             print("Look at me flying with these boots");
             rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * 2);
             coyoteJump = false;         
         }
-    }
-
-    IEnumerator JetPackBurst()
-    {
-        usingJetpack = true;
-        yield return new WaitForSeconds(2);
-        usingJetpack = false;
     }
     #endregion
 

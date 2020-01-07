@@ -39,4 +39,5 @@ public class WorldOptions : ScriptableObject
     public int maxSwordCharge = 10;
     public float bubbleSpeed;
     public float bubbleMaxLifetime;
+    public float MaxJetpackDuration = 2;
 }

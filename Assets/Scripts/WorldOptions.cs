@@ -11,4 +11,14 @@ public class WorldOptions : ScriptableObject
     public BAbility bDefault = BAbility.DefaultBlock;
 
     public Sprite DefaultJumpSprite;
+
+    [Header("Prefabs")]
+    public GameObject missilePrefab;
+
+    [Header("Y Ability Cooldowns")]
+    [Header("Cooldowns")]
+    public float missileCooldownTime;
+
+    [Header("Ability parameters")]
+    public int missileSpeed = 4;
 }

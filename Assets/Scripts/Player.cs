@@ -41,6 +41,10 @@ public class Player : MonoBehaviour, IBumpable
     public YAbility yAbility = YAbility.None;
     public BAbility bAbility = BAbility.DefaultBlock;
     #endregion
+    #region Cooldown system
+    private float aCooldown, xCooldown, yCooldown, bCooldown;
+    private float missileCooldown => Manager.worldOptions.missileCooldownTime;
+    #endregion
 
     int dir = 1;
     private bool knockbackState;
@@ -150,6 +154,17 @@ public class Player : MonoBehaviour, IBumpable
             else
                 rend.flipX = false;
         }
+
+        UpdateCooldowns();
+    }
+
+
+    private void UpdateCooldowns()
+    {
+        aCooldown = Mathf.Clamp(aCooldown - Time.deltaTime, 0, 999);
+        xCooldown = Mathf.Clamp(xCooldown - Time.deltaTime, 0, 999);
+        yCooldown = Mathf.Clamp(yCooldown - Time.deltaTime, 0, 999);
+        bCooldown = Mathf.Clamp(bCooldown - Time.deltaTime, 0, 999);
     }
 
     private void DebugUpdate()
@@ -235,7 +250,7 @@ public class Player : MonoBehaviour, IBumpable
         knockbackAmount = startKnockback;
     }
 
-    private void Damage(Vector2 dir) {
+    public void Damage(Vector2 dir) {
         rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
         StartCoroutine(KnockbackTimer());      
         knockbackAmount += 1;
@@ -528,7 +543,9 @@ public class Player : MonoBehaviour, IBumpable
     }
 
 
+
     //Y Abilities:
+    #region Y Abilities
     private void None()
     {
         //Animation:
@@ -540,11 +557,15 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void Missile()
     {
+        if (yCooldown > 0)
+            return;
         //Animation:
 
         //Ability Func:
-
+        var missile = Instantiate(Manager.worldOptions.missilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
+        missile.GetComponent<Missile>().Initialize(dir);
         //CoolDown and Debug:
+        yCooldown += missileCooldown;
         print("Missile");
     }
     private void PickUp()
@@ -574,5 +595,6 @@ public class Player : MonoBehaviour, IBumpable
         //CoolDown and Debug:
         print("BubbleGun");
     }
+    #endregion
     #endregion
 }

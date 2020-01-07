@@ -17,10 +17,10 @@ public class Manager : MonoBehaviour
     public static WorldOptions worldOptions => instance._worldOptions;
 
     static Manager instance;
-    public Manager Instance {
+    public static Manager Instance {
         get {
             if (!instance) {
-                instance = this;
+                instance = FindObjectOfType<Manager>();
                 return instance;
             }
             else

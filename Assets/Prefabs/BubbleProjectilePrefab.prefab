@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 3168322378879843609}
   - component: {fileID: 98282889463085947}
   - component: {fileID: 1808711590958694118}
-  - component: {fileID: 2370837893942549721}
+  - component: {fileID: 8890489793943751344}
   m_Layer: 0
-  m_Name: Missile
+  m_Name: BubbleProjectilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,7 +178,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2370837893942549721
+--- !u!114 &8890489793943751344
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -187,6 +187,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1600884451505982857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d95391906e6917748b848e024278c494, type: 3}
+  m_Script: {fileID: 11500000, guid: 78ef4f70801d894429ab4a892c776d56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

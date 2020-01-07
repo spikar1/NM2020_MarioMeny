@@ -47,6 +47,7 @@ public class Player : MonoBehaviour, IBumpable
     #region Cooldown system
     private float aCooldown, xCooldown, yCooldown, bCooldown;
     private float missileCooldown => Manager.worldOptions.missileCooldownTime;
+    private float bubbleGunCooldown => Manager.worldOptions.bubbleGunCooldownTime;
     #endregion
 
     int dir = 1;
@@ -591,7 +592,7 @@ public class Player : MonoBehaviour, IBumpable
 
         //Ability Func:
         var missile = Instantiate(Manager.worldOptions.missilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
-        missile.GetComponent<Missile>().Initialize(dir);
+        missile.GetComponent<Projectile>().Initialize(dir);
         //CoolDown and Debug:
         yCooldown += missileCooldown;
         print("Missile");
@@ -616,12 +617,16 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void BubbleGun()
     {
+        if (yCooldown > 0)
+            return;
         //Animation:
 
         //Ability Func:
-
+        var bubbleProjectile = Instantiate(Manager.worldOptions.bubbleProjectilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
+        bubbleProjectile.GetComponent<BubbleProjectile>().Initialize(dir);
         //CoolDown and Debug:
-        print("BubbleGun");
+        yCooldown += bubbleGunCooldown;
+        print("Bubble Gun");
     }
     #endregion
     #endregion

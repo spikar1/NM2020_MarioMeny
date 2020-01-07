@@ -14,11 +14,16 @@ public class WorldOptions : ScriptableObject
 
     [Header("Prefabs")]
     public GameObject missilePrefab;
+    public GameObject bubbleProjectilePrefab;
+    public GameObject bubblePrefab;
 
     [Header("Y Ability Cooldowns")]
     [Header("Cooldowns")]
-    public float missileCooldownTime;
+    public float missileCooldownTime = 3;
+    public float bubbleGunCooldownTime = 3;
 
     [Header("Ability parameters")]
-    public int missileSpeed = 4;
+    public int missileSpeed = 6;
+    public float bubbleSpeed;
+    public float bubbleMaxLifetime;
 }

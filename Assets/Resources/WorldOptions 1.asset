@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da695f4502635284da87e56ca39d274b, type: 3}
   m_Name: WorldOptions 1
   m_EditorClassIdentifier: 
-  aDefault: {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
-  xDefault: {fileID: 11400000, guid: ab8a076676aa5484db56a0be35a536e8, type: 2}
-  yDefault: {fileID: 11400000, guid: 67db7f9591f53d84492ef58ca2187dea, type: 2}
-  bDefault: {fileID: 11400000, guid: e608947a9dc9d504aafd4b47635b3421, type: 2}
-  aAbilities: []
-  xAbilities:
-  - {fileID: 11400000, guid: ab8a076676aa5484db56a0be35a536e8, type: 2}
-  yAbilities: []
-  bAbilities: []
+  aDefault: 0
+  xDefault: 0
+  yDefault: 0
+  bDefault: 0
+  DefaultJumpSprite: {fileID: 0}
+  missilePrefab: {fileID: 1600884451505982857, guid: f9c8939b166617a4fa270c52bb3dc16f,
+    type: 3}
+  bubblePrefab: {fileID: 0}
+  missileCooldownTime: 3
+  bubbleGunCooldownTime: 3
+  missileSpeed: 4

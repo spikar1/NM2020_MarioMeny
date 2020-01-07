@@ -29,6 +29,7 @@ public class Player : MonoBehaviour, IBumpable
     int jumpCount;
     bool usingJetpack, canJetpack, coyoteJump;
     public bool playerIsDead;
+    float startKnockback;
     #endregion
 
     #region Abilities
@@ -37,6 +38,11 @@ public class Player : MonoBehaviour, IBumpable
     public YAbility yAbility = YAbility.None;
     public BAbility bAbility = BAbility.DefaultBlock;
     #endregion
+
+    int dir = 1;
+    private bool knockbackState;
+    [SerializeField]
+    private float knockbackAmount = 10;  
 
     [HideInInspector]
     public Rigidbody2D rb;
@@ -68,6 +74,8 @@ public class Player : MonoBehaviour, IBumpable
 
         rend.color = playerColors[playerNumber - 1];
 
+        startKnockback = knockbackAmount;
+
         playerIsDead = false;
     }
 
@@ -86,10 +94,6 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetFloat("yVelocity", rb.velocity.y);
     }
 
-    int dir = 1;
-    private bool knockbackState;
-    [SerializeField]
-    private float knockbackAmount = 10;  
 
     private void Update() {
         if (playerIsDead || knockbackState) {       
@@ -197,9 +201,15 @@ public class Player : MonoBehaviour, IBumpable
         player.Damage((player.transform.position - transform.position).normalized);
     }
 
+    public void ResetKnockback()
+    {
+        knockbackAmount = startKnockback;
+    }
+
     private void Damage(Vector2 dir) {
         rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
-        StartCoroutine(KnockbackTimer());
+        StartCoroutine(KnockbackTimer());      
+        knockbackAmount += 1;
     }
 
     IEnumerator KnockbackTimer()

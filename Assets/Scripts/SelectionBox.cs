@@ -70,7 +70,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
             StartCoroutine(WaitBeforeEvents());
         }
 
-        if(abilitySelection)
+        if(abilitySelection && bumpee.stockCount > 1)
         {
             bumpee.LooseStock();
 

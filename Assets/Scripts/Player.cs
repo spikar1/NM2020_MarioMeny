@@ -33,6 +33,9 @@ public class Player : MonoBehaviour, IBumpable
     public bool playerIsDead;
     float startKnockback;
     float abilityNumber;
+    bool chargingSword;
+    float swordCharge, maxSwordCharge;
+    float startGravity;
     #endregion
 
     #region Abilities
@@ -82,6 +85,8 @@ public class Player : MonoBehaviour, IBumpable
         rend.color = playerColors[playerNumber - 1];
 
         startKnockback = knockbackAmount;
+        startGravity = rb.gravityScale;
+        maxSwordCharge = 10;
 
         playerIsDead = false;
     }
@@ -95,7 +100,6 @@ public class Player : MonoBehaviour, IBumpable
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight * .3f);
         }
-
 
         Move(horizontalInput);
         anim.SetFloat("yVelocity", rb.velocity.y);
@@ -119,15 +123,31 @@ public class Player : MonoBehaviour, IBumpable
         if (Manager.debugMode)
             DebugUpdate();
        
+        if(chargingSword)
+        {
+            if(swordCharge < maxSwordCharge)
+            {
+                swordCharge += Time.deltaTime;
+            }
+            else
+            {
+                swordCharge = maxSwordCharge;
+            }
+        }
 
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) 
         {
-            DoAAbility();
+            if(canUseAbility)
+                DoAAbility();
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
         {
             if(canUseAbility)
+            {
+                canUseAbility = false;
+                isUsingAbility = true;
                 DoXAbility();
+            }
         }
         if (Input.GetButtonDown("Y" + "_P" + playerIndex))
         {
@@ -280,13 +300,10 @@ public class Player : MonoBehaviour, IBumpable
 
     IEnumerator AbilityCoolDown(float coolDownTime)
     {
-        isUsingAbility = true;
-        canUseAbility = false;
         yield return new WaitForSeconds(coolDownTime);
         isUsingAbility = false;
         canUseAbility = true;
         anim.SetBool("UsingAbility", false);
-
     }
 
 
@@ -317,7 +334,7 @@ public class Player : MonoBehaviour, IBumpable
                 DefaultPunch();
                 break;
             case XAbility.Sword:
-                Sword();
+                StartCoroutine(Sword());
                 break;
             case XAbility.Axe:
                 Axe();
@@ -447,7 +464,7 @@ public class Player : MonoBehaviour, IBumpable
         StartCoroutine(AbilityCoolDown(.5f));
         print("DefaultPunch");
     }
-    private void Sword()
+    IEnumerator Sword()
     {
         //Animation:
         abilityNumber = 1;
@@ -455,9 +472,20 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        rb.velocity = new Vector2(0, 0);
+        rb.gravityScale = 0.1f;
+        swordCharge = 0;
+        chargingSword = true;
+        
+        yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
+        chargingSword = false;
+        rb.velocity = new Vector2(swordCharge * 25 * dir, 0);
+        rb.gravityScale = 0;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityCoolDown(.5f));
+        StartCoroutine(AbilityCoolDown(swordCharge * 0.5f));
+        yield return new WaitUntil(() => !isUsingAbility);
+        rb.gravityScale = startGravity;
         print("Sword");
     }
     private void Axe()

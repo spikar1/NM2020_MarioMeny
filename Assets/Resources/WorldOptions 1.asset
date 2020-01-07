@@ -19,7 +19,12 @@ MonoBehaviour:
   DefaultJumpSprite: {fileID: 0}
   missilePrefab: {fileID: 1600884451505982857, guid: f9c8939b166617a4fa270c52bb3dc16f,
     type: 3}
-  bubblePrefab: {fileID: 0}
+  bubbleProjectilePrefab: {fileID: 1600884451505982857, guid: 4af3d68ccd584024ea8bdf42a3bf6c8a,
+    type: 3}
+  bubblePrefab: {fileID: 5125063514514017571, guid: f1d98ae6b91a9084a95df2180d3445a7,
+    type: 3}
   missileCooldownTime: 3
   bubbleGunCooldownTime: 3
   missileSpeed: 4
+  bubbleSpeed: 1
+  bubbleMaxLifetime: 12

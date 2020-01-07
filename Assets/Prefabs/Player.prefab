@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: -1012352507
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 8a6a2938b1821dc47ac943d887c741fe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7e04b6310bde9a2489e272f4bb58dde7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.7066667, y: 1.7066667}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -166,26 +166,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIndex: 1
-  playerNumber: 1
-  playerColors:
-  - {r: 1, g: 0.514151, b: 0.527488, a: 1}
-  - {r: 0.57075465, g: 1, b: 0.504717, a: 1}
-  - {r: 0.5330188, g: 0.76193124, b: 1, a: 1}
-  - {r: 1, g: 0.97247505, b: 0.5613208, a: 1}
-  maxSpeed: 7
-  jumpHeight: 10
-  acceleration: 1
   stockCount: 5
-  punchDistance: 15
-  isattacking: 0
+  playerNumber: 1
   playerIsDead: 0
+  rb: {fileID: 0}
+  anim: {fileID: 0}
+  rend: {fileID: 0}
+  textMesh: {fileID: 0}
   aAbility: 0
   xAbility: 0
   yAbility: 0
   bAbility: 0
-  rb: {fileID: 0}
-  anim: {fileID: 0}
-  knockbackAmount: 10
 --- !u!50 &8432251687096783401
 Rigidbody2D:
   serializedVersion: 4
@@ -258,7 +249,7 @@ MonoBehaviour:
   - {x: -0.5071354, y: 0.50186545, z: 0}
   m_ShapePathHash: -748833776
   m_Mesh: {fileID: 0}
-  m_InstanceId: 27938
+  m_InstanceId: 29002
 --- !u!95 &588124520
 Animator:
   serializedVersion: 3

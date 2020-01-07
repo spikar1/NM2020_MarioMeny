@@ -36,8 +36,8 @@ public class Player : MonoBehaviour, IBumpable
 
     //A Abilities:
     int jumpCount;
-    float jetpackAmount;
-    bool usingJetpack, canJetpack, coyoteJump;
+    float jetpackAmount, extraHeight;
+    bool usingJetpack, canJetpack, coyoteJump, canHighJump;
 
     //X Abilities:
     bool chargingSword;
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void Update() {
-        if (playerIsDead || knockbackState) {       
+        if (playerIsDead || knockbackState) {
             return;
         }
 
@@ -147,7 +147,7 @@ public class Player : MonoBehaviour, IBumpable
         }
 
 
-        if (horizontalInput != 0) {
+        if (horizontalInput != 0 && !isUsingAbility) {
             dir = (int)Mathf.Sign(horizontalInput);
         }  
 
@@ -163,6 +163,7 @@ public class Player : MonoBehaviour, IBumpable
 
         UpdateCooldowns();
         JetPackFlying();
+        HighJump();
     }
 
 
@@ -277,6 +278,7 @@ public class Player : MonoBehaviour, IBumpable
         print($"{playerIndex} Lost a Stock!");
         stockCount--;
         playerIsDead = true;
+        anim.SetBool("IsDead", true);
     }
 
     public void CheckIfStillDead()
@@ -284,6 +286,7 @@ public class Player : MonoBehaviour, IBumpable
         if(stockCount > 0)
         {
             playerIsDead = false;
+            anim.SetBool("IsDead", false);
         }
     }
 
@@ -299,17 +302,37 @@ public class Player : MonoBehaviour, IBumpable
                 jetpackAmount -= Time.deltaTime;
                 rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * .3f);
                 anim.SetBool("JumpAnim", false);
+                anim.SetBool("IsRocket", true);
             }
             else
             {
                 anim.SetBool("JumpAnim", true);
+                anim.SetBool("IsRocket", false);
             }
         }
 
         if(jetpackAmount <= 0)
         {
             anim.SetBool("JumpAnim", true);
+            anim.SetBool("IsRocket", false);
             usingJetpack = false;
+        }
+    }
+
+    private void HighJump()
+    {
+        if(canHighJump)
+        {
+            if (Input.GetButton("A" + "_P" + playerIndex))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
+                extraHeight += Time.deltaTime;
+            }
+        }
+
+        if(extraHeight >= .5f || Input.GetButtonUp("A" + "_P" + playerIndex))
+        {
+            canHighJump = false;
         }
     }
 
@@ -454,9 +477,9 @@ public class Player : MonoBehaviour, IBumpable
         if (coyoteJump)
         {
             anim.SetBool("JumpAnim", true);
-            print("Look at me flying with these boots");
-            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * 2);
-            coyoteJump = false;         
+            coyoteJump = false;
+            extraHeight = 0;
+            canHighJump = true;
         }
     }
     #endregion
@@ -492,7 +515,7 @@ public class Player : MonoBehaviour, IBumpable
         
         yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
         chargingSword = false;
-        rb.velocity = new Vector2(swordCharge * 25 * dir, 0);
+        rb.velocity = new Vector2(swordCharge * 40 * dir, 0);
         rb.gravityScale = 0;
 
         //CoolDown And Debug:

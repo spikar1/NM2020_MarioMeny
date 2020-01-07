@@ -23,6 +23,8 @@ public class Player : MonoBehaviour, IBumpable
     #region InputRelated
     float horizontalInput;
     public bool isattacking;
+    public bool isUsingAbility;
+    public bool canUseAbility = true;
     #endregion
 
     #region AbilityFunction Related
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour, IBumpable
     bool usingJetpack, canJetpack, coyoteJump;
     public bool playerIsDead;
     float startKnockback;
+    float abilityNumber;
     #endregion
 
     #region Abilities
@@ -103,19 +106,24 @@ public class Player : MonoBehaviour, IBumpable
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
        
 
-        if (Input.GetButtonDown("A" + "_P" + playerIndex)) {
+        if (Input.GetButtonDown("A" + "_P" + playerIndex)) 
+        {
             DoAAbility();
         }
-        if (Input.GetButtonDown("X" + "_P" + playerIndex)) {
-            DoXAbility();
+        if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
+        {
+            if(canUseAbility)
+                DoXAbility();
         }
         if (Input.GetButtonDown("Y" + "_P" + playerIndex))
         {
-            DoYAbility();
+            if(canUseAbility)
+                DoYAbility();
         }
         if (Input.GetButtonDown("B" + "_P" + playerIndex))
         {
-            DoBAbility();
+            if(canUseAbility)
+                DoBAbility();
         }
 
 
@@ -123,7 +131,7 @@ public class Player : MonoBehaviour, IBumpable
             dir = (int)Mathf.Sign(horizontalInput);
         }  
 
-        if(!isattacking)
+        if(!isUsingAbility)
         {
             if (dir == -1)
             {
@@ -136,7 +144,6 @@ public class Player : MonoBehaviour, IBumpable
 
     public void StopAbility(string abilityString) {
         anim.SetBool(abilityString, false);
-        isattacking = false;
     }
 
     #region ChangeAbilities
@@ -160,7 +167,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void Move(float direction) {
-        if (isattacking)
+        if (isUsingAbility)
             return;
         rb.velocity = new Vector2(direction * maxSpeed, rb.velocity.y);
         anim.SetFloat("HorizontalMovement", horizontalInput);
@@ -193,7 +200,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void OnTriggerStay2D(Collider2D col) {
-        if (!isattacking)
+        if (!isUsingAbility)
             return;
         var player = col.GetComponent<Player>();
         if (!player)
@@ -232,6 +239,17 @@ public class Player : MonoBehaviour, IBumpable
         {
             playerIsDead = false;
         }
+    }
+
+    IEnumerator AbilityCoolDown(float coolDownTime)
+    {
+        isUsingAbility = true;
+        canUseAbility = false;
+        yield return new WaitForSeconds(coolDownTime);
+        isUsingAbility = false;
+        canUseAbility = true;
+        anim.SetBool("UsingAbility", false);
+
     }
 
 
@@ -380,64 +398,159 @@ public class Player : MonoBehaviour, IBumpable
     //X Abilities:
     private void DefaultPunch()
     {
-        isattacking = true;
-        anim.SetBool("DefaultAttack", true);
+        //Animation:
+        abilityNumber = 0;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
         rb.velocity = new Vector2(punchDistance * dir, 0);
-        print("Punching the Bastard");
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(.5f));
+        print("DefaultPunch");
     }
     private void Sword()
     {
-        print("Attacking with Sword");
+        //Animation:
+        abilityNumber = 1;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(.5f));
+        print("Sword");
     }
     private void Axe()
     {
-        print("Swinging Axe");
+        //Animation:
+        abilityNumber = 2;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(.5f));
+        print("Axe");
     }
     private void Hammer()
     {
-        print("Toss a Hammer Wil ya?");
-    }
+        //Animation:
+        abilityNumber = 3;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
 
+        //Ability Func:
 
-    //Y Abilities:
-    private void None()
-    {
-        print("You aint got nothing son");
-    }
-    private void Missile()
-    {
-        print("Shoot tha damn missile BOI");
-    }
-    private void PickUp()
-    {
-        print("He He imma pick u Up Fool");
-    }
-    private void FireShield()
-    {
-        print("Burn EveryBody around me");
-    }
-    private void BubbleGun()
-    {
-        print("You got stuck in bubble mate");
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(.5f));
+        print("Hammer");
     }
 
 
     //B Abilities:
     private void DefaultBlock()
     {
-        print("You just got BLOCKED");
+        //Animation:
+        abilityNumber = 4;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(0.5f));
+        print("DefaultBlock");
     }
     private void ReflectiveShield()
     {
-        print("Blocked and i send it back");
+        //Animation:
+        abilityNumber = 5;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(0.5f));
+        print("ReflectiveShield");
     }
     private void Barrier()
     {
-        print("Setting up a Barrier");
+        //Animation:
+        abilityNumber = 6;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(.5f));
+        print("Barrier");
     }
     private void Evade()
     {
-        print("Can't hit us, fool");
+        //Animation:
+        abilityNumber = 7;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+        anim.SetBool("UsingAbility", true);
+
+        //Ability Func:
+
+        //CoolDown And Debug:
+        StartCoroutine(AbilityCoolDown(.5f));
+        print("Evade");
+    }
+
+
+    //Y Abilities:
+    private void None()
+    {
+        //Animation:
+
+        //Ability Func:
+
+        //CoolDown and Debug:
+        print("None");
+    }
+    private void Missile()
+    {
+        //Animation:
+
+        //Ability Func:
+
+        //CoolDown and Debug:
+        print("Missile");
+    }
+    private void PickUp()
+    {
+        //Animation:
+
+        //Ability Func:
+
+        //CoolDown and Debug:
+        print("PickUp");
+    }
+    private void FireShield()
+    {
+        //Animation:
+
+        //Ability Func:
+
+        //CoolDown and Debug:
+        print("FireShield");
+    }
+    private void BubbleGun()
+    {
+        //Animation:
+
+        //Ability Func:
+
+        //CoolDown and Debug:
+        print("BubbleGun");
     }
     #endregion
 }

@@ -37,10 +37,6 @@ public class Countdown : MonoBehaviour
             min--;
             t = 60;
         }
-        else
-        {
-            print("Times UP!");
-        }
 
         if((int)t < 10)
         {

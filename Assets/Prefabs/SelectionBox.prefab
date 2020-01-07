@@ -137,9 +137,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprites:
   - {fileID: 21300000, guid: ef86c99d3403c8543a466b634a6084cd, type: 3}
-  - {fileID: 21300000, guid: 9b9647f9e51dc0844b372cc3efbd2e61, type: 3}
-  - {fileID: 21300000, guid: 64bfd3e3510902848ba1735222c5051c, type: 3}
   - {fileID: 21300000, guid: ee1d271feb9f6ac4f9dec10b571bde09, type: 3}
+  - {fileID: 21300000, guid: 64bfd3e3510902848ba1735222c5051c, type: 3}
+  - {fileID: 21300000, guid: 9b9647f9e51dc0844b372cc3efbd2e61, type: 3}
   displayText: 
   abilitySelection: 0
   onBumped:

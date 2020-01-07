@@ -41,9 +41,9 @@ public class Player : MonoBehaviour, IBumpable
 
     //X Abilities:
     bool chargingSword;
-    float swordCharge;
+    float swordCharge, slamPower;
     private float knockbackAmount; 
-    private bool knockbackState;
+    bool knockbackState, canSlam;
     #endregion
 
     #region Cooldown system
@@ -164,6 +164,7 @@ public class Player : MonoBehaviour, IBumpable
         UpdateCooldowns();
         JetPackFlying();
         HighJump();
+        SlamDunk();
     }
 
 
@@ -336,6 +337,15 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
 
+    private void SlamDunk()
+    {
+        if(canSlam)
+        {
+            slamPower += Time.deltaTime * 5;
+            rb.velocity = new Vector2(0, -Manager.worldOptions.jumpHeight * slamPower);
+        }
+    }
+
     IEnumerator AbilityDuration(float duration)
     {
         yield return new WaitForSeconds(duration);
@@ -377,7 +387,7 @@ public class Player : MonoBehaviour, IBumpable
                 Axe();
                 break;
             case XAbility.Hammer:
-                Hammer();
+                StartCoroutine(Hammer());
                 break;
             default:
                 break;
@@ -537,7 +547,7 @@ public class Player : MonoBehaviour, IBumpable
         StartCoroutine(AbilityDuration(.5f));
         print("Axe");
     }
-    private void Hammer()
+    IEnumerator Hammer()
     {
         //Animation:
         abilityNumber = 3;
@@ -545,9 +555,14 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        slamPower = -1.2f;
+        canSlam = true;
+        coyoteJump = false;
+        yield return new WaitUntil(() => coyoteJump);
+        canSlam = false;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
+        StartCoroutine(AbilityDuration(.2f));
         print("Hammer");
     }
     #endregion

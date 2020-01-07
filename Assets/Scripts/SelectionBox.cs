@@ -30,9 +30,11 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     int abilityType;
     int abilitySubType;
+    bool canGetAbility;
 
     void Start()
     {
+        canGetAbility = true;
         manager = GameObject.FindGameObjectWithTag("Manage");
         textMesh = GetComponent<TextMeshPro>();
 
@@ -53,7 +55,6 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     public void Bumped(Player bumpee, Vector2 collisionVector) {
         //Invoke Unity Events
-
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             if(bumpee.playerNumber.ToString() == "1")
@@ -72,27 +73,31 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
         if(abilitySelection && bumpee.stockCount > 1)
         {
-            bumpee.LooseStock();
-
-            switch (abilityType)
+            if(canGetAbility)
             {
-                case 0:
-                    bumpee.ChangeAAbility(newAAbility);
-                    break;
-                case 1:
-                    bumpee.ChangeXAbility(newXAbility);
-                    break;
-                case 2:
-                    bumpee.ChangeYAbility(newYAbility);
-                    break;
-                case 3:
-                    bumpee.ChangeBAbility(newBAbility);
-                    break;
-                default:
-                    break;
-            }
+                canGetAbility = false;
+                bumpee.LooseStock();
 
-            StartCoroutine(SelfDestruct());
+                switch (abilityType)
+                {
+                    case 0:
+                        bumpee.ChangeAAbility(newAAbility);
+                        break;
+                    case 1:
+                        bumpee.ChangeXAbility(newXAbility);
+                        break;
+                    case 2:
+                        bumpee.ChangeYAbility(newYAbility);
+                        break;
+                    case 3:
+                        bumpee.ChangeBAbility(newBAbility);
+                        break;
+                    default:
+                        break;
+                }
+
+                StartCoroutine(SelfDestruct());
+            }
         }
 
         BumpEffect(bumpee, collisionVector);
@@ -107,7 +112,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     IEnumerator SelfDestruct()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 

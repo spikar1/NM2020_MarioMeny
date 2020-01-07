@@ -225,6 +225,11 @@ PrefabInstance:
       propertyPath: displayText
       value: Settings
       objectReference: {fileID: 0}
+    - target: {fileID: 1580853639296073499, guid: 23a74348687311f44b1b22308858785c,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2805473018038876124, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
       propertyPath: m_Name
@@ -335,7 +340,7 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 0000000005baa8c36b7dbdf0e913eea969e8a76cc5978cb9
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
-  m_LightOrder: 0
+  m_LightOrder: 1
   m_AlphaBlendOnOverlap: 0
   m_ShadowIntensity: 0
   m_ShadowVolumeIntensity: 0
@@ -6048,6 +6053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: displayText
       value: Start!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580853639296073499, guid: 23a74348687311f44b1b22308858785c,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2805473018038876124, guid: 23a74348687311f44b1b22308858785c,
         type: 3}

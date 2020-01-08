@@ -21,16 +21,16 @@ public class MagicMissile : MonoBehaviour
         var y = transform.position.y;
 
         while (t < 1) {
-            y += Manager.worldOptions.magicMissileYCurve.Evaluate(t) * Manager.worldOptions.magicMissileMaxSpeed * Time.deltaTime;
-            var x = Mathf.MoveTowards(transform.position.x, target.transform.position.x, Manager.worldOptions.magicMissileHomingSpeed * Time.deltaTime);
+            y += Manager.WorldOptions.magicMissileYCurve.Evaluate(t) * Manager.WorldOptions.magicMissileMaxSpeed * Time.deltaTime;
+            var x = Mathf.MoveTowards(transform.position.x, target.transform.position.x, Manager.WorldOptions.magicMissileHomingSpeed * Time.deltaTime);
 
             transform.position = new Vector3(x, y);
             t += Time.deltaTime;
             yield return null;
         }
         while (true) {
-            y += Manager.worldOptions.magicMissileYCurve.Evaluate(1) * Time.deltaTime;
-            var x = Mathf.MoveTowards(transform.position.x, target.transform.position.x, Manager.worldOptions.magicMissileHomingSpeed * Time.deltaTime);
+            y += Manager.WorldOptions.magicMissileYCurve.Evaluate(1) * Time.deltaTime;
+            var x = Mathf.MoveTowards(transform.position.x, target.transform.position.x, Manager.WorldOptions.magicMissileHomingSpeed * Time.deltaTime);
 
             transform.position = new Vector3(x, y);
             yield return null;

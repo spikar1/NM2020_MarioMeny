@@ -27,7 +27,7 @@ MonoBehaviour:
   maxSpeed: 8
   acceleration: 1
   deaccelerationSpeed: 1
-  iceFloorAcceleration: 0
+  iceFloorAcceleration: 0.1
   jumpHeight: 10
   stockCount: 5
   punchDistance: 15

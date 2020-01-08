@@ -17,6 +17,8 @@ public class Player : MonoBehaviour, IBumpable
     public int stockCount, playerNumber = 1;
     public bool playerIsDead;
 
+
+
     //Ref:
     [HideInInspector]
     public Rigidbody2D rb;
@@ -65,6 +67,19 @@ public class Player : MonoBehaviour, IBumpable
     private static int iceIndex = -1;
 
     #endregion
+    float groundedXOffset = .43f;
+    float groundedYOffset = .7f;
+
+    bool Grounded {
+        get {
+            bool b = !Physics2D.Linecast(
+                transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
+                transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset
+                );
+            print("Bool - " + b);
+            return b;
+        }
+    }
 
     private void Awake() {
         //Ref:
@@ -202,6 +217,7 @@ public class Player : MonoBehaviour, IBumpable
 
         if (Input.GetKeyDown(KeyCode.I))
             isIcyFloor = true;
+
         if (Input.GetKeyDown(KeyCode.K))
             isIcyFloor = false;
 
@@ -274,7 +290,7 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetFloat("HorizontalMovement", horizontalInput);
 
             var acc = Mathf.Sign(rb.velocity.x) == Mathf.Sign(direction) ? Manager.WorldOptions.acceleration : Manager.WorldOptions.deaccelerationSpeed;
-            if (isIcyFloor && iceIndex != playerNumber)
+            if (isIcyFloor && iceIndex != playerNumber && Grounded)
                 acc = Manager.WorldOptions.iceFloorAcceleration;
 
             if (canMove)
@@ -285,7 +301,7 @@ public class Player : MonoBehaviour, IBumpable
         }
         else {
             var acc = Manager.WorldOptions.deaccelerationSpeed;
-            if (isIcyFloor && iceIndex != playerNumber)
+            if (isIcyFloor && iceIndex != playerNumber && Grounded)
                 acc = Manager.WorldOptions.iceFloorAcceleration;
             rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, 0, acc), rb.velocity.y);
         }
@@ -629,8 +645,17 @@ public class Player : MonoBehaviour, IBumpable
         rb.gravityScale = 0.1f;
         swordCharge = 0;
         chargingSword = true;
-        
-        yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
+
+        var t = 0f;
+        var p = transform.position;
+        while (!Input.GetButtonUp("X" + "_P" + playerIndex)) {
+            transform.position = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
+            
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        //yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
 
         //Animation:
         abilityNumber = 1;
@@ -804,4 +829,13 @@ public class Player : MonoBehaviour, IBumpable
     }
     #endregion
     #endregion
+
+    private void OnDrawGizmosSelected() {
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(
+            transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
+            transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset
+            );
+    }
 }

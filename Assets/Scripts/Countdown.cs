@@ -37,10 +37,6 @@ public class Countdown : MonoBehaviour
             min--;
             t = 60;
         }
-        else
-        {
-            print("Times UP!");
-        }
 
         if((int)t < 10)
         {
@@ -69,5 +65,11 @@ public class Countdown : MonoBehaviour
             GameObject manager = GameObject.FindGameObjectWithTag("Manage");
             manager.GetComponent<Manager>().sceneLoader.LoadScene(1);
         }
+    }
+
+    public void RushCountDown()
+    {
+        min = 0;
+        t = 4;
     }
 }

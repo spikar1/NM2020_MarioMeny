@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _worldOptions: {fileID: 11400000, guid: eb9fc7c7458d40e49900646c1c967c38, type: 2}
-  sceneLoader: {fileID: 0}
+  sceneLoader: {fileID: 166531019}
 --- !u!4 &166531018
 Transform:
   m_ObjectHideFlags: 0
@@ -224,6 +224,11 @@ PrefabInstance:
         type: 3}
       propertyPath: displayText
       value: Settings
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580853639296073499, guid: 23a74348687311f44b1b22308858785c,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2805473018038876124, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
@@ -335,7 +340,7 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 0000000005baa8c36b7dbdf0e913eea969e8a76cc5978cb9
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
-  m_LightOrder: 0
+  m_LightOrder: 1
   m_AlphaBlendOnOverlap: 0
   m_ShadowIntensity: 0
   m_ShadowVolumeIntensity: 0
@@ -646,7 +651,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 5.27
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -670,7 +675,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511217643}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1.58, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6048,6 +6053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: displayText
       value: Start!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580853639296073499, guid: 23a74348687311f44b1b22308858785c,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2805473018038876124, guid: 23a74348687311f44b1b22308858785c,
         type: 3}

@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 using System;
 using TMPro;
 
+using Random = UnityEngine.Random;
+
 public class SelectionBox : MonoBehaviour, IBumpable
 {
     Vector2 desiredDirection;
@@ -30,9 +32,11 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     int abilityType;
     int abilitySubType;
+    bool canGetAbility;
 
     void Start()
     {
+        canGetAbility = true;
         manager = GameObject.FindGameObjectWithTag("Manage");
         textMesh = GetComponent<TextMeshPro>();
 
@@ -40,6 +44,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
         if(abilitySelection)
         {
             abilityType = UnityEngine.Random.Range(0, 4);
+            abilityType = DetermineAbilityType();
             rend = GetComponentInChildren<SpriteRenderer>();
             rend.sprite = sprites[abilityType];
             SetAbility();
@@ -50,10 +55,45 @@ public class SelectionBox : MonoBehaviour, IBumpable
         }
     }
 
+    private int DetermineAbilityType()
+    {
+        //Sum total amount of abilities
+        int sum = 0;
+        int aSum = Manager.WorldOptions.availableAAbilities.Count;
+        int xSum = Manager.WorldOptions.availableXAbilities.Count;
+        int ySum = Manager.WorldOptions.availableYAbilities.Count;
+        int bSum = Manager.WorldOptions.availableBAbilities.Count;
+        sum += aSum;
+        sum += xSum;
+        sum += ySum;
+        sum += bSum;
+
+        //If the total amount of abilites is zero....
+        if (sum <= 0)
+            throw new Exception("No available abilities found in world options");
+
+        var r = Random.Range(0, sum);
+
+        //Use a "weighted" random to determine ability type
+        r -= aSum;
+        if (r < 0)
+            return 0;
+        r -= xSum;
+        if (r < 0)
+            return 1;
+        r -= ySum;
+        if (r < 0)
+            return 2;
+        r -= bSum;
+        if (r < 0)
+            return 3;
+
+        //If this happens, I do not know how..... :s
+        throw new Exception("Something is not right...");
+    }
 
     public void Bumped(Player bumpee, Vector2 collisionVector) {
         //Invoke Unity Events
-
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             if(bumpee.playerNumber.ToString() == "1")
@@ -72,27 +112,32 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
         if(abilitySelection && bumpee.stockCount > 1)
         {
-            bumpee.LooseStock();
-
-            switch (abilityType)
+            if(canGetAbility)
             {
-                case 0:
-                    bumpee.ChangeAAbility(newAAbility);
-                    break;
-                case 1:
-                    bumpee.ChangeXAbility(newXAbility);
-                    break;
-                case 2:
-                    bumpee.ChangeYAbility(newYAbility);
-                    break;
-                case 3:
-                    bumpee.ChangeBAbility(newBAbility);
-                    break;
-                default:
-                    break;
-            }
+                canGetAbility = false;
+                bumpee.LooseStock();
+                UpdatePlayersAlive();
 
-            StartCoroutine(SelfDestruct());
+                switch (abilityType)
+                {
+                    case 0:
+                        bumpee.ChangeAAbility(newAAbility);
+                        break;
+                    case 1:
+                        bumpee.ChangeXAbility(newXAbility);
+                        break;
+                    case 2:
+                        bumpee.ChangeYAbility(newYAbility);
+                        break;
+                    case 3:
+                        bumpee.ChangeBAbility(newBAbility);
+                        break;
+                    default:
+                        break;
+                }
+
+                StartCoroutine(SelfDestruct());
+            }
         }
 
         BumpEffect(bumpee, collisionVector);
@@ -107,7 +152,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     IEnumerator SelfDestruct()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 
@@ -124,8 +169,13 @@ public class SelectionBox : MonoBehaviour, IBumpable
         switch (abilityType)
         {
             case 0:
+                var abilityListA = Manager.WorldOptions.availableAAbilities;
+                var rA = Random.Range(0, abilityListA.Count);
+                textMesh.text = abilityListA[rA].ToString();
+                newAAbility = abilityListA[rA];
+
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(1,Enum.GetValues(typeof(AAbility)).Length);
+                /*abilitySubType = UnityEngine.Random.Range(1,Enum.GetValues(typeof(AAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(AAbility)))
                 {
                     if(i == abilitySubType)
@@ -134,12 +184,17 @@ public class SelectionBox : MonoBehaviour, IBumpable
                         textMesh.text = Enum.GetName(typeof(AAbility), i);
                         newAAbility = (AAbility)i;
                     }
-                }         
+                }*/
                 break;
 
             case 1:
+                var abilityListX = Manager.WorldOptions.availableXAbilities;
+                var rX = Random.Range(0, abilityListX.Count);
+                textMesh.text = abilityListX[rX].ToString();
+                newXAbility = abilityListX[rX];
+
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(XAbility)).Length);
+                /*abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(XAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(XAbility)))
                 {
                     if (i == abilitySubType)
@@ -148,12 +203,17 @@ public class SelectionBox : MonoBehaviour, IBumpable
                         textMesh.text = Enum.GetName(typeof(XAbility), i);
                         newXAbility = (XAbility)i;
                     }
-                }
+                }*/
                 break;
 
             case 2:
+                var abilityListY = Manager.WorldOptions.availableYAbilities;
+                var rY = Random.Range(0, abilityListY.Count);
+                textMesh.text = abilityListY[rY].ToString();
+                newYAbility = abilityListY[rY];
+
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(YAbility)).Length);
+                /*abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(YAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(YAbility)))
                 {
                     if (i == abilitySubType)
@@ -162,12 +222,17 @@ public class SelectionBox : MonoBehaviour, IBumpable
                         textMesh.text = Enum.GetName(typeof(YAbility), i);
                         newYAbility = (YAbility)i;
                     }
-                }
+                }*/
                 break;
 
             case 3:
+                var abilityListB = Manager.WorldOptions.availableBAbilities;
+                var rB = Random.Range(0, abilityListB.Count);
+                textMesh.text = abilityListB[rB].ToString();
+                newBAbility = abilityListB[rB];
+
                 //First get Enum length, then select one random:
-                abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(BAbility)).Length);
+                /*abilitySubType = UnityEngine.Random.Range(1, Enum.GetValues(typeof(BAbility)).Length);
                 foreach (int i in Enum.GetValues(typeof(BAbility)))
                 {
                     if (i == abilitySubType)
@@ -176,7 +241,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
                         textMesh.text = Enum.GetName(typeof(BAbility), i);
                         newBAbility = (BAbility)i;
                     }
-                }
+                }*/
                 break;
             default:
                 break;
@@ -197,5 +262,15 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
         transform.position = Vector2.MoveTowards(transform.position, startPos + (offset * decayingOffset), 0.1f);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, (offset.x * -30) * decayingOffset), 1f);
+    }
+
+    private void UpdatePlayersAlive()
+    {
+        GameObject selectionChecker = GameObject.FindGameObjectWithTag("CheckSelection");
+        var selectionCheck = selectionChecker.GetComponent<CheckSelection>();
+        if(selectionCheck != null)
+        {
+            selectionCheck.checkDeadPlayers();
+        }
     }
 }

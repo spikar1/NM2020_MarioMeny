@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aDefault: 0
   xDefault: 0
-  yDefault: 0
+  yDefault: 4
   bDefault: 0
   DefaultJumpSprite: {fileID: 0}
   missilePrefab: {fileID: 1600884451505982857, guid: f9c8939b166617a4fa270c52bb3dc16f,
@@ -36,7 +36,12 @@ MonoBehaviour:
   missileCooldownTime: 3
   bubbleGunCooldownTime: 3
   missileSpeed: 4
-  maxSwordCharge: 10
+  maxSwordCharge: 1
   bubbleSpeed: 1
   bubbleMaxLifetime: 12
   MaxJetpackDuration: 2
+  bubbleGunProjectileSpeed: 8
+  availableAAbilities: 010000000200000003000000
+  availableXAbilities: 010000000200000003000000
+  availableYAbilities: 040000000300000002000000
+  availableBAbilities: 010000000200000003000000

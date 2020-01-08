@@ -6,16 +6,16 @@ abstract public class Projectile : MonoBehaviour
 {
     private Rigidbody2D rb;
     internal int dir = 1;
-
+    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();    
     }
 
 
-    public void Initialize(int dir)
+    public void Initialize(int dir, float speed)
     {
-        rb.velocity = new Vector2(dir * Manager.worldOptions.missileSpeed, 0);
+        rb.velocity = new Vector2(dir * speed, 0);
         this.dir = dir;
     }
 

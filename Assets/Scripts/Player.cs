@@ -42,7 +42,6 @@ public class Player : MonoBehaviour, IBumpable
     int jumpCount;
     float jetpackAmount, extraHeight;
     bool usingJetpack, canJetpack, coyoteJump, canHighJump;
-    Quaternion desiredRot;
 
     //X Abilities:
     bool chargingSword;
@@ -89,7 +88,6 @@ public class Player : MonoBehaviour, IBumpable
 
         startGravity = rb.gravityScale;
         playerIsDead = false;
-        desiredRot = Quaternion.identity;
     }
 
     void FixedUpdate() {
@@ -247,6 +245,7 @@ public class Player : MonoBehaviour, IBumpable
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.GetContact(0).normal.y > 0)
         {
+            print(name + "Collided with" +  collision.collider);
             coyoteJump = true;
             usingJetpack = false;
             jetpackAmount = Manager.WorldOptions.MaxJetpackDuration;
@@ -470,9 +469,10 @@ public class Player : MonoBehaviour, IBumpable
     private void DefaultJump() {
         if(coyoteJump)
         {
+            print("I Jumped");
             anim.SetBool("JumpAnim", true);
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
-            coyoteJump = false;  
+            coyoteJump = false;
         }
     }
     private void DoubleJump()

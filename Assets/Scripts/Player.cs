@@ -48,16 +48,16 @@ public class Player : MonoBehaviour, IBumpable
 
     #region Cooldown system
     private float aCooldown, xCooldown, yCooldown, bCooldown;
-    private float missileCooldown => Manager.worldOptions.missileCooldownTime;
-    private float bubbleGunCooldown => Manager.worldOptions.bubbleGunCooldownTime;
+    private float missileCooldown => Manager.WorldOptions.missileCooldownTime;
+    private float bubbleGunCooldown => Manager.WorldOptions.bubbleGunCooldownTime;
     #endregion
 
     #region Abilities:
-    //Abilities:
-    public AAbility aAbility = Manager.worldOptions.aDefault;
-    public XAbility xAbility = Manager.worldOptions.xDefault;
-    public YAbility yAbility = Manager.worldOptions.yDefault;
-    public BAbility bAbility = Manager.worldOptions.bDefault;
+    public BAbility bAbility = BAbility.DefaultBlock;
+    public AAbility aAbility = AAbility.DefaultJump;
+    public XAbility xAbility = XAbility.DefaultPunch;
+    public YAbility yAbility = YAbility.None;
+    
     #endregion
 
     private void Awake() {
@@ -69,13 +69,18 @@ public class Player : MonoBehaviour, IBumpable
 
         //Dont Destroy:
         DontDestroyOnLoad(gameObject);
+
+        bAbility = Manager.WorldOptions.bDefault;
+        aAbility = Manager.WorldOptions.aDefault;
+        xAbility = Manager.WorldOptions.xDefault;
+        yAbility = Manager.WorldOptions.yDefault;
     }
 
     private void Start() {
-        stockCount = Manager.worldOptions.stockCount;
+        stockCount = Manager.WorldOptions.stockCount;
         textMesh.text = "P" + playerNumber;
-        textMesh.color = Manager.worldOptions.playerColors[playerNumber - 1];
-        rend.color = Manager.worldOptions.playerColors[playerNumber - 1];
+        textMesh.color = Manager.WorldOptions.playerColors[playerNumber - 1];
+        rend.color = Manager.WorldOptions.playerColors[playerNumber - 1];
 
         startGravity = rb.gravityScale;
         playerIsDead = false;
@@ -111,13 +116,13 @@ public class Player : MonoBehaviour, IBumpable
        
         if(chargingSword)
         {
-            if(swordCharge < Manager.worldOptions.maxSwordCharge)
+            if(swordCharge < Manager.WorldOptions.maxSwordCharge)
             {
                 swordCharge += Time.deltaTime;
             }
             else
             {
-                swordCharge = Manager.worldOptions.maxSwordCharge;
+                swordCharge = Manager.WorldOptions.maxSwordCharge;
             }
         }
 
@@ -215,7 +220,7 @@ public class Player : MonoBehaviour, IBumpable
     private void Move(float direction) {
         if (isUsingAbility)
             return;
-        rb.velocity = new Vector2(direction * Manager.worldOptions.maxSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(direction * Manager.WorldOptions.maxSpeed, rb.velocity.y);
         anim.SetFloat("HorizontalMovement", horizontalInput);
     }
 
@@ -230,7 +235,7 @@ public class Player : MonoBehaviour, IBumpable
         {
             coyoteJump = true;
             usingJetpack = false;
-            jetpackAmount = Manager.worldOptions.MaxJetpackDuration;
+            jetpackAmount = Manager.WorldOptions.MaxJetpackDuration;
             anim.SetBool("JumpAnim", false);
         }
 
@@ -258,7 +263,7 @@ public class Player : MonoBehaviour, IBumpable
 
     public void ResetKnockback()
     {
-        knockbackAmount = Manager.worldOptions.KnockbackStartAmount;
+        knockbackAmount = Manager.WorldOptions.KnockbackStartAmount;
     }
 
     public void Damage(Vector2 dir) {
@@ -301,7 +306,7 @@ public class Player : MonoBehaviour, IBumpable
             if(Input.GetButton("A" + "_P" + playerIndex))
             {
                 jetpackAmount -= Time.deltaTime;
-                rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight * .3f);
+                rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight * .3f);
                 anim.SetBool("JumpAnim", false);
                 anim.SetBool("IsRocket", true);
             }
@@ -326,7 +331,7 @@ public class Player : MonoBehaviour, IBumpable
         {
             if (Input.GetButton("A" + "_P" + playerIndex))
             {
-                rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
+                rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
                 extraHeight += Time.deltaTime;
             }
         }
@@ -342,7 +347,7 @@ public class Player : MonoBehaviour, IBumpable
         if(canSlam)
         {
             slamPower += Time.deltaTime * 5;
-            rb.velocity = new Vector2(0, -Manager.worldOptions.jumpHeight * slamPower);
+            rb.velocity = new Vector2(0, -Manager.WorldOptions.jumpHeight * slamPower);
         }
     }
 
@@ -446,7 +451,7 @@ public class Player : MonoBehaviour, IBumpable
         if(coyoteJump)
         {
             anim.SetBool("JumpAnim", true);
-            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;  
         }
     }
@@ -461,7 +466,7 @@ public class Player : MonoBehaviour, IBumpable
         {
             jumpCount--;
             anim.SetBool("JumpAnim", true);
-            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             print("Can Double Jump");
             coyoteJump = false;
         }
@@ -471,7 +476,7 @@ public class Player : MonoBehaviour, IBumpable
         if (coyoteJump)
         {
             anim.SetBool("JumpAnim", true);
-            rb.velocity = new Vector2(rb.velocity.x, Manager.worldOptions.jumpHeight);
+            rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;
             canJetpack = true;
         }
@@ -504,7 +509,7 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
-        rb.velocity = new Vector2(Manager.worldOptions.punchDistance * dir, 0);
+        rb.velocity = new Vector2(Manager.WorldOptions.punchDistance * dir, 0);
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(.5f));
@@ -642,8 +647,8 @@ public class Player : MonoBehaviour, IBumpable
         //Animation:
 
         //Ability Func:
-        var missile = Instantiate(Manager.worldOptions.missilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
-        missile.GetComponent<Projectile>().Initialize(dir);
+        var missile = Instantiate(Manager.WorldOptions.missilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
+        missile.GetComponent<Projectile>().Initialize(dir, Manager.WorldOptions.missileSpeed);
         //CoolDown and Debug:
         yCooldown += missileCooldown;
         print("Missile");
@@ -673,8 +678,8 @@ public class Player : MonoBehaviour, IBumpable
         //Animation:
 
         //Ability Func:
-        var bubbleProjectile = Instantiate(Manager.worldOptions.bubbleProjectilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
-        bubbleProjectile.GetComponent<BubbleProjectile>().Initialize(dir);
+        var bubbleProjectile = Instantiate(Manager.WorldOptions.bubbleProjectilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
+        bubbleProjectile.GetComponent<BubbleProjectile>().Initialize(dir, Manager.WorldOptions.bubbleGunProjectileSpeed);
         //CoolDown and Debug:
         yCooldown += bubbleGunCooldown;
         print("Bubble Gun");

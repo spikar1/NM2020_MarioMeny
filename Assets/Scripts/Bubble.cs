@@ -19,7 +19,7 @@ public class Bubble : MonoBehaviour
     {
         lifeTime += Time.deltaTime;
 
-        if (lifeTime > Manager.worldOptions.bubbleMaxLifetime)
+        if (lifeTime > Manager.WorldOptions.bubbleMaxLifetime)
         {
             BurstBubble();
         }
@@ -32,7 +32,7 @@ public class Bubble : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + Vector2.up * Manager.worldOptions.bubbleSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + Vector2.up * Manager.WorldOptions.bubbleSpeed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

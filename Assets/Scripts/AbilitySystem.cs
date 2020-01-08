@@ -24,9 +24,9 @@ static public class AbilityExtensions
     static public Sprite GetIconA(this AAbility ability) {
         switch (ability) {
             case AAbility.DefaultJump:
-                return Manager.worldOptions.DefaultJumpSprite;
+                return Manager.WorldOptions.DefaultJumpSprite;
             case AAbility.DoubleJump:
-                return Manager.worldOptions.DefaultJumpSprite;
+                return Manager.WorldOptions.DefaultJumpSprite;
             default:
                 throw new Exception("Missing sprite for " + ability.ToString());
         }

@@ -27,6 +27,8 @@ public class WorldOptions : ScriptableObject
     public int stockCount = 5;
     public float punchDistance = 15;
     public float KnockbackStartAmount = 10;
+    public float blockedKnockback = 0.2f;
+    public float knockbackScaler = 2;
 
     [Header("Player Colors")]
     public Color[] playerColors;

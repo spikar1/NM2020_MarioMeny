@@ -27,11 +27,13 @@ MonoBehaviour:
   maxSpeed: 8
   acceleration: 1
   deaccelerationSpeed: 1
-  iceFloorAcceleration: 0.3
+  iceFloorAcceleration: 0
   jumpHeight: 10
   stockCount: 5
   punchDistance: 15
   KnockbackStartAmount: 10
+  blockedKnockback: 0.2
+  knockbackScaler: 2
   playerColors:
   - {r: 1, g: 0.5896226, b: 0.5896226, a: 1}
   - {r: 0.66498154, g: 1, b: 0.6462264, a: 1}
@@ -60,5 +62,5 @@ MonoBehaviour:
   blizzardDuration: 4
   availableAAbilities: 010000000200000003000000
   availableXAbilities: 010000000200000003000000
-  availableYAbilities: 040000000300000002000000
+  availableYAbilities: 040000000300000003000000
   availableBAbilities: 010000000200000003000000

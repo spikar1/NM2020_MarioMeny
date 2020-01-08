@@ -163,7 +163,6 @@ public class Player : MonoBehaviour, IBumpable
             {
                 canUseAbility = false;
                 isUsingAbility = true;
-                isBlocking = true;
                 DoBAbility();
             }
         }
@@ -322,11 +321,16 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void OnTriggerStay2D(Collider2D col) {
-        if (!isUsingAbility)
+        if (!isAttacking)
             return;
         var player = col.GetComponent<Player>();
         if (!player)
             return;
+
+        isAttacking = false;
+        isUsingAbility = false;
+        anim.SetBool("UsingAbility", false);
+
         player.Damage((player.transform.position - transform.position).normalized);
     }
 
@@ -336,16 +340,35 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     public void Damage(Vector2 dir) {
-        rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
-        StartCoroutine(KnockbackTimer());      
-        knockbackAmount += 1;
+        if(isBlocking)
+        {
+            rb.velocity = dir * knockbackAmount * Manager.WorldOptions.blockedKnockback + (Vector2.up * knockbackAmount * 0.5f * Manager.WorldOptions.blockedKnockback);
+            StartCoroutine(KnockbackTimer());
+            knockbackAmount += Manager.WorldOptions.knockbackScaler * Manager.WorldOptions.blockedKnockback;
+        }
+        else
+        {
+            rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
+            StartCoroutine(KnockbackTimer());      
+            knockbackAmount += Manager.WorldOptions.knockbackScaler;
+        }
     }
 
     IEnumerator KnockbackTimer()
     {
-        knockbackState = true;
-        yield return new WaitForSeconds(knockbackAmount * 0.05f);
-        knockbackState = false;
+        if(isBlocking)
+        {
+            knockbackState = true;
+            yield return new WaitForSeconds(knockbackAmount * 0.05f * Manager.WorldOptions.blockedKnockback);
+            knockbackState = false;
+        }
+        else
+        {
+            knockbackState = true;
+            yield return new WaitForSeconds(knockbackAmount * 0.05f);
+            knockbackState = false;
+        }
+
     }
 
     public void LooseStock()
@@ -586,6 +609,7 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        isAttacking = true;
         rb.velocity = new Vector2(Manager.WorldOptions.punchDistance * dir, 0);
 
         //CoolDown And Debug:
@@ -596,7 +620,7 @@ public class Player : MonoBehaviour, IBumpable
     IEnumerator Sword()
     {
         //Animation:
-        abilityNumber = 1;
+        abilityNumber = 8;
         anim.SetFloat("AbilityNumber", abilityNumber);
         anim.SetBool("UsingAbility", true);
 
@@ -607,7 +631,13 @@ public class Player : MonoBehaviour, IBumpable
         chargingSword = true;
         
         yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
+
+        //Animation:
+        abilityNumber = 1;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+
         chargingSword = false;
+        isAttacking = true;
         rb.velocity = new Vector2(swordCharge * 40 * dir, 0);
         rb.gravityScale = 0;
 
@@ -663,6 +693,7 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        isBlocking = true;
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(0.5f));

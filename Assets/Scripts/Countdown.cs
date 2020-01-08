@@ -66,4 +66,10 @@ public class Countdown : MonoBehaviour
             manager.GetComponent<Manager>().sceneLoader.LoadScene(1);
         }
     }
+
+    public void RushCountDown()
+    {
+        min = 0;
+        t = 4;
+    }
 }

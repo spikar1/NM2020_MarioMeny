@@ -139,7 +139,7 @@ MonoBehaviour:
   - {x: -0.44900513, y: -0.048988342, z: 0}
   m_ShapePathHash: 785579775
   m_Mesh: {fileID: 0}
-  m_InstanceId: 45226
+  m_InstanceId: 39948
 --- !u!1 &8432251687096783399
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,10 +204,11 @@ MonoBehaviour:
   anim: {fileID: 0}
   rend: {fileID: 0}
   textMesh: {fileID: 0}
+  spriteTransform: {fileID: 2687339978417362781}
+  bAbility: 0
   aAbility: 0
   xAbility: 0
   yAbility: 0
-  bAbility: 0
 --- !u!50 &8432251687096783401
 Rigidbody2D:
   serializedVersion: 4

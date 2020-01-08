@@ -29,15 +29,20 @@ public class Player : MonoBehaviour, IBumpable
     #endregion
 
     #region AbilityFunction Related
-    private bool isUsingAbility = false;
-    private bool canUseAbility = true;
-    float abilityNumber;
+    //Player States:
+    bool isUsingAbility = false;
+    bool isAttacking = false;
+    bool isBlocking = false;
+
+    bool canUseAbility = true;
     float startGravity;
+    float abilityNumber;
 
     //A Abilities:
     int jumpCount;
     float jetpackAmount, extraHeight;
     bool usingJetpack, canJetpack, coyoteJump, canHighJump;
+    Quaternion desiredRot;
 
     //X Abilities:
     bool chargingSword;
@@ -84,6 +89,7 @@ public class Player : MonoBehaviour, IBumpable
 
         startGravity = rb.gravityScale;
         playerIsDead = false;
+        desiredRot = Quaternion.identity;
     }
 
     void FixedUpdate() {
@@ -129,7 +135,9 @@ public class Player : MonoBehaviour, IBumpable
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) 
         {
             if(canUseAbility)
+            {
                 DoAAbility();
+            }
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
         {
@@ -137,6 +145,7 @@ public class Player : MonoBehaviour, IBumpable
             {
                 canUseAbility = false;
                 isUsingAbility = true;
+                isAttacking = true;
                 DoXAbility();
             }
         }
@@ -147,8 +156,13 @@ public class Player : MonoBehaviour, IBumpable
         }
         if (Input.GetButtonDown("B" + "_P" + playerIndex))
         {
-            if(canUseAbility)
+            if (canUseAbility)
+            {
+                canUseAbility = false;
+                isUsingAbility = true;
+                isBlocking = true;
                 DoBAbility();
+            }
         }
 
 
@@ -239,7 +253,6 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetBool("JumpAnim", false);
         }
 
-
         Transform other = collision.collider.transform;
         float otherY = other.position.y;
         IBumpable bumpable = other.GetComponent<IBumpable>();
@@ -297,9 +310,10 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void JetPackFlying()
-    {
+    {      
         if (!canUseAbility)
             return;
+        
 
         if(usingJetpack)
         {
@@ -315,6 +329,10 @@ public class Player : MonoBehaviour, IBumpable
                 anim.SetBool("JumpAnim", true);
                 anim.SetBool("IsRocket", false);
             }
+        }
+        else
+        {
+            //anim.SetBool("IsRocket", false);
         }
 
         if(jetpackAmount <= 0)
@@ -356,6 +374,8 @@ public class Player : MonoBehaviour, IBumpable
         yield return new WaitForSeconds(duration);
         isUsingAbility = false;
         canUseAbility = true;
+        isAttacking = false;
+        isBlocking = false;
         anim.SetBool("UsingAbility", false);
     }
 

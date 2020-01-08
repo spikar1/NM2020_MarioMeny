@@ -116,6 +116,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
             {
                 canGetAbility = false;
                 bumpee.LooseStock();
+                UpdatePlayersAlive();
 
                 switch (abilityType)
                 {
@@ -261,5 +262,15 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
         transform.position = Vector2.MoveTowards(transform.position, startPos + (offset * decayingOffset), 0.1f);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, (offset.x * -30) * decayingOffset), 1f);
+    }
+
+    private void UpdatePlayersAlive()
+    {
+        GameObject selectionChecker = GameObject.FindGameObjectWithTag("CheckSelection");
+        var selectionCheck = selectionChecker.GetComponent<CheckSelection>();
+        if(selectionCheck != null)
+        {
+            selectionCheck.checkDeadPlayers();
+        }
     }
 }

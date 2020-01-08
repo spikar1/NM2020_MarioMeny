@@ -114,9 +114,6 @@ public class Player : MonoBehaviour, IBumpable
             if (Input.GetKey(KeyCode.D))
                 horizontalInput += 1;
         }
-
-        if (Manager.debugMode)
-            DebugUpdate();
        
         if(chargingSword)
         {
@@ -128,6 +125,10 @@ public class Player : MonoBehaviour, IBumpable
             {
                 swordCharge = Manager.WorldOptions.maxSwordCharge;
             }
+        }
+
+        if (Manager.debugMode) {
+            DebugUpdate();
         }
 
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) 
@@ -195,14 +196,29 @@ public class Player : MonoBehaviour, IBumpable
 
     private void DebugUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            DoAAbility();
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            DoXAbility();
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            DoYAbility();
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            DoBAbility();
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            if (canUseAbility)
+                DoAAbility();
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            if (canUseAbility) {
+                canUseAbility = false;
+                isUsingAbility = true;
+                isAttacking = true;
+                DoXAbility();
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            if (canUseAbility)
+                DoYAbility();
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            if (canUseAbility)
+                DoBAbility();
+
+        }
     }
 
     public void StopAbility(string abilityString) {

@@ -18,7 +18,10 @@ public class WorldOptions : ScriptableObject
     public GameObject bubblePrefab;
 
     [Header("PlayerStats")]
+    public bool useAcceleration = true;
     public float maxSpeed = 7;
+    public float acceleration = 1;
+    public float deaccelerationSpeed = 1;
     public float jumpHeight = 10;
     public int stockCount = 5;
     public float punchDistance = 15;

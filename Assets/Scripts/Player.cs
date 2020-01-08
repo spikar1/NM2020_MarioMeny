@@ -751,7 +751,10 @@ public class Player : MonoBehaviour, IBumpable
         iceIndex = playerNumber;
         print("Blizzard done by player" + playerNumber);
         yield return new WaitForSeconds(Manager.WorldOptions.blizzardDuration);
+        isIcyFloor = false;
+        iceIndex = -1; 
         print("Blizzard by player" + playerNumber + "Has stopped");
+
         //CoolDown and Debug:
         yCooldown += Manager.WorldOptions.blizzardCooldown;
     }

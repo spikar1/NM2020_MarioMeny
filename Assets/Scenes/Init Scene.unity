@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9b7aef1c9eaf24ca41ac44fc46e9df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _worldOptions: {fileID: 11400000, guid: eb9fc7c7458d40e49900646c1c967c38, type: 2}
+  _worldOptions: {fileID: 11400000, guid: 1ec21cb4311870f4aacfd225cf07bc5b, type: 2}
   sceneLoader: {fileID: 166531019}
 --- !u!4 &166531018
 Transform:

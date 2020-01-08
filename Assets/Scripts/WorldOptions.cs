@@ -40,4 +40,11 @@ public class WorldOptions : ScriptableObject
     public float bubbleSpeed;
     public float bubbleMaxLifetime;
     public float MaxJetpackDuration = 2;
+    public float bubbleGunProjectileSpeed;
+
+
+    public List<AAbility> availableAAbilities = new List<AAbility>();
+    public List<XAbility> availableXAbilities = new List<XAbility>();
+    public List<YAbility> availableYAbilities = new List<YAbility>();
+    public List<BAbility> availableBAbilities = new List<BAbility>();
 }

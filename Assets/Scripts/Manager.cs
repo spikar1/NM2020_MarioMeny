@@ -14,21 +14,18 @@ public class Manager : MonoBehaviour
 
     public static bool debugMode = false;
 
-    public static WorldOptions worldOptions => instance._worldOptions;
+    public static WorldOptions WorldOptions => Instance._worldOptions;
 
-    static Manager instance;
-    public Manager Instance {
-        get {
-            if (!instance) {
-                instance = this;
-                return instance;
-            }
-            else
-                return instance;
-        }
-    }
+    static Manager instance = null;
+    public static Manager Instance => instance;
 
     private void Awake() {
+
+        if (!instance)
+        {
+            instance = this;
+        }
+
         if (Debug.isDebugBuild)
             debugMode = true;
         else

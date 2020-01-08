@@ -41,3 +41,7 @@ MonoBehaviour:
   bubbleMaxLifetime: 12
   MaxJetpackDuration: 2
   bubbleGunProjectileSpeed: 8
+  availableAAbilities: 010000000200000003000000
+  availableXAbilities: 010000000200000003000000
+  availableYAbilities: 040000000300000002000000
+  availableBAbilities: 010000000200000003000000

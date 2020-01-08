@@ -23,7 +23,10 @@ MonoBehaviour:
     type: 3}
   bubblePrefab: {fileID: 5125063514514017571, guid: f1d98ae6b91a9084a95df2180d3445a7,
     type: 3}
+  useAcceleration: 1
   maxSpeed: 7
+  acceleration: 2.75
+  deaccelerationSpeed: 1
   jumpHeight: 10
   stockCount: 5
   punchDistance: 15

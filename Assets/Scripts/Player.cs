@@ -94,7 +94,10 @@ public class Player : MonoBehaviour, IBumpable
         if (playerIsDead || knockbackState)
             return;
 
-        Move(horizontalInput);
+        if (Manager.WorldOptions.useAcceleration)
+            Accelerate(horizontalInput);
+        else
+            Move(horizontalInput);
         anim.SetFloat("yVelocity", rb.velocity.y);
     }
 
@@ -250,6 +253,26 @@ public class Player : MonoBehaviour, IBumpable
             return;
         rb.velocity = new Vector2(direction * Manager.WorldOptions.maxSpeed, rb.velocity.y);
         anim.SetFloat("HorizontalMovement", horizontalInput);
+    }
+    private void Accelerate(float direction) {
+        if (isUsingAbility)
+            return;
+        if (Mathf.Abs(direction) > .1f) {
+
+            var canMove = false;
+            if (Mathf.Sign(rb.velocity.x) != Mathf.Sign(horizontalInput))
+                canMove = true;
+            else if (Mathf.Abs(rb.velocity.x) < Manager.WorldOptions.maxSpeed)
+                canMove = true;
+
+            anim.SetFloat("HorizontalMovement", horizontalInput);
+            if (canMove)
+                rb.velocity += new Vector2(direction * Manager.WorldOptions.acceleration, 0);
+        }
+        else {
+            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, 0, Manager.WorldOptions.deaccelerationSpeed), rb.velocity.y);
+        }
+        
     }
 
     public void Bumped(Player other, Vector2 collisionVector) {

@@ -61,7 +61,9 @@ public class Player : MonoBehaviour, IBumpable
     public AAbility aAbility = AAbility.DefaultJump;
     public XAbility xAbility = XAbility.DefaultPunch;
     public YAbility yAbility = YAbility.None;
-    
+    private static bool isIcyFloor = false;
+    private static int iceIndex = -1;
+
     #endregion
 
     private void Awake() {
@@ -108,7 +110,6 @@ public class Player : MonoBehaviour, IBumpable
         }
 
 
-
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
         if (Manager.debugMode)
         {
@@ -143,7 +144,7 @@ public class Player : MonoBehaviour, IBumpable
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
         {
-            if(canUseAbility)
+            if(canUseAbility && xCooldown <= 0.01f)
             {
                 canUseAbility = false;
                 isUsingAbility = true;
@@ -153,12 +154,12 @@ public class Player : MonoBehaviour, IBumpable
         }
         if (Input.GetButtonDown("Y" + "_P" + playerIndex))
         {
-            if(canUseAbility)
+            if(canUseAbility && yCooldown <= 0.01f)
                 DoYAbility();
         }
         if (Input.GetButtonDown("B" + "_P" + playerIndex))
         {
-            if (canUseAbility)
+            if (canUseAbility && bCooldown <= 0.01f)
             {
                 canUseAbility = false;
                 isUsingAbility = true;
@@ -199,7 +200,13 @@ public class Player : MonoBehaviour, IBumpable
 
     private void DebugUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+
+        if (Input.GetKeyDown(KeyCode.I))
+            isIcyFloor = true;
+        if (Input.GetKeyDown(KeyCode.K))
+            isIcyFloor = false;
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
             if (canUseAbility)
                 DoAAbility();
 
@@ -258,19 +265,30 @@ public class Player : MonoBehaviour, IBumpable
         if (isUsingAbility)
             return;
         if (Mathf.Abs(direction) > .1f) {
-
             var canMove = false;
+
             if (Mathf.Sign(rb.velocity.x) != Mathf.Sign(horizontalInput))
                 canMove = true;
             else if (Mathf.Abs(rb.velocity.x) < Manager.WorldOptions.maxSpeed)
                 canMove = true;
 
             anim.SetFloat("HorizontalMovement", horizontalInput);
+
+            var acc = Mathf.Sign(rb.velocity.x) == Mathf.Sign(direction) ? Manager.WorldOptions.acceleration : Manager.WorldOptions.deaccelerationSpeed;
+            if (isIcyFloor && iceIndex != playerNumber)
+                acc = Manager.WorldOptions.iceFloorAcceleration;
+
             if (canMove)
-                rb.velocity += new Vector2(direction * Manager.WorldOptions.acceleration, 0);
+                rb.velocity += new Vector2(direction * acc, 0);
+            if(Mathf.Abs(rb.velocity.x) > Manager.WorldOptions.maxSpeed) {
+                rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * Manager.WorldOptions.maxSpeed, rb.velocity.y);
+            }
         }
         else {
-            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, 0, Manager.WorldOptions.deaccelerationSpeed), rb.velocity.y);
+            var acc = Manager.WorldOptions.deaccelerationSpeed;
+            if (isIcyFloor && iceIndex != playerNumber)
+                acc = Manager.WorldOptions.iceFloorAcceleration;
+            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, 0, acc), rb.velocity.y);
         }
         
     }
@@ -468,8 +486,8 @@ public class Player : MonoBehaviour, IBumpable
             case YAbility.PickUp:
                 PickUp();
                 break;
-            case YAbility.FireShield:
-                FireShield();
+            case YAbility.Blizzard:
+                StartCoroutine(Blizzard());
                 break;
             case YAbility.BubbleGun:
                 BubbleGun();
@@ -572,6 +590,7 @@ public class Player : MonoBehaviour, IBumpable
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(.5f));
+        xCooldown += Manager.WorldOptions.defaultPunchCooldownTime;
         print("DefaultPunch");
     }
     IEnumerator Sword()
@@ -596,6 +615,7 @@ public class Player : MonoBehaviour, IBumpable
         StartCoroutine(AbilityDuration(swordCharge * 0.5f));
         yield return new WaitUntil(() => !isUsingAbility);
         rb.gravityScale = startGravity;
+        xCooldown += Manager.WorldOptions.swordCooldownTime;
         print("Sword");
     }
     private void Axe()
@@ -609,6 +629,7 @@ public class Player : MonoBehaviour, IBumpable
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(.5f));
+        xCooldown += Manager.WorldOptions.axeCooldownTime;
         print("Axe");
     }
     IEnumerator Hammer()
@@ -627,6 +648,7 @@ public class Player : MonoBehaviour, IBumpable
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(.2f));
+        xCooldown += Manager.WorldOptions.hammerCooldownTime;
         print("Hammer");
     }
     #endregion
@@ -701,8 +723,7 @@ public class Player : MonoBehaviour, IBumpable
     }
     private void Missile()
     {
-        if (yCooldown > 0)
-            return;
+        
         //Animation:
 
         //Ability Func:
@@ -721,14 +742,18 @@ public class Player : MonoBehaviour, IBumpable
         //CoolDown and Debug:
         print("PickUp");
     }
-    private void FireShield()
+    private IEnumerator Blizzard()
     {
         //Animation:
 
         //Ability Func:
-
+        isIcyFloor = true;
+        iceIndex = playerNumber;
+        print("Blizzard done by player" + playerNumber);
+        yield return new WaitForSeconds(Manager.WorldOptions.blizzardDuration);
+        print("Blizzard by player" + playerNumber + "Has stopped");
         //CoolDown and Debug:
-        print("FireShield");
+        yCooldown += Manager.WorldOptions.blizzardCooldown;
     }
     private void BubbleGun()
     {

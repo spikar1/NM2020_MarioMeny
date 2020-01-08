@@ -24,9 +24,10 @@ MonoBehaviour:
   bubblePrefab: {fileID: 5125063514514017571, guid: f1d98ae6b91a9084a95df2180d3445a7,
     type: 3}
   useAcceleration: 1
-  maxSpeed: 7
-  acceleration: 2.75
+  maxSpeed: 8
+  acceleration: 1
   deaccelerationSpeed: 1
+  iceFloorAcceleration: 0.3
   jumpHeight: 10
   stockCount: 5
   punchDistance: 15
@@ -36,6 +37,10 @@ MonoBehaviour:
   - {r: 0.66498154, g: 1, b: 0.6462264, a: 1}
   - {r: 0.6650944, g: 0.8102097, b: 1, a: 1}
   - {r: 0.9986979, g: 1, b: 0.6462264, a: 1}
+  defaultPunchCooldownTime: 1
+  swordCooldownTime: 1
+  hammerCooldownTime: 1
+  axeCooldownTime: 1
   missileCooldownTime: 3
   bubbleGunCooldownTime: 3
   missileSpeed: 4
@@ -52,6 +57,7 @@ MonoBehaviour:
   magicMissileMaxSpeed: 0
   MaxJetpackDuration: 2
   bubbleGunProjectileSpeed: 8
+  blizzardDuration: 4
   availableAAbilities: 010000000200000003000000
   availableXAbilities: 010000000200000003000000
   availableYAbilities: 040000000300000002000000

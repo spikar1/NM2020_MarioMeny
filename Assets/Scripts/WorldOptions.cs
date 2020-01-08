@@ -22,6 +22,7 @@ public class WorldOptions : ScriptableObject
     public float maxSpeed = 7;
     public float acceleration = 1;
     public float deaccelerationSpeed = 1;
+    public float iceFloorAcceleration = .4f;
     public float jumpHeight = 10;
     public int stockCount = 5;
     public float punchDistance = 15;
@@ -31,11 +32,17 @@ public class WorldOptions : ScriptableObject
     public Color[] playerColors;
 
 
-    [Header("Y Ability Cooldowns")]
+    [Header("X Ability Cooldowns")]
     [Header("Cooldowns")]
+    public float defaultPunchCooldownTime = 1;
+    public float swordCooldownTime = 1;
+    public float hammerCooldownTime = 1;
+    public float axeCooldownTime = 1;
+
+    [Header("Y Ability Cooldowns")]
     public float missileCooldownTime = 3;
     public float bubbleGunCooldownTime = 3;
-
+    internal float blizzardCooldown = 10;
 
     [Header("Ability parameters")]
     public int missileSpeed = 6;
@@ -47,6 +54,8 @@ public class WorldOptions : ScriptableObject
     public float magicMissileMaxSpeed;
     public float MaxJetpackDuration = 2;
     public float bubbleGunProjectileSpeed;
+    [Tooltip("Seconds the blizzards lasts for")]
+    public float blizzardDuration = 3;
 
 
     public List<AAbility> availableAAbilities = new List<AAbility>();

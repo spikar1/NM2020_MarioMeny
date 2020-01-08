@@ -12,7 +12,7 @@ public enum XAbility
 }
 public enum YAbility
 {
-    None, Missile, PickUp, FireShield, BubbleGun
+    None, Missile, PickUp, Blizzard, BubbleGun
 }
 public enum BAbility
 {

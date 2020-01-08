@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Manage
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - technical_non_render
+  - Player
   - 
   - 
   - 
@@ -49,4 +50,10 @@ TagManager:
     locked: 0
   - name: Ledge
     uniqueID: 2850952169
+    locked: 0
+  - name: Level Objects
+    uniqueID: 1822943337
+    locked: 0
+  - name: Technicals-Non-Render
+    uniqueID: 3112998853
     locked: 0

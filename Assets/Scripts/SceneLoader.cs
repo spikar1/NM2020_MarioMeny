@@ -5,15 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public int sceneToLoad = 1;
+    GameObject[] players;
+    
+    public void LoadScene(int sceneToLoad) {
+        StartCoroutine(LoadNewScene(sceneToLoad));
+        players = GameObject.FindGameObjectsWithTag("Player");
 
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().ResetKnockback();
+        }
+    }
 
-    IEnumerator LoadNewScene() {
+    IEnumerator LoadNewScene(int sceneIndex) {
 
-        AsyncOperation async = SceneManager.LoadSceneAsync(sceneToLoad);
+        AsyncOperation async = SceneManager.LoadSceneAsync(sceneIndex);
 
         while (!async.isDone) {
             yield return null;
-        }
+        }    
     }
 }

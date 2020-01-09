@@ -5,9 +5,11 @@ using UnityEngine;
 public class DeathZone : MonoBehaviour
 {
     GameObject manager;
+    StockCanvas stockCanvas;
 
     private void Start()
     {
+        stockCanvas = GameObject.FindGameObjectWithTag("StockCanvas").GetComponent<StockCanvas>();
         manager = GameObject.FindGameObjectWithTag("Manage");
     }
 
@@ -21,6 +23,7 @@ public class DeathZone : MonoBehaviour
 
             if(player.stockCount == 1)
             {
+                stockCanvas.UpdatePlayerStock(player.playerNumber, 0);
                 Destroy(collision.gameObject);
             }
             else

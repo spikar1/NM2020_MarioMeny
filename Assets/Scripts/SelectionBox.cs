@@ -101,6 +101,9 @@ public class SelectionBox : MonoBehaviour, IBumpable
         }
         else if(SceneManager.GetActiveScene().name == "WinScreen")
         {
+            StockCanvas stockCanvas = GameObject.FindGameObjectWithTag("StockCanvas").GetComponent<StockCanvas>();
+            stockCanvas.SelfDestruct();
+
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             Destroy(player);
             manager.GetComponent<Manager>().sceneLoader.LoadScene("Init Scene");

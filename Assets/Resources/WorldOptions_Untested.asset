@@ -53,6 +53,7 @@ MonoBehaviour:
   axeCooldownTime: 1
   missileCooldownTime: 3
   bubbleGunCooldownTime: 3
+  reflectiveCooldownTime: 2
   missileSpeed: 9
   maxSwordCharge: 1
   bubbleSpeed: 1

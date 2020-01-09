@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using System;
+
+using Random = UnityEngine.Random;
 
 public class Countdown : MonoBehaviour
 {
@@ -62,9 +65,22 @@ public class Countdown : MonoBehaviour
         if(min <= 0 && (int)t <= 0 && canInvoke)
         {
             canInvoke = false;
-            GameObject manager = GameObject.FindGameObjectWithTag("Manage");
-            manager.GetComponent<Manager>().sceneLoader.LoadScene(1);
+            SelectLevel();
         }
+    }
+
+    private void SelectLevel()
+    {
+        string levelName = "";
+        string[] levelList = Manager.WorldOptions.levelList;
+        if (levelList.Length <= 0)
+            throw new Exception("World Options conains no levels");
+        var r = Random.Range(0, levelList.Length);
+
+        levelName = levelList[r];
+
+        GameObject manager = GameObject.FindGameObjectWithTag("Manage");
+        manager.GetComponent<Manager>().sceneLoader.LoadScene(levelName);
     }
 
     public void RushCountDown()

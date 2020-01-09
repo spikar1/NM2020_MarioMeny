@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="WorldOptions", menuName ="MarioMenu/New World Options")]
 public class WorldOptions : ScriptableObject
 {
+    public string[] levelList = new string[] { "level_1" };
+
     public AAbility aDefault = AAbility.DefaultJump;
     public XAbility xDefault = XAbility.DefaultPunch;
     public YAbility yDefault = YAbility.None;

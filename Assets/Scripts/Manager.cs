@@ -63,13 +63,13 @@ public class Manager : MonoBehaviour
             if(currentPlaying < 2)
             {
                 //Go to SelectionScreen:
-                sceneLoader.LoadScene(4);
+                sceneLoader.LoadScene("Selection Screen");
             }
         }
         else
         {
             //Go To Victory Screen:
-            sceneLoader.LoadScene(5);
+            sceneLoader.LoadScene("WinScreen");
         }
     }
 

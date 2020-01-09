@@ -94,16 +94,16 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     public void Bumped(Player bumpee, Vector2 collisionVector) {
         //Invoke Unity Events
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().name == "Init Scene")
         {
             if(bumpee.playerNumber.ToString() == "1")
                 StartCoroutine(WaitBeforeEvents());
         }
-        else if(SceneManager.GetActiveScene().buildIndex == 5)
+        else if(SceneManager.GetActiveScene().name == "WinScreen")
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             Destroy(player);
-            manager.GetComponent<Manager>().sceneLoader.LoadScene(0);
+            manager.GetComponent<Manager>().sceneLoader.LoadScene("Init Scene");
         }
         else
         {

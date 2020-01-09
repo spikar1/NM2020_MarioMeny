@@ -5,10 +5,12 @@ using UnityEngine;
 public class DeathRay : MonoBehaviour
 {
     GameObject manager;
+    StockCanvas stockCanvas;
 
     private void Start()
     {
         manager = GameObject.FindGameObjectWithTag("Manage");
+        stockCanvas = GameObject.FindGameObjectWithTag("StockCanvas").GetComponent<StockCanvas>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -21,6 +23,7 @@ public class DeathRay : MonoBehaviour
 
             if (player.stockCount == 1)
             {
+                stockCanvas.UpdatePlayerStock(player.playerNumber, 0);
                 Destroy(collision.gameObject);
             }
             else

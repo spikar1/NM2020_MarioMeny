@@ -314,6 +314,14 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void OnCollisionEnter2D(Collision2D collision) {
+        if (Manager.WorldOptions.bounceGameplay && 
+            rb.velocity.y > -1f &&
+            rb.velocity.y < 5f
+            ) {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+
+        }
+
         if(collision.GetContact(0).normal.y > 0)
         {
             print(name + "Collided with" +  collision.collider);

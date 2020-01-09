@@ -41,4 +41,16 @@ public class StockCanvas : MonoBehaviour
             }
         }
     }
+
+    public void UpdatePlayerStock(int playerNumber, int playerStock)
+    {
+        for (int i = 0; i < textPros.Length; i++)
+        {
+            if(i == playerNumber - 1)
+            {
+                textPros[i].text = $"P{playerNumber}: {playerStock}";
+            }
+        }
+    }
+
 }

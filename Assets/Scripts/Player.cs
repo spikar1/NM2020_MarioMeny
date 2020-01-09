@@ -28,6 +28,7 @@ public class Player : MonoBehaviour, IBumpable
     public SpriteRenderer rend;
     [HideInInspector]
     public TextMeshPro textMesh;
+    StockCanvas stockCanvas;
     #endregion
 
     #region AbilityFunction Related
@@ -87,6 +88,7 @@ public class Player : MonoBehaviour, IBumpable
         anim = gameObject.GetComponentInChildren<Animator>();
         rend = GetComponentInChildren<SpriteRenderer>();
         textMesh = GetComponent<TextMeshPro>();
+        stockCanvas = GameObject.FindGameObjectWithTag("StockCanvas").GetComponent<StockCanvas>();
 
         //Dont Destroy:
         DontDestroyOnLoad(gameObject);
@@ -437,6 +439,8 @@ public class Player : MonoBehaviour, IBumpable
         stockCount--;
         playerIsDead = true;
         anim.SetBool("IsDead", true);
+
+        stockCanvas.UpdatePlayerStock(playerNumber, stockCount);
     }
 
     public void CheckIfStillDead()

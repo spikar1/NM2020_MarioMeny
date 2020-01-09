@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class MagicMissile : MonoBehaviour
 {
-    float upTime = 1;
+    //float upTime = 1;
     Player target;
 
     

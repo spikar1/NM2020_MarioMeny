@@ -60,7 +60,7 @@ MonoBehaviour:
   MaxJetpackDuration: 2
   bubbleGunProjectileSpeed: 8
   blizzardDuration: 4
-  availableAAbilities: 010000000200000003000000
-  availableXAbilities: 010000000200000003000000
-  availableYAbilities: 040000000300000003000000
-  availableBAbilities: 010000000200000003000000
+  availableAAbilities: 0100000002000000
+  availableXAbilities: 01000000
+  availableYAbilities: 0100000002000000
+  availableBAbilities: 0100000002000000

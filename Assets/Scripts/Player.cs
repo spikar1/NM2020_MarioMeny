@@ -47,7 +47,7 @@ public class Player : MonoBehaviour, IBumpable
     public bool coyoteJump;
 
     //X Abilities:
-    bool chargingSword;
+    bool isChargingSword;
     float swordCharge, slamPower;
     private float knockbackAmount; 
     bool knockbackState, canSlam;
@@ -134,7 +134,7 @@ public class Player : MonoBehaviour, IBumpable
                 horizontalInput += 1;
         }
        
-        if(chargingSword)
+        if(isChargingSword)
         {
             if(swordCharge < Manager.WorldOptions.maxSwordCharge)
             {
@@ -195,6 +195,9 @@ public class Player : MonoBehaviour, IBumpable
             }
             else
                 rend.flipX = false;
+        }
+        else if(isAttacking && !isChargingSword){
+            rend.flipX = Mathf.Sign(rb.velocity.x) > 0 ? false : true;
         }
 
         UpdateCooldowns();
@@ -609,7 +612,7 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(0, 0);
         rb.gravityScale = 0.1f;
         swordCharge = 0;
-        chargingSword = true;
+        isChargingSword = true;
 
         var t = 0f;
         var p = transform.GetChild(0).localPosition;
@@ -626,7 +629,7 @@ public class Player : MonoBehaviour, IBumpable
         abilityNumber = 1;
         anim.SetFloat("AbilityNumber", abilityNumber);
 
-        chargingSword = false;
+        isChargingSword = false;
         isAttacking = true;
         rb.velocity = new Vector2(swordCharge * 40 * dir, 0);
         rb.gravityScale = 0;

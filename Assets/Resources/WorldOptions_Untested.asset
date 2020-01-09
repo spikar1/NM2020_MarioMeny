@@ -53,10 +53,10 @@ MonoBehaviour:
   axeCooldownTime: 1
   missileCooldownTime: 3
   bubbleGunCooldownTime: 3
-  missileSpeed: 4
+  missileSpeed: 9
   maxSwordCharge: 1
   bubbleSpeed: 1
-  bubbleMaxLifetime: 12
+  bubbleMaxLifetime: 4
   magicMissileYCurve:
     serializedVersion: 2
     m_Curve: []
@@ -68,6 +68,7 @@ MonoBehaviour:
   MaxJetpackDuration: 2
   bubbleGunProjectileSpeed: 8
   blizzardDuration: 4
+  shieldVelocityCutoff: 0.4
   availableAAbilities: 0100000002000000
   availableXAbilities: 01000000
   availableYAbilities: 0100000002000000

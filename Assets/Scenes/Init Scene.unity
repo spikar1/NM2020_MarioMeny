@@ -194,8 +194,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c7db69cb4108f46bc4874ed69ffe1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swordChargeUp: {fileID: 0}
-  swordSwing: {fileID: 0}
+  aSource: {fileID: 0}
+  defaultPunch: {fileID: 8300000, guid: af3edc36e23081741b0bbcb420520612, type: 3}
+  swordChargeUp: {fileID: 8300000, guid: 6a2c1ae5308c5de4d8887f78e0101887, type: 3}
+  swordSwing: {fileID: 8300000, guid: 1a3ddff1411294c488b1ff247ad94efe, type: 3}
+  jetpackLoop: {fileID: 8300000, guid: f1e0410ba148a7b44b7cf9f43cb0ca4a, type: 3}
+  blizzard: {fileID: 8300000, guid: ae27d25f6ffc4e746b997a95026868d5, type: 3}
+  hammer: {fileID: 8300000, guid: 2f08e9309bb0d174a8ab70080dac4397, type: 3}
+  defaultBlock: {fileID: 8300000, guid: 34ca9bc5721a98f4cb3a9c3476e19c72, type: 3}
+  reflectiveShield: {fileID: 8300000, guid: af3edc36e23081741b0bbcb420520612, type: 3}
   jumpSounds:
   - {fileID: 8300000, guid: 47c5d5d10b36358448a10532f805cbbe, type: 3}
   - {fileID: 8300000, guid: d55d9c220618c0c47a75ed7720b408e4, type: 3}
@@ -368,8 +375,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -50, y: 387}
-  m_SizeDelta: {x: 60.03, y: 43.04}
+  m_AnchoredPosition: {x: -50, y: 353.4}
+  m_SizeDelta: {x: 39.17, y: 43.04001}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &402450480
 MonoBehaviour:
@@ -389,7 +396,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'P1: DEAD'
+  m_text: 'P1: 5'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -458,7 +465,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 402450480}
-    characterCount: 8
+    characterCount: 5
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -730,8 +737,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 50, y: 387}
-  m_SizeDelta: {x: 60.03, y: 43.04}
+  m_AnchoredPosition: {x: 50, y: 353.40002}
+  m_SizeDelta: {x: 39.17, y: 43.04001}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &626745291
 MonoBehaviour:
@@ -751,7 +758,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'P1: DEAD'
+  m_text: 'P1: 5'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -820,7 +827,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 626745291}
-    characterCount: 8
+    characterCount: 5
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -1111,8 +1118,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -150, y: 387}
-  m_SizeDelta: {x: 61.26, y: 43.04}
+  m_AnchoredPosition: {x: -150, y: 353.40002}
+  m_SizeDelta: {x: 39.17, y: 43.04001}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1188082351
 MonoBehaviour:
@@ -1132,7 +1139,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'P1: DEAD'
+  m_text: 'P1: 5'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1201,7 +1208,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1188082351}
-    characterCount: 8
+    characterCount: 5
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -1446,7 +1453,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528403636}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 8.1, z: 0}
+  m_LocalPosition: {x: 0, y: 7.58, z: 0}
   m_LocalScale: {x: 18.70625, y: 3.108, z: 1}
   m_Children: []
   m_Father: {fileID: 201295741}
@@ -1559,8 +1566,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 150, y: 387}
-  m_SizeDelta: {x: 58.8, y: 43.04}
+  m_AnchoredPosition: {x: 150, y: 353.40002}
+  m_SizeDelta: {x: 39.17, y: 43.04001}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1738823017
 MonoBehaviour:
@@ -1580,7 +1587,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'P1: DEAD'
+  m_text: 'P1: 5'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1649,7 +1656,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1738823017}
-    characterCount: 8
+    characterCount: 5
     spriteCount: 0
     spaceCount: 1
     wordCount: 2

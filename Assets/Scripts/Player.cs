@@ -43,7 +43,8 @@ public class Player : MonoBehaviour, IBumpable
     //A Abilities:
     int jumpCount;
     float jetpackAmount;
-    bool usingJetpack, canJetpack, coyoteJump;
+    bool usingJetpack, canJetpack;
+    public bool coyoteJump;
 
     //X Abilities:
     bool chargingSword;

@@ -12,6 +12,7 @@ public class BounceTrigger : MonoBehaviour
             return;
         var rb = p.GetComponent<Rigidbody2D>();
 
+        p.coyoteJump = true;
         rb.velocity = new Vector2(rb.velocity.x, bounceHeight);
     }
 }

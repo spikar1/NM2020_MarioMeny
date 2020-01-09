@@ -34,7 +34,7 @@ public class Player : MonoBehaviour, IBumpable
     //Player States:
     bool isUsingAbility = false;
     bool isAttacking = false;
-    bool isBlocking = false;
+    public bool isBlocking = false;
 
     bool canUseAbility = true;
     float startGravity;
@@ -321,6 +321,9 @@ public class Player : MonoBehaviour, IBumpable
             rb.velocity = new Vector2(rb.velocity.x, 0);
 
         }
+
+        if (isBlocking)
+            rb.velocity *= new Vector2(1, 0.5f);
 
         if(collision.GetContact(0).normal.y > 0)
         {

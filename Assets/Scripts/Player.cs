@@ -688,7 +688,8 @@ public class Player : MonoBehaviour, IBumpable
 
         var t = 0f;
         var p = transform.GetChild(0).localPosition;
-        while (!Input.GetButtonUp("X" + "_P" + playerIndex) && !Input.GetKeyUp(KeyCode.Alpha2)) {
+        while (!Input.GetButtonUp("X" + "_P" + playerIndex) && !Input.GetKeyUp(KeyCode.Alpha2) ||
+            t > 2* Manager.WorldOptions.maxSwordCharge) {
             //transform.position = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
             transform.GetChild(0).localPosition = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
             t += Time.deltaTime;

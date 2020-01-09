@@ -18,9 +18,10 @@ MonoBehaviour:
   - level_3
   - level_4
   playersCanJumpAfterBouncePad: 1
+  bounceGameplay: 1
   aDefault: 0
   xDefault: 0
-  yDefault: 4
+  yDefault: 0
   bDefault: 0
   DefaultJumpSprite: {fileID: 0}
   missilePrefab: {fileID: 1600884451505982857, guid: f9c8939b166617a4fa270c52bb3dc16f,
@@ -40,6 +41,7 @@ MonoBehaviour:
   KnockbackStartAmount: 10
   blockedKnockback: 0.2
   knockbackScaler: 2
+  bouncyKnockback: 15
   playerColors:
   - {r: 1, g: 0.5896226, b: 0.5896226, a: 1}
   - {r: 0.66498154, g: 1, b: 0.6462264, a: 1}

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Manage
   - CheckSelection
+  - StockCanvas
   layers:
   - Default
   - TransparentFX

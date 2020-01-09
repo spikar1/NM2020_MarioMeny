@@ -34,6 +34,7 @@ public class WorldOptions : ScriptableObject
     public float KnockbackStartAmount = 10;
     public float blockedKnockback = 0.2f;
     public float knockbackScaler = 2;
+    public float bouncyKnockback = 10;
 
     [Header("Player Colors")]
     public Color[] playerColors;

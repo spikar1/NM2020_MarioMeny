@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerSpawner : MonoBehaviour
 {
-
+    public StockCanvas stockCanvas;
     public GameObject playerPrefab;
     int playerCount;
     string stick1, stick2, stick3, stick4;
@@ -77,6 +77,8 @@ public class PlayerSpawner : MonoBehaviour
         GameObject clone = Instantiate(playerPrefab, transform.position, Quaternion.identity);
         clone.GetComponent<Player>().playerIndex = index.ToString();
         clone.GetComponent<Player>().playerNumber = number;
+
+        stockCanvas.PlayerJoined(number, clone.GetComponent<Player>().stockCount);
     }
 
     private void OnGUI()

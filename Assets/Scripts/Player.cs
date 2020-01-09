@@ -105,6 +105,8 @@ public class Player : MonoBehaviour, IBumpable
 
         startGravity = rb.gravityScale;
         playerIsDead = false;
+
+        ResetKnockback();
     }
 
     void FixedUpdate() {
@@ -360,12 +362,26 @@ public class Player : MonoBehaviour, IBumpable
         isUsingAbility = false;
         anim.SetBool("UsingAbility", false);
 
-        player.Damage((player.transform.position - transform.position).normalized);
+        if(Manager.WorldOptions.bounceGameplay)
+        {
+            player.BouncyDamage((player.transform.position - transform.position).normalized);
+        }
+        else
+        {
+            player.Damage((player.transform.position - transform.position).normalized);
+        }
     }
 
     public void ResetKnockback()
     {
-        knockbackAmount = Manager.WorldOptions.KnockbackStartAmount;
+        if(Manager.WorldOptions.bounceGameplay)
+        {
+            knockbackAmount = Manager.WorldOptions.bouncyKnockback;
+        }
+        else
+        {
+            knockbackAmount = Manager.WorldOptions.KnockbackStartAmount;
+        }
     }
 
     public void Damage(Vector2 dir) {
@@ -383,17 +399,32 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
 
+    public void BouncyDamage(Vector2 dir)
+    {
+        if (isBlocking)
+        {
+            knockbackState = true;
+            rb.velocity = dir * knockbackAmount * Manager.WorldOptions.blockedKnockback + (Vector2.up * knockbackAmount * 0.5f * Manager.WorldOptions.blockedKnockback);
+            StartCoroutine(KnockbackTimer());
+        }
+        else
+        {
+            print("Hit");
+            knockbackState = true;
+            rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
+            StartCoroutine(KnockbackTimer());
+        }
+    }
+
     IEnumerator KnockbackTimer()
     {
         if(isBlocking)
         {
-            knockbackState = true;
             yield return new WaitForSeconds(knockbackAmount * 0.05f * Manager.WorldOptions.blockedKnockback);
             knockbackState = false;
         }
         else
         {
-            knockbackState = true;
             yield return new WaitForSeconds(knockbackAmount * 0.05f);
             knockbackState = false;
         }
@@ -440,7 +471,7 @@ public class Player : MonoBehaviour, IBumpable
         }
         else
         {
-            //anim.SetBool("IsRocket", false);
+            anim.SetBool("IsRocket", false);
         }
 
         if(jetpackAmount <= 0)

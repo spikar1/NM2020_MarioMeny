@@ -35,6 +35,7 @@ public class Player : MonoBehaviour, IBumpable
     //Player States:
     bool isUsingAbility = false;
     bool isAttacking = false;
+    bool isReflecting = false;
     public bool isBlocking = false;
 
     bool canUseAbility = true;
@@ -367,9 +368,19 @@ public class Player : MonoBehaviour, IBumpable
         isUsingAbility = false;
         anim.SetBool("UsingAbility", false);
 
+        rb.velocity = new Vector2(0, 0);
+        player.rb.velocity = new Vector2(0, 0);
+
         if(Manager.WorldOptions.bounceGameplay)
         {
-            player.BouncyDamage((player.transform.position - transform.position).normalized);
+            if(player.isReflecting)
+            {
+                BouncyDamage((transform.position - player.transform.position).normalized);
+            }
+            else
+            {
+                player.BouncyDamage((player.transform.position - transform.position).normalized);
+            }
         }
         else
         {
@@ -513,6 +524,7 @@ public class Player : MonoBehaviour, IBumpable
         canUseAbility = true;
         isAttacking = false;
         isBlocking = false;
+        isReflecting = false;
         anim.SetBool("UsingAbility", false);
     }
 
@@ -732,9 +744,11 @@ public class Player : MonoBehaviour, IBumpable
 
         //Ability Func:
         Manager.SoundManager.PlayReflectiveShield();
+        isReflecting = true;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(0.5f));
+        StartCoroutine(AbilityDuration(.7f));
+        bCooldown += Manager.WorldOptions.reflectiveCooldownTime;
         print("ReflectiveShield");
     }
     IEnumerator Hammer()

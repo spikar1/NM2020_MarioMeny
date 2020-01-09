@@ -52,6 +52,9 @@ public class WorldOptions : ScriptableObject
     public float bubbleGunCooldownTime = 3;
     internal float blizzardCooldown = 10;
 
+    [Header("B Ability Cooldowns")]
+    public float reflectiveCooldownTime = 3;
+
     [Header("Ability parameters")]
     public int missileSpeed = 6;
     public int maxSwordCharge = 10;

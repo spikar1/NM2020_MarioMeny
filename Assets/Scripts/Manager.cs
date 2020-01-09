@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Manager : MonoBehaviour
 {
     public WorldOptions _worldOptions;
+    public SoundManager _soundManager;
 
     GameObject[] players;
     private int playersPlaying;
@@ -18,6 +19,8 @@ public class Manager : MonoBehaviour
 
     static Manager instance = null;
     public static Manager Instance => instance;
+
+    public static SoundManager SoundManager => Instance._soundManager;
 
     private void Awake() {
 

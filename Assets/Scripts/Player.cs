@@ -582,6 +582,8 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetBool("JumpAnim", true);
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;
+
+            Manager.SoundManager.PlayJumpSound();
         }
     }
     private void DoubleJump()
@@ -598,6 +600,8 @@ public class Player : MonoBehaviour, IBumpable
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             print("Can Double Jump");
             coyoteJump = false;
+
+            Manager.SoundManager.PlayJumpSound();
         }
     }
     private void Jetpack()
@@ -608,12 +612,17 @@ public class Player : MonoBehaviour, IBumpable
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;
             canJetpack = true;
+
+            Manager.SoundManager.PlayJumpSound();
         }
         else if(canJetpack)
         {
             anim.SetBool("JumpAnim", false);
             canJetpack = false;
             usingJetpack = true;
+
+
+            Manager.SoundManager.PlayJetPackLoop();
         }
     }
     #endregion
@@ -630,6 +639,10 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
         isAttacking = true;
         rb.velocity = new Vector2(Manager.WorldOptions.punchDistance * dir, 0);
+
+        //Sound
+        Manager.SoundManager.PlayDefaultPunch();
+
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(.2f));
@@ -648,6 +661,7 @@ public class Player : MonoBehaviour, IBumpable
         rb.gravityScale = 0.1f;
         swordCharge = 0;
         isChargingSword = true;
+        Manager.SoundManager.PlaySwordChargeUp();
 
         var t = 0f;
         var p = transform.GetChild(0).localPosition;
@@ -668,6 +682,8 @@ public class Player : MonoBehaviour, IBumpable
         isAttacking = true;
         rb.velocity = new Vector2(swordCharge * 40 * dir, 0);
         rb.gravityScale = 0;
+
+        Manager.SoundManager.PlaySwordSwing();
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(swordCharge * 0.5f));
@@ -690,6 +706,8 @@ public class Player : MonoBehaviour, IBumpable
         //Ability Func:
         isBlocking = true;
 
+        Manager.SoundManager.PlayDefaultBlock();
+
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(0.5f));
         print("DefaultBlock");
@@ -702,6 +720,7 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        Manager.SoundManager.PlayReflectiveShield();
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(0.5f));
@@ -713,6 +732,8 @@ public class Player : MonoBehaviour, IBumpable
         abilityNumber = 3;
         anim.SetFloat("AbilityNumber", abilityNumber);
         anim.SetBool("UsingAbility", true);
+
+        Manager.SoundManager.PlayHammerSound();
 
         //Ability Func:
         slamPower = -1.2f;
@@ -750,6 +771,7 @@ public class Player : MonoBehaviour, IBumpable
         isIcyFloor = true;
         iceIndex = playerNumber;
         print("Blizzard done by player" + playerNumber);
+        Manager.SoundManager.PlayBlizzardSound();
         yield return new WaitForSeconds(Manager.WorldOptions.blizzardDuration);
         isIcyFloor = false;
         iceIndex = -1; 

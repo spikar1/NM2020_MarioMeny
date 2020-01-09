@@ -63,7 +63,8 @@ public class WorldOptions : ScriptableObject
     public float bubbleGunProjectileSpeed;
     [Tooltip("Seconds the blizzards lasts for")]
     public float blizzardDuration = 3;
-
+    [Range(0, 1)]
+    public float shieldVelocityCutoff = .4f;
 
     public List<AAbility> availableAAbilities = new List<AAbility>();
     public List<XAbility> availableXAbilities = new List<XAbility>();

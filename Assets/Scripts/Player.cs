@@ -323,7 +323,7 @@ public class Player : MonoBehaviour, IBumpable
         }
 
         if (isBlocking)
-            rb.velocity *= new Vector2(1, 0.5f);
+            rb.velocity *= new Vector2(1, Manager.WorldOptions.shieldVelocityCutoff);
 
         if(collision.GetContact(0).normal.y > 0)
         {

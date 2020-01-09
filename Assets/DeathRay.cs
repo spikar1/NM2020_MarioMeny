@@ -4,10 +4,38 @@ using UnityEngine;
 
 public class DeathRay : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision) {
-        Player p = collision.GetComponent<Player>();
+    GameObject manager;
 
-        if (p)
-            p.LooseStock();
+    private void Start()
+    {
+        manager = GameObject.FindGameObjectWithTag("Manage");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            var player = collision.GetComponent<Player>();
+            if (!player)
+                return;
+
+            if (player.stockCount == 1)
+            {
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                player.LooseStock();
+            }
+
+            StartCoroutine(WaitBeforeChecking());
+
+        }
+    }
+
+    IEnumerator WaitBeforeChecking()
+    {
+        yield return new WaitForSeconds(1);
+        manager.GetComponent<Manager>().CheckRemainingPlayers();
     }
 }

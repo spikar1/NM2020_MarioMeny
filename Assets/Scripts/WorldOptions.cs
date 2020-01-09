@@ -8,6 +8,7 @@ public class WorldOptions : ScriptableObject
     [Header("General Options")]
     public string[] levelList = new string[] { "level_1" };
     public bool playersCanJumpAfterBouncePad = true;
+    public bool bounceGameplay = true;
 
     public AAbility aDefault = AAbility.DefaultJump;
     public XAbility xDefault = XAbility.DefaultPunch;

@@ -210,6 +210,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   rend: {fileID: 0}
   textMesh: {fileID: 0}
+  coyoteJump: 0
   bAbility: 0
   aAbility: 0
   xAbility: 0
@@ -230,7 +231,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 5d06e6902aba2ab4588adc9b243fb859, type: 2}
+  m_Material: {fileID: 6200000, guid: c43165c5c1893af4a867207b88d9b57f, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1

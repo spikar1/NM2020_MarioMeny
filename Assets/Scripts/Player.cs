@@ -320,7 +320,7 @@ public class Player : MonoBehaviour, IBumpable
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision) {
+    private void OnCollisionEnter2D(Collision2D c) {
         if (Manager.WorldOptions.bounceGameplay && 
             rb.velocity.y > -1f &&
             rb.velocity.y < 5f
@@ -332,24 +332,23 @@ public class Player : MonoBehaviour, IBumpable
         if (isBlocking)
             rb.velocity *= new Vector2(1, Manager.WorldOptions.shieldVelocityCutoff);
 
-        if(collision.GetContact(0).normal.y > 0)
+        if(c.GetContact(0).normal.y > 0.2f)
         {
-            print(name + "Collided with" +  collision.collider);
             coyoteJump = true;
             usingJetpack = false;
             jetpackAmount = Manager.WorldOptions.MaxJetpackDuration;
             anim.SetBool("JumpAnim", false);
         }
 
-        Transform other = collision.collider.transform;
+        Transform other = c.collider.transform;
         float otherY = other.position.y;
         IBumpable bumpable = other.GetComponent<IBumpable>();
         if (bumpable == null)
             return;
 
 
-        if(otherY > transform.position.y && collision.GetContact(0).normal.y < 0) {
-            bumpable.Bumped(this, collision.relativeVelocity);          
+        if(otherY > transform.position.y && c.GetContact(0).normal.y < 0) {
+            bumpable.Bumped(this, c.relativeVelocity);          
         }
     }
 

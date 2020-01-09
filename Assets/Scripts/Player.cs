@@ -405,6 +405,7 @@ public class Player : MonoBehaviour, IBumpable
         if (isBlocking)
         {
             knockbackState = true;
+            anim.SetBool("IsKnocked", true);
             rb.velocity = dir * knockbackAmount * Manager.WorldOptions.blockedKnockback + (Vector2.up * knockbackAmount * 0.5f * Manager.WorldOptions.blockedKnockback);
             StartCoroutine(KnockbackTimer());
         }
@@ -412,6 +413,7 @@ public class Player : MonoBehaviour, IBumpable
         {
             print("Hit");
             knockbackState = true;
+            anim.SetBool("IsKnocked", true);
             rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
             StartCoroutine(KnockbackTimer());
         }
@@ -423,11 +425,13 @@ public class Player : MonoBehaviour, IBumpable
         {
             yield return new WaitForSeconds(knockbackAmount * 0.05f * Manager.WorldOptions.blockedKnockback);
             knockbackState = false;
+            anim.SetBool("IsKnocked", false);
         }
         else
         {
             yield return new WaitForSeconds(knockbackAmount * 0.05f);
             knockbackState = false;
+            anim.SetBool("IsKnocked", false);
         }
 
     }

@@ -683,7 +683,9 @@ public class Player : MonoBehaviour, IBumpable
         slamPower = -1.2f;
         canSlam = true;
         coyoteJump = false;
+        canUseAbility = false;
         yield return new WaitUntil(() => coyoteJump);
+
         canSlam = false;
 
         //CoolDown And Debug:

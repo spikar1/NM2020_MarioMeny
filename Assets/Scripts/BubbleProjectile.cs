@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BubbleProjectile : Projectile
 {
+    bool hasSpawnedBubble = false;
+
+
     public override void OnTriggerEnter2D(Collider2D collision)
     {
         Bubble bubble = collision.GetComponent<Bubble>();
@@ -14,8 +17,12 @@ public class BubbleProjectile : Projectile
         if (!otherPlayer)
             otherPlayer = collision.transform.parent.GetComponent<Player>();
 
-        if (otherPlayer)
-            Instantiate(Manager.WorldOptions.bubblePrefab, otherPlayer.transform.position + Vector3.up * .5f, Quaternion.identity);
+        if (otherPlayer) {
+            var b = Instantiate(Manager.WorldOptions.bubblePrefab, otherPlayer.transform.position + Vector3.up * .5f, Quaternion.identity);
+            b.GetComponent<Bubble>().trappedPlayer = otherPlayer;
+            StartCoroutine(otherPlayer.Freeze(Manager.WorldOptions.bubbleMaxLifetime));
+            hasSpawnedBubble = true;
+        }
 
         Destroy(gameObject);
     }

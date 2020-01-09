@@ -6,6 +6,7 @@ using UnityEngine;
 public class Bubble : MonoBehaviour
 {
     private Rigidbody2D rb;
+    public Player trappedPlayer;
 
     private float lifeTime = 0;
 
@@ -27,21 +28,27 @@ public class Bubble : MonoBehaviour
 
     private void BurstBubble()
     {
+        trappedPlayer.knockbackState = false;
         Destroy(gameObject);
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + Vector2.up * Manager.WorldOptions.bubbleSpeed * Time.fixedDeltaTime);
+        rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.bubbleSpeed);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+            
         /*if(lifeTime > .6f)
         foreach (var point in collision.contacts)
         {
             if (point.normal.y < 0)
                 BurstBubble();
         }*/
+    }
+
+    internal void Damage(Vector2 dir) {
+        rb.velocity += dir * 20;
     }
 }

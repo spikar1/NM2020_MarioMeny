@@ -51,7 +51,7 @@ public class Player : MonoBehaviour, IBumpable
     bool isChargingSword;
     float swordCharge, slamPower;
     private float knockbackAmount; 
-    bool knockbackState, canSlam;
+    public bool knockbackState, canSlam;
     #endregion
 
     #region Cooldown system
@@ -80,6 +80,11 @@ public class Player : MonoBehaviour, IBumpable
             print("Bool - " + b);
             return b;
         }
+    }
+
+    public IEnumerator Freeze(float duration) {
+        knockbackState = true;
+        yield return new WaitForSeconds(duration);
     }
 
     private void Awake() {
@@ -372,6 +377,10 @@ public class Player : MonoBehaviour, IBumpable
         {
             player.Damage((player.transform.position - transform.position).normalized);
         }
+
+        var b = col.GetComponent<Bubble>();
+        if (b)
+            b.Damage((player.transform.position - transform.position).normalized);
     }
 
     public void ResetKnockback()

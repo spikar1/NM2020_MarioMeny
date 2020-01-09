@@ -612,14 +612,14 @@ public class Player : MonoBehaviour, IBumpable
         chargingSword = true;
 
         var t = 0f;
-        var p = transform.position;
-        while (!Input.GetButtonUp("X" + "_P" + playerIndex)) {
-            transform.position = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
-            
+        var p = transform.GetChild(0).localPosition;
+        while (!Input.GetButtonUp("X" + "_P" + playerIndex) && !Input.GetKeyUp(KeyCode.Alpha2)) {
+            //transform.position = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
+            transform.GetChild(0).localPosition = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
             t += Time.deltaTime;
             yield return null;
         }
-
+        transform.GetChild(0).localPosition = p;
         //yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
 
         //Animation:

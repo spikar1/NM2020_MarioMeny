@@ -7,12 +7,6 @@ public class SceneLoader : MonoBehaviour
 {
     GameObject[] players;
     
-    public void LoadScene(int sceneToLoad)
-    {
-        StartCoroutine(LoadNewScene(sceneToLoad));
-        ResetAllKnockback();
-    }
-
     private void ResetAllKnockback()
     {
         players = GameObject.FindGameObjectsWithTag("Player");
@@ -22,6 +16,12 @@ public class SceneLoader : MonoBehaviour
             players[i].GetComponent<Player>().ResetKnockback();
         }
     }
+    public void LoadScene(int sceneToLoad)
+    {
+        StartCoroutine(LoadNewScene(sceneToLoad));
+        ResetAllKnockback();
+    }
+
 
     public void LoadScene(string sceneToLoad)
     {

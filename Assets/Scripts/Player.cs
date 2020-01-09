@@ -42,8 +42,8 @@ public class Player : MonoBehaviour, IBumpable
 
     //A Abilities:
     int jumpCount;
-    float jetpackAmount, extraHeight;
-    bool usingJetpack, canJetpack, coyoteJump, canHighJump;
+    float jetpackAmount;
+    bool usingJetpack, canJetpack, coyoteJump;
 
     //X Abilities:
     bool chargingSword;
@@ -54,7 +54,6 @@ public class Player : MonoBehaviour, IBumpable
 
     #region Cooldown system
     private float aCooldown, xCooldown, yCooldown, bCooldown;
-    private float missileCooldown => Manager.WorldOptions.missileCooldownTime;
     private float bubbleGunCooldown => Manager.WorldOptions.bubbleGunCooldownTime;
     #endregion
 
@@ -199,7 +198,6 @@ public class Player : MonoBehaviour, IBumpable
 
         UpdateCooldowns();
         JetPackFlying();
-        HighJump();
         SlamDunk();
     }
 
@@ -438,23 +436,6 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
 
-    private void HighJump()
-    {
-        if(canHighJump)
-        {
-            if (Input.GetButton("A" + "_P" + playerIndex))
-            {
-                rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
-                extraHeight += Time.deltaTime;
-            }
-        }
-
-        if(extraHeight >= .5f || Input.GetButtonUp("A" + "_P" + playerIndex))
-        {
-            canHighJump = false;
-        }
-    }
-
     private void SlamDunk()
     {
         if(canSlam)
@@ -487,9 +468,6 @@ public class Player : MonoBehaviour, IBumpable
             case AAbility.Jetpack:
                 Jetpack();
                 break;
-            case AAbility.BouncyShoes:
-                BouncyShoes();
-                break;
             default:
                 break;
         }
@@ -503,12 +481,6 @@ public class Player : MonoBehaviour, IBumpable
             case XAbility.Sword:
                 StartCoroutine(Sword());
                 break;
-            case XAbility.Axe:
-                Axe();
-                break;
-            case XAbility.Hammer:
-                StartCoroutine(Hammer());
-                break;
             default:
                 break;
         }
@@ -518,12 +490,6 @@ public class Player : MonoBehaviour, IBumpable
         switch (yAbility) {
             case YAbility.None:
                 None();
-                break;
-            case YAbility.Missile:
-                Missile();
-                break;
-            case YAbility.PickUp:
-                PickUp();
                 break;
             case YAbility.Blizzard:
                 StartCoroutine(Blizzard());
@@ -545,11 +511,8 @@ public class Player : MonoBehaviour, IBumpable
             case BAbility.ReflectiveShield:
                 ReflectiveShield();
                 break;
-            case BAbility.Barrier:
-                Barrier();
-                break;
-            case BAbility.Evade:
-                Evade();
+            case BAbility.Hammer:
+                StartCoroutine(Hammer());
                 break;
             default:
                 break;
@@ -603,16 +566,6 @@ public class Player : MonoBehaviour, IBumpable
             usingJetpack = true;
         }
     }
-    private void BouncyShoes()
-    {
-        if (coyoteJump)
-        {
-            anim.SetBool("JumpAnim", true);
-            coyoteJump = false;
-            extraHeight = 0;
-            canHighJump = true;
-        }
-    }
     #endregion
 
     //X Abilities:
@@ -629,7 +582,7 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(Manager.WorldOptions.punchDistance * dir, 0);
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
+        StartCoroutine(AbilityDuration(.2f));
         xCooldown += Manager.WorldOptions.defaultPunchCooldownTime;
         print("DefaultPunch");
     }
@@ -672,40 +625,7 @@ public class Player : MonoBehaviour, IBumpable
         rb.gravityScale = startGravity;
         xCooldown += Manager.WorldOptions.swordCooldownTime;
         print("Sword");
-    }
-    private void Axe()
-    {
-        //Animation:
-        abilityNumber = 2;
-        anim.SetFloat("AbilityNumber", abilityNumber);
-        anim.SetBool("UsingAbility", true);
-
-        //Ability Func:
-
-        //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
-        xCooldown += Manager.WorldOptions.axeCooldownTime;
-        print("Axe");
-    }
-    IEnumerator Hammer()
-    {
-        //Animation:
-        abilityNumber = 3;
-        anim.SetFloat("AbilityNumber", abilityNumber);
-        anim.SetBool("UsingAbility", true);
-
-        //Ability Func:
-        slamPower = -1.2f;
-        canSlam = true;
-        coyoteJump = false;
-        yield return new WaitUntil(() => coyoteJump);
-        canSlam = false;
-
-        //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.2f));
-        xCooldown += Manager.WorldOptions.hammerCooldownTime;
-        print("Hammer");
-    }
+    }  
     #endregion
 
     //B Abilities:
@@ -737,31 +657,24 @@ public class Player : MonoBehaviour, IBumpable
         StartCoroutine(AbilityDuration(0.5f));
         print("ReflectiveShield");
     }
-    private void Barrier()
+    IEnumerator Hammer()
     {
         //Animation:
-        abilityNumber = 6;
+        abilityNumber = 3;
         anim.SetFloat("AbilityNumber", abilityNumber);
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        slamPower = -1.2f;
+        canSlam = true;
+        coyoteJump = false;
+        yield return new WaitUntil(() => coyoteJump);
+        canSlam = false;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
-        print("Barrier");
-    }
-    private void Evade()
-    {
-        //Animation:
-        abilityNumber = 7;
-        anim.SetFloat("AbilityNumber", abilityNumber);
-        anim.SetBool("UsingAbility", true);
-
-        //Ability Func:
-
-        //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
-        print("Evade");
+        StartCoroutine(AbilityDuration(.2f));
+        xCooldown += Manager.WorldOptions.hammerCooldownTime;
+        print("Hammer");
     }
     #endregion
 
@@ -776,27 +689,6 @@ public class Player : MonoBehaviour, IBumpable
 
         //CoolDown and Debug:
         print("None");
-    }
-    private void Missile()
-    {
-        
-        //Animation:
-
-        //Ability Func:
-        var missile = Instantiate(Manager.WorldOptions.missilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
-        missile.GetComponent<Projectile>().Initialize(dir, Manager.WorldOptions.missileSpeed);
-        //CoolDown and Debug:
-        yCooldown += missileCooldown;
-        print("Missile");
-    }
-    private void PickUp()
-    {
-        //Animation:
-
-        //Ability Func:
-
-        //CoolDown and Debug:
-        print("PickUp");
     }
     private IEnumerator Blizzard()
     {

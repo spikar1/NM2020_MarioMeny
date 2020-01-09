@@ -6022,7 +6022,7 @@ PrefabInstance:
     - target: {fileID: 1536612990725597374, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
       propertyPath: onBumped.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1536612990725597374, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
@@ -6053,6 +6053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: displayText
       value: Start!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536612990725597374, guid: 23a74348687311f44b1b22308858785c,
+        type: 3}
+      propertyPath: onBumped.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: Selection Screen
       objectReference: {fileID: 0}
     - target: {fileID: 1580853639296073499, guid: 23a74348687311f44b1b22308858785c,
         type: 3}

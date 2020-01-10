@@ -16,7 +16,7 @@ public enum YAbility
 }
 public enum BAbility
 {
-    DefaultBlock, ReflectiveShield, Hammer
+    DefaultBlock, ReflectiveShield, Anvil
 }
 
 static public class AbilityExtensions

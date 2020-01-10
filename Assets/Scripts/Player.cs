@@ -711,7 +711,7 @@ public class Player : MonoBehaviour, IBumpable
             case BAbility.ReflectiveShield:
                 ReflectiveShield();
                 break;
-            case BAbility.Hammer:
+            case BAbility.Anvil:
                 StartCoroutine(Hammer());
                 break;
             default:

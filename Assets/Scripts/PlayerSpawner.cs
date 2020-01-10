@@ -16,6 +16,9 @@ public class PlayerSpawner : MonoBehaviour
 
     private void Awake()
     {
+        stockCanvas = FindObjectOfType<StockCanvas>();
+
+
         var plrs = FindObjectsOfType<Player>();
 
         
@@ -41,6 +44,11 @@ public class PlayerSpawner : MonoBehaviour
         pla4 = true;
         
         plaDebug = true;
+    }
+
+    private void Start()
+    {
+       
     }
 
     private void Update()

@@ -399,7 +399,10 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void OnCollisionEnter2D(Collision2D c) {
-        
+
+        if (c.relativeVelocity.magnitude > 13)
+            EmitSplatter(transform.position, vel);
+
 
         if (!c.GetContact(0).collider.GetComponent<Player>()) {
             /*var spr = splatterSprites[Random.Range(0, splatterSprites.Length)];
@@ -463,9 +466,8 @@ public class Player : MonoBehaviour, IBumpable
         if (!player)
             return;
 
-        ParticleSystem p = Instantiate(splatterParticle, Vector3.Lerp(transform.position + Vector3.back, col.transform.position, .5f), splatterParticle.transform.rotation).GetComponent<ParticleSystem>();
-        var main = p.main;
-        main.startColor = new ParticleSystem.MinMaxGradient(Manager.WorldOptions.playerColors[playerNumber - 1]);
+        /*var particlePos = Vector3.Lerp(transform.position + Vector3.back, col.transform.position, .5f);
+        EmitSplatter(particlePos);*/
 
         isAttacking = false;
         isUsingAbility = false;
@@ -474,28 +476,31 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(0, 0);
         player.rb.velocity = new Vector2(0, 0);
 
-        if(Manager.WorldOptions.bounceGameplay)
-        {
+        if (Manager.WorldOptions.bounceGameplay) {
             if (canSlam) {
                 //Insert slamming here
             }
-            if(player.isReflecting)
-            {
+            if (player.isReflecting) {
                 BouncyDamage((transform.position - player.transform.position).normalized);
             }
-            else
-            {
+            else {
                 player.BouncyDamage((player.transform.position - transform.position).normalized);
             }
         }
-        else
-        {
+        else {
             player.Damage((player.transform.position - transform.position).normalized);
         }
 
         var b = col.GetComponent<Bubble>();
         if (b)
             b.Damage((player.transform.position - transform.position).normalized);
+    }
+
+    private void EmitSplatter(Vector3 particlePos, Vector2 vel) {
+        ParticleSystem p = Instantiate(splatterParticle, particlePos, splatterParticle.transform.rotation).GetComponent<ParticleSystem>();
+        var main = p.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(Manager.WorldOptions.playerColors[playerNumber - 1]);
+        
     }
 
     public void ResetKnockback()

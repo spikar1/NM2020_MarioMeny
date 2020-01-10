@@ -223,7 +223,7 @@ public class Player : MonoBehaviour, IBumpable
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
         {
-            if(canUseAbility && xCooldown <= 0.01f)
+            if(canUseAbility && xCooldown <= 0.01f && !isChargingSword)
             {
                 canUseAbility = false;
                 isUsingAbility = true;
@@ -396,6 +396,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void OnCollisionEnter2D(Collision2D c) {
+        
 
         if (!c.GetContact(0).collider.GetComponent<Player>()) {
             /*var spr = splatterSprites[Random.Range(0, splatterSprites.Length)];
@@ -458,6 +459,8 @@ public class Player : MonoBehaviour, IBumpable
         var player = col.GetComponent<Player>();
         if (!player)
             return;
+
+        
 
         isAttacking = false;
         isUsingAbility = false;
@@ -802,8 +805,11 @@ public class Player : MonoBehaviour, IBumpable
 
         var t = 0f;
         var p = transform.GetChild(0).localPosition;
-        while (!Input.GetButtonUp("X" + "_P" + playerIndex) && !Input.GetKeyUp(KeyCode.Alpha2) ||
-            t > 2* Manager.WorldOptions.maxSwordCharge) {
+        while (!Input.GetButtonUp("X" + "_P" + playerIndex) && !Input.GetKeyUp(KeyCode.Alpha2)
+            ) {
+            if (t > 2 * Manager.WorldOptions.maxSwordCharge)
+                break;
+
             //transform.position = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
             transform.GetChild(0).localPosition = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
             t += Time.deltaTime;

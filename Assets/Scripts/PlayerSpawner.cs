@@ -16,6 +16,14 @@ public class PlayerSpawner : MonoBehaviour
 
     private void Awake()
     {
+        var plrs = FindObjectsOfType<Player>();
+
+        
+
+        for (int i = 0; i < plrs.Length; i++) {
+            Destroy(plrs[i].gameObject);
+        }
+
         stick1 = $"Joystick{1}Button7";
         kc1 = (KeyCode)System.Enum.Parse(typeof(KeyCode), stick1);
         pla1 = true;

@@ -435,9 +435,6 @@ public class Player : MonoBehaviour, IBumpable
             jetpackAmount = Manager.WorldOptions.MaxJetpackDuration;
             anim.SetBool("JumpAnim", false);
         }
-        else {
-            SetBounceState();
-        }
 
         Transform other = c.collider.transform;
         float otherY = other.position.y;
@@ -451,9 +448,7 @@ public class Player : MonoBehaviour, IBumpable
         }
     }
 
-    private void SetBounceState() {
-        anim.SetBool("BounceAnim", true);
-    }
+
 
     private void Land() {
         

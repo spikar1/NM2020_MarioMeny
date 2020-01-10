@@ -38,7 +38,7 @@ public class DeathRay : MonoBehaviour
 
     IEnumerator WaitBeforeChecking()
     {
-        yield return new WaitForSeconds(1);
         manager.GetComponent<Manager>().CheckRemainingPlayers();
+        yield return new WaitForSeconds(0);
     }
 }

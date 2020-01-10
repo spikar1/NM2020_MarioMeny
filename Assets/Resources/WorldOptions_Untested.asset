@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WorldOptions_Untested
   m_EditorClassIdentifier: 
   levelList:
-  - level_1
+  - level_2
   playersCanJumpAfterBouncePad: 0
   bounceGameplay: 1
   aDefault: 0

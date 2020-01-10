@@ -401,7 +401,7 @@ public class Player : MonoBehaviour, IBumpable
     private void OnCollisionEnter2D(Collision2D c) {
 
         if (c.relativeVelocity.magnitude > 13)
-            EmitSplatter(transform.position, vel);
+            EmitSplatter(transform.position, new Vector2());
 
 
         if (!c.GetContact(0).collider.GetComponent<Player>()) {

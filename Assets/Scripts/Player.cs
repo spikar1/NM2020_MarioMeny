@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IBumpable
     public bool playerIsDead;
 
     public GameObject splatterPrefab;
+    public GameObject goopPrefab;
 
     //Ref:
     [HideInInspector]
@@ -152,11 +153,11 @@ public class Player : MonoBehaviour, IBumpable
             else{
                 t += Time.deltaTime;
             }
-            if(t > .05f && rb.velocity.magnitude > 2) {
+            if(t > .1f && rb.velocity.magnitude > 2) {
                 t = 0;
-                Quaternion q = Quaternion.Euler(0, 0, Random.Range(0f, 359f));
-                GameObject go = Instantiate(splatterPrefab, transform.position + Vector3.down * .5f, q);
-                go.transform.localScale = new Vector3(.6f, .6f, .6f);
+                Quaternion q = Quaternion.Euler(0, 0, Random.Range(-5f, 5));
+                GameObject go = Instantiate(goopPrefab, transform.position + Vector3.down * .55f, q);
+                go.transform.localScale = Vector3.one * 1f;
                 go.GetComponent<SpriteRenderer>().color = Manager.WorldOptions.playerColors[playerNumber - 1];
             }
         }
@@ -358,6 +359,7 @@ public class Player : MonoBehaviour, IBumpable
     private void Accelerate(float direction) {
         if (isUsingAbility || knockbackState)
             return;
+
         if (Mathf.Abs(direction) > .1f) {
             var canMove = false;
 
@@ -466,6 +468,9 @@ public class Player : MonoBehaviour, IBumpable
 
         if(Manager.WorldOptions.bounceGameplay)
         {
+            if (canSlam) {
+                //Insert slamming here
+            }
             if(player.isReflecting)
             {
                 BouncyDamage((transform.position - player.transform.position).normalized);
@@ -863,6 +868,7 @@ public class Player : MonoBehaviour, IBumpable
     }
     IEnumerator Hammer()
     {
+        shouldFollowVelocity = true;
         //Animation:
         abilityNumber = 3;
         anim.SetFloat("AbilityNumber", abilityNumber);
@@ -876,6 +882,7 @@ public class Player : MonoBehaviour, IBumpable
         coyoteJump = false;
         canUseAbility = false;
         yield return new WaitUntil(() => coyoteJump);
+
 
         canSlam = false;
 

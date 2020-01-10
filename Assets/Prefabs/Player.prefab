@@ -145,7 +145,7 @@ MonoBehaviour:
   - {x: -0.7164154, y: -0.36358643, z: 0}
   m_ShapePathHash: 1430796295
   m_Mesh: {fileID: 0}
-  m_InstanceId: 41250
+  m_InstanceId: 52746
 --- !u!1 &8432251687096783399
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +210,8 @@ MonoBehaviour:
   playerNumber: 1
   playerIsDead: 0
   splatterPrefab: {fileID: 5949891616056485929, guid: e159d335e47459e43b8783a0ae3d466f,
+    type: 3}
+  goopPrefab: {fileID: 5949891616056485929, guid: 15b599b70a2e50a4da67651d805c0fa0,
     type: 3}
   rb: {fileID: 0}
   anim: {fileID: 0}

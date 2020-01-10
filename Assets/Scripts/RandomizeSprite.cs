@@ -8,10 +8,13 @@ public class RandomizeSprite : MonoBehaviour
     Sprite[] sprites;
 
     SpriteRenderer sr;
+    static float offset = 0;
 
     private void Awake() {
         sr = GetComponent<SpriteRenderer>();
 
         sr.sprite = sprites.Length > 0 ? sprites[Random.Range(0, sprites.Length)] : sr.sprite;
+        transform.position -= new Vector3(0, 0, offset);
+        offset += .0001f;
     }
 }

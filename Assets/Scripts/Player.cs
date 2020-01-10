@@ -140,18 +140,41 @@ public class Player : MonoBehaviour, IBumpable
         ResetKnockback();
     }
 
+    float t = 0;
+    private bool startedSplatting = false;
+
     void FixedUpdate() {
+        if (Grounded) {
+            if (!startedSplatting) {
+                startedSplatting = true;
+                t = 0;
+            }
+            else{
+                t += Time.deltaTime;
+            }
+            if(t > .05f && rb.velocity.magnitude > 2) {
+                t = 0;
+                Quaternion q = Quaternion.Euler(0, 0, Random.Range(0f, 359f));
+                GameObject go = Instantiate(splatterPrefab, transform.position + Vector3.down * .5f, q);
+                go.transform.localScale = new Vector3(.6f, .6f, .6f);
+                go.GetComponent<SpriteRenderer>().color = Manager.WorldOptions.playerColors[playerNumber - 1];
+            }
+        }
+        if (startedSplatting && !Grounded)
+            startedSplatting = false;
+
+
         if (shouldFollowVelocity)
             FollowVelocity();
         else {
             transform.GetChild(0).up = Vector3.up;
         }
 
-        if (playerIsDead || knockbackState)
-            return;
-
         if (Manager.WorldOptions.useAcceleration)
             Accelerate(horizontalInput);
+
+        if (playerIsDead || knockbackState)
+            return;
         else
             Move(horizontalInput);
         anim.SetFloat("yVelocity", rb.velocity.y);
@@ -194,6 +217,7 @@ public class Player : MonoBehaviour, IBumpable
             if(canUseAbility)
             {
                 DoAAbility();
+                shouldFollowVelocity = true;
             }
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
@@ -203,18 +227,21 @@ public class Player : MonoBehaviour, IBumpable
                 canUseAbility = false;
                 isUsingAbility = true;
                 isAttacking = true;
+                shouldFollowVelocity = false;
                 DoXAbility();
             }
         }
-        if (Input.GetButtonDown("Y" + "_P" + playerIndex))
-        {
-            if(canUseAbility && yCooldown <= 0.01f)
+        if (Input.GetButtonDown("Y" + "_P" + playerIndex)) {
+            if (canUseAbility && yCooldown <= 0.01f) {
+                shouldFollowVelocity = false;
                 DoYAbility();
+            }
         }
         if (Input.GetButtonDown("B" + "_P" + playerIndex))
         {
             if (canUseAbility && bCooldown <= 0.01f)
             {
+                shouldFollowVelocity = false;
                 canUseAbility = false;
                 isUsingAbility = true;
                 DoBAbility();
@@ -265,7 +292,7 @@ public class Player : MonoBehaviour, IBumpable
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
             if (canUseAbility) {
-                shouldFollowVelocity = false;
+                shouldFollowVelocity = true;
                 DoAAbility();
 
             }
@@ -680,7 +707,6 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetBool("JumpAnim", true);
             //Temp
             shouldFollowVelocity = true;
-            FollowVelocity();
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;
 

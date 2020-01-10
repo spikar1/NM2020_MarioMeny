@@ -213,6 +213,7 @@ public class Player : MonoBehaviour, IBumpable
         UpdateCooldowns();
         JetPackFlying();
         SlamDunk();
+        CheckBouncyBall();
     }
 
 
@@ -453,6 +454,11 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetBool("IsKnocked", false);
         }
 
+    }
+
+    public void CheckBouncyBall()
+    {
+        print(Grounded);
     }
 
     public void LooseStock()

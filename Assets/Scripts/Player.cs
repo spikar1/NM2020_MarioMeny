@@ -529,6 +529,7 @@ public class Player : MonoBehaviour, IBumpable
     {
         if (isBlocking)
         {
+            DamageSprite(0.1f);
             knockbackState = true;
             anim.SetBool("IsKnocked", true);
             rb.velocity = dir * knockbackAmount * Manager.WorldOptions.blockedKnockback + (Vector2.up * knockbackAmount * 0.5f * Manager.WorldOptions.blockedKnockback);
@@ -536,6 +537,7 @@ public class Player : MonoBehaviour, IBumpable
         }
         else
         {
+            DamageSprite(0.1f);
             print("Hit");
             knockbackState = true;
             anim.SetBool("IsKnocked", true);
@@ -559,6 +561,14 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetBool("IsKnocked", false);
         }
 
+    }
+
+    IEnumerator DamageSprite(float time)
+    {
+        Color startColor = rend.color;
+        rend.color = Color.white;
+        yield return new WaitForSeconds(time);
+        rend.color = startColor;
     }
 
     public void CheckBouncyBall()

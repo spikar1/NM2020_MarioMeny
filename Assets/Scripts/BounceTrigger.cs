@@ -6,7 +6,7 @@ public class BounceTrigger : MonoBehaviour
     public float bounceHeight = 10;
 
     private void OnTriggerStay2D(Collider2D collision) {
-        if (collision.GetComponent<Rigidbody2D>().velocity.y < 5)
+        if (collision.GetComponent<Rigidbody2D>().velocity.y < 1)
             return;
 
         Player p = collision.GetComponent<Player>();

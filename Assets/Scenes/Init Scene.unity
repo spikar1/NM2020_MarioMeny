@@ -2598,12 +2598,12 @@ PrefabInstance:
     - target: {fileID: 6363083138229300929, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -8.02
+      value: -8.25
       objectReference: {fileID: 0}
     - target: {fileID: 6363083138229300929, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4.82
+      value: 4.31
       objectReference: {fileID: 0}
     - target: {fileID: 6363083138229300929, guid: 23a74348687311f44b1b22308858785c,
         type: 3}
@@ -3097,6 +3097,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1661993817}
   - component: {fileID: 1661993818}
+  - component: {fileID: 1661993819}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -3129,7 +3130,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7d5c173e701d5a24ba3b39e9613d806c, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -3214,6 +3215,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1661993819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661993816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb4053a160fa4f44fb3c0904c373ba46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1738823015
 GameObject:
   m_ObjectHideFlags: 0

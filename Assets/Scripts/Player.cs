@@ -172,11 +172,11 @@ public class Player : MonoBehaviour, IBumpable
 
         if (Manager.WorldOptions.useAcceleration)
             Accelerate(horizontalInput);
+        else
+            Move(horizontalInput);
 
         if (playerIsDead || knockbackState)
             return;
-        else
-            Move(horizontalInput);
         anim.SetFloat("yVelocity", rb.velocity.y);
     }
 
@@ -356,7 +356,7 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetFloat("HorizontalMovement", horizontalInput);
     }
     private void Accelerate(float direction) {
-        if (isUsingAbility)
+        if (isUsingAbility || knockbackState)
             return;
         if (Mathf.Abs(direction) > .1f) {
             var canMove = false;

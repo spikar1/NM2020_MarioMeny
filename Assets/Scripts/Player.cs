@@ -173,14 +173,14 @@ public class Player : MonoBehaviour, IBumpable
         else {
             transform.GetChild(0).up = Vector3.up;
         }
+        if (playerIsDead || knockbackState)
+            return;
 
         if (Manager.WorldOptions.useAcceleration)
             Accelerate(horizontalInput);
         else
             Move(horizontalInput);
 
-        if (playerIsDead || knockbackState)
-            return;
         anim.SetFloat("yVelocity", rb.velocity.y);
     }
 
@@ -360,7 +360,7 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetFloat("HorizontalMovement", horizontalInput);
     }
     private void Accelerate(float direction) {
-        if (isUsingAbility || knockbackState)
+        if (isUsingAbility)
             return;
 
         if (Mathf.Abs(direction) > .1f) {
@@ -575,6 +575,7 @@ public class Player : MonoBehaviour, IBumpable
         print($"{playerIndex} Lost a Stock!");
         stockCount--;
         playerIsDead = true;
+        rb.velocity = Vector3.zero;
         anim.SetBool("IsDead", true);
 
         stockCanvas.UpdatePlayerStock(playerNumber, stockCount);

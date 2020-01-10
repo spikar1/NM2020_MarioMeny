@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-
+using Random = UnityEngine.Random;
 public class Player : MonoBehaviour, IBumpable
 {
-    
+    public LayerMask nonPlayerLayers;
+
     float horizontalInput;
     int dir = 1;
 
@@ -17,11 +18,23 @@ public class Player : MonoBehaviour, IBumpable
     public int stockCount, playerNumber = 1;
     public bool playerIsDead;
 
-
+    [SerializeField]
+    Sprite[] splatterSprites;
 
     //Ref:
     [HideInInspector]
     public Rigidbody2D rb;
+
+    internal void ResetPlayer() {
+        isUsingAbility = false;
+        canUseAbility = true;
+        isAttacking = false;
+        isBlocking = false;
+        isReflecting = false;
+        rb.velocity = new Vector2(0, 0);
+        
+    }
+
     [HideInInspector]
     public Animator anim;
     [HideInInspector]
@@ -72,13 +85,24 @@ public class Player : MonoBehaviour, IBumpable
     float groundedXOffset = .43f;
     float groundedYOffset = .7f;
 
+    private bool shouldFollowVelocity;
+
     bool Grounded {
         get {
-            bool b = !Physics2D.Linecast(
+            bool b = false;
+            /*var hit = Physics2D.Linecast(
                 transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
-                transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset
-                );
-            print("Bool - " + b);
+                transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset,
+                nonPlayerLayers
+                );*/
+            var hit = Physics2D.OverlapBox(transform.position + Vector3.down * groundedYOffset, new Vector2(groundedXOffset * 2, .3f), 0, nonPlayerLayers);
+
+            Debug.DrawLine(
+                transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
+                transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset,
+                Color.red);
+
+            b = hit;
             return b;
         }
     }
@@ -118,6 +142,12 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     void FixedUpdate() {
+        if (shouldFollowVelocity)
+            FollowVelocity();
+        else {
+            transform.GetChild(0).up = Vector3.up;
+        }
+
         if (playerIsDead || knockbackState)
             return;
 
@@ -235,12 +265,16 @@ public class Player : MonoBehaviour, IBumpable
             isIcyFloor = false;
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            if (canUseAbility)
+            if (canUseAbility) {
+                shouldFollowVelocity = false;
                 DoAAbility();
+
+            }
 
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
             if (canUseAbility) {
+                shouldFollowVelocity = false;
                 canUseAbility = false;
                 isUsingAbility = true;
                 isAttacking = true;
@@ -248,13 +282,19 @@ public class Player : MonoBehaviour, IBumpable
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            if (canUseAbility)
+            if (canUseAbility) {
+                shouldFollowVelocity = false;
                 DoYAbility();
+
+            }
 
         }
         if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            if (canUseAbility)
+            if (canUseAbility) {
+                shouldFollowVelocity = false;
                 DoBAbility();
+
+            }
 
         }
     }
@@ -328,22 +368,38 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void OnCollisionEnter2D(Collision2D c) {
+
+        if (!c.GetContact(0).collider.GetComponent<Player>()) {
+            var spr = splatterSprites[Random.Range(0, splatterSprites.Length)];
+            var o = new GameObject();
+            var sr = o.AddComponent<SpriteRenderer>();
+            sr.sprite = spr;
+            sr.sortingLayerName = "Ground";
+            sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            o.transform.position = c.GetContact(0).point;
+
+        }
+
         if (Manager.WorldOptions.bounceGameplay && rb.velocity.y > -1f && rb.velocity.y < 5f ||
             rb.velocity.magnitude < 3f
             ) {
             rb.velocity = new Vector2(rb.velocity.x, 0);
-
+            shouldFollowVelocity = false;
+            Land();
         }
 
         if (isBlocking)
             rb.velocity *= new Vector2(1, Manager.WorldOptions.shieldVelocityCutoff);
 
-        if(c.GetContact(0).normal.y > 0.2f)
-        {
+        if(c.GetContact(0).normal.y > 0.2f) {
+            shouldFollowVelocity = false;
             coyoteJump = true;
             usingJetpack = false;
             jetpackAmount = Manager.WorldOptions.MaxJetpackDuration;
             anim.SetBool("JumpAnim", false);
+        }
+        else {
+            SetBounceState();
         }
 
         Transform other = c.collider.transform;
@@ -356,6 +412,14 @@ public class Player : MonoBehaviour, IBumpable
         if(otherY > transform.position.y && c.GetContact(0).normal.y < 0) {
             bumpable.Bumped(this, c.relativeVelocity);          
         }
+    }
+
+    private void SetBounceState() {
+        anim.SetBool("BounceAnim", true);
+    }
+
+    private void Land() {
+        
     }
 
     private void OnTriggerStay2D(Collider2D col) {
@@ -458,7 +522,11 @@ public class Player : MonoBehaviour, IBumpable
 
     public void CheckBouncyBall()
     {
-        print(Grounded);
+        if (coyoteJump && !Grounded)
+            anim.SetBool("IsBouncyBall", true);
+        else
+            anim.SetBool("IsBouncyBall", false);
+
     }
 
     public void LooseStock()
@@ -609,12 +677,20 @@ public class Player : MonoBehaviour, IBumpable
         {
             print("I Jumped");
             anim.SetBool("JumpAnim", true);
+            //Temp
+            shouldFollowVelocity = true;
+            FollowVelocity();
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;
 
             Manager.SoundManager.PlayJumpSound();
         }
     }
+
+    private void FollowVelocity() {
+        transform.GetChild(0).up = rb.velocity.normalized;
+    }
+
     private void DoubleJump()
     {
         if (coyoteJump)
@@ -828,12 +904,10 @@ public class Player : MonoBehaviour, IBumpable
     #endregion
     #endregion
 
-    private void OnDrawGizmosSelected() {
 
+    private void OnDrawGizmosSelected() {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(
-            transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
-            transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset
-            );
+
+        Gizmos.DrawWireCube(transform.position + Vector3.down * groundedYOffset, new Vector2(groundedXOffset * 2, .3f));
     }
 }

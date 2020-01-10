@@ -145,7 +145,7 @@ MonoBehaviour:
   - {x: -0.7164154, y: -0.36358643, z: 0}
   m_ShapePathHash: 1430796295
   m_Mesh: {fileID: 0}
-  m_InstanceId: 31686
+  m_InstanceId: 35868
 --- !u!1 &8432251687096783399
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,15 +202,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16875395bd0e9b4409891e38e7bb3dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nonPlayerLayers:
+    serializedVersion: 2
+    m_Bits: 311
   playerIndex: 1
   stockCount: 5
   playerNumber: 1
   playerIsDead: 0
+  splatterSprites:
+  - {fileID: 21300000, guid: 2029e34f09722534f8001789aa497adc, type: 3}
+  - {fileID: 21300000, guid: e8a28ed0b44d98447ab22e4abdb215bc, type: 3}
   rb: {fileID: 0}
   anim: {fileID: 0}
   rend: {fileID: 0}
   textMesh: {fileID: 0}
+  isBlocking: 0
   coyoteJump: 0
+  knockbackState: 0
+  canSlam: 0
   bAbility: 0
   aAbility: 0
   xAbility: 0

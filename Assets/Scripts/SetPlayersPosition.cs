@@ -14,8 +14,9 @@ public class SetPlayersPosition : MonoBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
-            players[i].GetComponent<Player>().rb.velocity = new Vector2(0, 0);
+            players[i].GetComponent<Player>().ResetPlayer();
             players[i].transform.position = transforms[i].position;
+
         }
 
         for (int i = 0; i < players.Length; i++)

@@ -400,7 +400,7 @@ public class Player : MonoBehaviour, IBumpable
 
     private void OnCollisionEnter2D(Collision2D c) {
 
-        if (c.relativeVelocity.magnitude > 13)
+        if (c.relativeVelocity.magnitude > 15)
             EmitSplatter(transform.position, new Vector2());
 
 
@@ -499,7 +499,7 @@ public class Player : MonoBehaviour, IBumpable
     private void EmitSplatter(Vector3 particlePos, Vector2 vel) {
         ParticleSystem p = Instantiate(splatterParticle, particlePos, splatterParticle.transform.rotation).GetComponent<ParticleSystem>();
         var main = p.main;
-        main.startColor = new ParticleSystem.MinMaxGradient(Manager.WorldOptions.playerColors[playerNumber - 1]);
+        main.startColor = new ParticleSystem.MinMaxGradient(Manager.WorldOptions.playerColors[playerNumber - 1] * .6f);
         
     }
 

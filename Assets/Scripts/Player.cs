@@ -12,6 +12,9 @@ public class Player : MonoBehaviour, IBumpable
     float horizontalInput;
     int dir = 1;
 
+
+    public GameObject splatterParticle;
+
     #region Public Variables & References
     //Variables:
     public string playerIndex = "1";
@@ -460,7 +463,9 @@ public class Player : MonoBehaviour, IBumpable
         if (!player)
             return;
 
-        
+        ParticleSystem p = Instantiate(splatterParticle, Vector3.Lerp(transform.position + Vector3.back, col.transform.position, .5f), splatterParticle.transform.rotation).GetComponent<ParticleSystem>();
+        var main = p.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(Manager.WorldOptions.playerColors[playerNumber - 1]);
 
         isAttacking = false;
         isUsingAbility = false;

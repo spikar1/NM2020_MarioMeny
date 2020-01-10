@@ -205,6 +205,8 @@ MonoBehaviour:
   nonPlayerLayers:
     serializedVersion: 2
     m_Bits: 311
+  splatterParticle: {fileID: 6993538211897296162, guid: 926940b5d9865184ba0def0f796df0b8,
+    type: 3}
   playerIndex: 1
   stockCount: 5
   playerNumber: 1

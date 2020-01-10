@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WorldOptions_Untested
   m_EditorClassIdentifier: 
   levelList:
-  - level_2
+  - level_3
   playersCanJumpAfterBouncePad: 0
   bounceGameplay: 1
   aDefault: 0
@@ -40,10 +40,10 @@ MonoBehaviour:
   knockbackScaler: 2
   bouncyKnockback: 15
   playerColors:
-  - {r: 1, g: 0.5896226, b: 0.5896226, a: 1}
-  - {r: 0.66498154, g: 1, b: 0.6462264, a: 1}
-  - {r: 0.6650944, g: 0.8102097, b: 1, a: 1}
-  - {r: 0.9986979, g: 1, b: 0.6462264, a: 1}
+  - {r: 1, g: 0.3726415, b: 0.3726415, a: 1}
+  - {r: 0.39028367, g: 1, b: 0.3537736, a: 1}
+  - {r: 0.27699995, g: 0.59171766, b: 1, a: 1}
+  - {r: 1, g: 0.8273658, b: 0.4009434, a: 1}
   defaultPunchCooldownTime: 1
   swordCooldownTime: 1
   hammerCooldownTime: 1
@@ -69,5 +69,5 @@ MonoBehaviour:
   shieldVelocityCutoff: 0.4
   availableAAbilities: 0100000002000000
   availableXAbilities: 01000000
-  availableYAbilities: 0100000002000000
+  availableYAbilities: 
   availableBAbilities: 0100000002000000

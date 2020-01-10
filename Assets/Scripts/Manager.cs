@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Manager : MonoBehaviour
 {
     public WorldOptions _worldOptions;
+    public SoundManager _soundManager;
 
     GameObject[] players;
     private int playersPlaying;
@@ -18,6 +19,8 @@ public class Manager : MonoBehaviour
 
     static Manager instance = null;
     public static Manager Instance => instance;
+
+    public static SoundManager SoundManager => Instance._soundManager;
 
     private void Awake() {
 
@@ -63,13 +66,13 @@ public class Manager : MonoBehaviour
             if(currentPlaying < 2)
             {
                 //Go to SelectionScreen:
-                sceneLoader.LoadScene(4);
+                sceneLoader.LoadScene("Selection Screen");
             }
         }
         else
         {
             //Go To Victory Screen:
-            sceneLoader.LoadScene(5);
+            sceneLoader.LoadScene("WinScreen");
         }
     }
 

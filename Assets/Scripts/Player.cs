@@ -17,6 +17,8 @@ public class Player : MonoBehaviour, IBumpable
     public int stockCount, playerNumber = 1;
     public bool playerIsDead;
 
+
+
     //Ref:
     [HideInInspector]
     public Rigidbody2D rb;
@@ -26,29 +28,35 @@ public class Player : MonoBehaviour, IBumpable
     public SpriteRenderer rend;
     [HideInInspector]
     public TextMeshPro textMesh;
+    StockCanvas stockCanvas;
     #endregion
 
     #region AbilityFunction Related
-    private bool isUsingAbility = false;
-    private bool canUseAbility = true;
-    float abilityNumber;
+    //Player States:
+    bool isUsingAbility = false;
+    bool isAttacking = false;
+    bool isReflecting = false;
+    public bool isBlocking = false;
+
+    bool canUseAbility = true;
     float startGravity;
+    float abilityNumber;
 
     //A Abilities:
     int jumpCount;
-    float jetpackAmount, extraHeight;
-    bool usingJetpack, canJetpack, coyoteJump, canHighJump;
+    float jetpackAmount;
+    bool usingJetpack, canJetpack;
+    public bool coyoteJump;
 
     //X Abilities:
-    bool chargingSword;
+    bool isChargingSword;
     float swordCharge, slamPower;
     private float knockbackAmount; 
-    bool knockbackState, canSlam;
+    public bool knockbackState, canSlam;
     #endregion
 
     #region Cooldown system
     private float aCooldown, xCooldown, yCooldown, bCooldown;
-    private float missileCooldown => Manager.WorldOptions.missileCooldownTime;
     private float bubbleGunCooldown => Manager.WorldOptions.bubbleGunCooldownTime;
     #endregion
 
@@ -57,8 +65,28 @@ public class Player : MonoBehaviour, IBumpable
     public AAbility aAbility = AAbility.DefaultJump;
     public XAbility xAbility = XAbility.DefaultPunch;
     public YAbility yAbility = YAbility.None;
-    
+    private static bool isIcyFloor = false;
+    private static int iceIndex = -1;
+
     #endregion
+    float groundedXOffset = .43f;
+    float groundedYOffset = .7f;
+
+    bool Grounded {
+        get {
+            bool b = !Physics2D.Linecast(
+                transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
+                transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset
+                );
+            print("Bool - " + b);
+            return b;
+        }
+    }
+
+    public IEnumerator Freeze(float duration) {
+        knockbackState = true;
+        yield return new WaitForSeconds(duration);
+    }
 
     private void Awake() {
         //Ref:
@@ -66,6 +94,7 @@ public class Player : MonoBehaviour, IBumpable
         anim = gameObject.GetComponentInChildren<Animator>();
         rend = GetComponentInChildren<SpriteRenderer>();
         textMesh = GetComponent<TextMeshPro>();
+        stockCanvas = GameObject.FindGameObjectWithTag("StockCanvas").GetComponent<StockCanvas>();
 
         //Dont Destroy:
         DontDestroyOnLoad(gameObject);
@@ -84,13 +113,18 @@ public class Player : MonoBehaviour, IBumpable
 
         startGravity = rb.gravityScale;
         playerIsDead = false;
+
+        ResetKnockback();
     }
 
     void FixedUpdate() {
         if (playerIsDead || knockbackState)
             return;
 
-        Move(horizontalInput);
+        if (Manager.WorldOptions.useAcceleration)
+            Accelerate(horizontalInput);
+        else
+            Move(horizontalInput);
         anim.SetFloat("yVelocity", rb.velocity.y);
     }
 
@@ -101,7 +135,6 @@ public class Player : MonoBehaviour, IBumpable
         }
 
 
-
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
         if (Manager.debugMode)
         {
@@ -110,11 +143,8 @@ public class Player : MonoBehaviour, IBumpable
             if (Input.GetKey(KeyCode.D))
                 horizontalInput += 1;
         }
-
-        if (Manager.debugMode)
-            DebugUpdate();
        
-        if(chargingSword)
+        if(isChargingSword)
         {
             if(swordCharge < Manager.WorldOptions.maxSwordCharge)
             {
@@ -126,29 +156,40 @@ public class Player : MonoBehaviour, IBumpable
             }
         }
 
+        if (Manager.debugMode) {
+            DebugUpdate();
+        }
+
         if (Input.GetButtonDown("A" + "_P" + playerIndex)) 
         {
             if(canUseAbility)
+            {
                 DoAAbility();
+            }
         }
         if (Input.GetButtonDown("X" + "_P" + playerIndex)) 
         {
-            if(canUseAbility)
+            if(canUseAbility && xCooldown <= 0.01f)
             {
                 canUseAbility = false;
                 isUsingAbility = true;
+                isAttacking = true;
                 DoXAbility();
             }
         }
         if (Input.GetButtonDown("Y" + "_P" + playerIndex))
         {
-            if(canUseAbility)
+            if(canUseAbility && yCooldown <= 0.01f)
                 DoYAbility();
         }
         if (Input.GetButtonDown("B" + "_P" + playerIndex))
         {
-            if(canUseAbility)
+            if (canUseAbility && bCooldown <= 0.01f)
+            {
+                canUseAbility = false;
+                isUsingAbility = true;
                 DoBAbility();
+            }
         }
 
 
@@ -165,10 +206,12 @@ public class Player : MonoBehaviour, IBumpable
             else
                 rend.flipX = false;
         }
+        else if(isAttacking && !isChargingSword){
+            rend.flipX = Mathf.Sign(rb.velocity.x) > 0 ? false : true;
+        }
 
         UpdateCooldowns();
         JetPackFlying();
-        HighJump();
         SlamDunk();
     }
 
@@ -183,14 +226,36 @@ public class Player : MonoBehaviour, IBumpable
 
     private void DebugUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            DoAAbility();
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            DoXAbility();
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            DoYAbility();
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            DoBAbility();
+
+        if (Input.GetKeyDown(KeyCode.I))
+            isIcyFloor = true;
+
+        if (Input.GetKeyDown(KeyCode.K))
+            isIcyFloor = false;
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            if (canUseAbility)
+                DoAAbility();
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            if (canUseAbility) {
+                canUseAbility = false;
+                isUsingAbility = true;
+                isAttacking = true;
+                DoXAbility();
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            if (canUseAbility)
+                DoYAbility();
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            if (canUseAbility)
+                DoBAbility();
+
+        }
     }
 
     public void StopAbility(string abilityString) {
@@ -223,6 +288,37 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(direction * Manager.WorldOptions.maxSpeed, rb.velocity.y);
         anim.SetFloat("HorizontalMovement", horizontalInput);
     }
+    private void Accelerate(float direction) {
+        if (isUsingAbility)
+            return;
+        if (Mathf.Abs(direction) > .1f) {
+            var canMove = false;
+
+            if (Mathf.Sign(rb.velocity.x) != Mathf.Sign(horizontalInput))
+                canMove = true;
+            else if (Mathf.Abs(rb.velocity.x) < Manager.WorldOptions.maxSpeed)
+                canMove = true;
+
+            anim.SetFloat("HorizontalMovement", horizontalInput);
+
+            var acc = Mathf.Sign(rb.velocity.x) == Mathf.Sign(direction) ? Manager.WorldOptions.acceleration : Manager.WorldOptions.deaccelerationSpeed;
+            if (isIcyFloor && iceIndex != playerNumber && Grounded)
+                acc = Manager.WorldOptions.iceFloorAcceleration;
+
+            if (canMove)
+                rb.velocity += new Vector2(direction * acc, 0);
+            if(Mathf.Abs(rb.velocity.x) > Manager.WorldOptions.maxSpeed) {
+                rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * Manager.WorldOptions.maxSpeed, rb.velocity.y);
+            }
+        }
+        else {
+            var acc = Manager.WorldOptions.deaccelerationSpeed;
+            if (isIcyFloor && iceIndex != playerNumber && Grounded)
+                acc = Manager.WorldOptions.iceFloorAcceleration;
+            rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, 0, acc), rb.velocity.y);
+        }
+        
+    }
 
     public void Bumped(Player other, Vector2 collisionVector) {
         print(name + " is bumped by " + other);
@@ -230,8 +326,18 @@ public class Player : MonoBehaviour, IBumpable
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision) {
-        if(collision.GetContact(0).normal.y > 0)
+    private void OnCollisionEnter2D(Collision2D c) {
+        if (Manager.WorldOptions.bounceGameplay && rb.velocity.y > -1f && rb.velocity.y < 5f ||
+            rb.velocity.magnitude < 3f
+            ) {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+
+        }
+
+        if (isBlocking)
+            rb.velocity *= new Vector2(1, Manager.WorldOptions.shieldVelocityCutoff);
+
+        if(c.GetContact(0).normal.y > 0.2f)
         {
             coyoteJump = true;
             usingJetpack = false;
@@ -239,44 +345,114 @@ public class Player : MonoBehaviour, IBumpable
             anim.SetBool("JumpAnim", false);
         }
 
-
-        Transform other = collision.collider.transform;
+        Transform other = c.collider.transform;
         float otherY = other.position.y;
         IBumpable bumpable = other.GetComponent<IBumpable>();
         if (bumpable == null)
             return;
 
 
-        if(otherY > transform.position.y && collision.GetContact(0).normal.y < 0) {
-            bumpable.Bumped(this, collision.relativeVelocity);          
+        if(otherY > transform.position.y && c.GetContact(0).normal.y < 0) {
+            bumpable.Bumped(this, c.relativeVelocity);          
         }
     }
 
     private void OnTriggerStay2D(Collider2D col) {
-        if (!isUsingAbility)
+        if (!isAttacking)
             return;
         var player = col.GetComponent<Player>();
         if (!player)
             return;
-        player.Damage((player.transform.position - transform.position).normalized);
+
+        isAttacking = false;
+        isUsingAbility = false;
+        anim.SetBool("UsingAbility", false);
+
+        rb.velocity = new Vector2(0, 0);
+        player.rb.velocity = new Vector2(0, 0);
+
+        if(Manager.WorldOptions.bounceGameplay)
+        {
+            if(player.isReflecting)
+            {
+                BouncyDamage((transform.position - player.transform.position).normalized);
+            }
+            else
+            {
+                player.BouncyDamage((player.transform.position - transform.position).normalized);
+            }
+        }
+        else
+        {
+            player.Damage((player.transform.position - transform.position).normalized);
+        }
+
+        var b = col.GetComponent<Bubble>();
+        if (b)
+            b.Damage((player.transform.position - transform.position).normalized);
     }
 
     public void ResetKnockback()
     {
-        knockbackAmount = Manager.WorldOptions.KnockbackStartAmount;
+        if(Manager.WorldOptions.bounceGameplay)
+        {
+            knockbackAmount = Manager.WorldOptions.bouncyKnockback;
+        }
+        else
+        {
+            knockbackAmount = Manager.WorldOptions.KnockbackStartAmount;
+        }
     }
 
     public void Damage(Vector2 dir) {
-        rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
-        StartCoroutine(KnockbackTimer());      
-        knockbackAmount += 1;
+        if(isBlocking)
+        {
+            rb.velocity = dir * knockbackAmount * Manager.WorldOptions.blockedKnockback + (Vector2.up * knockbackAmount * 0.5f * Manager.WorldOptions.blockedKnockback);
+            StartCoroutine(KnockbackTimer());
+            knockbackAmount += Manager.WorldOptions.knockbackScaler * Manager.WorldOptions.blockedKnockback;
+        }
+        else
+        {
+            rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
+            StartCoroutine(KnockbackTimer());      
+            knockbackAmount += Manager.WorldOptions.knockbackScaler;
+        }
+    }
+
+    public void BouncyDamage(Vector2 dir)
+    {
+        if (isBlocking)
+        {
+            knockbackState = true;
+            anim.SetBool("IsKnocked", true);
+            rb.velocity = dir * knockbackAmount * Manager.WorldOptions.blockedKnockback + (Vector2.up * knockbackAmount * 0.5f * Manager.WorldOptions.blockedKnockback);
+            StartCoroutine(KnockbackTimer());
+        }
+        else
+        {
+            print("Hit");
+            knockbackState = true;
+            anim.SetBool("IsKnocked", true);
+            rb.velocity = dir * knockbackAmount + (Vector2.up * knockbackAmount * 0.5f);
+            StartCoroutine(KnockbackTimer());
+        }
     }
 
     IEnumerator KnockbackTimer()
     {
-        knockbackState = true;
-        yield return new WaitForSeconds(knockbackAmount * 0.05f);
-        knockbackState = false;
+        if(isBlocking)
+        {
+            yield return new WaitForSeconds(knockbackAmount * 0.05f * Manager.WorldOptions.blockedKnockback);
+            knockbackState = false;
+            anim.SetBool("IsKnocked", false);
+        }
+        else
+        {
+            yield return new WaitForSeconds(knockbackAmount * 0.05f);
+            knockbackState = false;
+            anim.SetBool("IsKnocked", false);
+        }
+
     }
 
     public void LooseStock()
@@ -285,6 +461,8 @@ public class Player : MonoBehaviour, IBumpable
         stockCount--;
         playerIsDead = true;
         anim.SetBool("IsDead", true);
+
+        stockCanvas.UpdatePlayerStock(playerNumber, stockCount);
     }
 
     public void CheckIfStillDead()
@@ -297,9 +475,10 @@ public class Player : MonoBehaviour, IBumpable
     }
 
     private void JetPackFlying()
-    {
+    {      
         if (!canUseAbility)
             return;
+        
 
         if(usingJetpack)
         {
@@ -316,29 +495,16 @@ public class Player : MonoBehaviour, IBumpable
                 anim.SetBool("IsRocket", false);
             }
         }
+        else
+        {
+            anim.SetBool("IsRocket", false);
+        }
 
         if(jetpackAmount <= 0)
         {
             anim.SetBool("JumpAnim", true);
             anim.SetBool("IsRocket", false);
             usingJetpack = false;
-        }
-    }
-
-    private void HighJump()
-    {
-        if(canHighJump)
-        {
-            if (Input.GetButton("A" + "_P" + playerIndex))
-            {
-                rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
-                extraHeight += Time.deltaTime;
-            }
-        }
-
-        if(extraHeight >= .5f || Input.GetButtonUp("A" + "_P" + playerIndex))
-        {
-            canHighJump = false;
         }
     }
 
@@ -356,6 +522,9 @@ public class Player : MonoBehaviour, IBumpable
         yield return new WaitForSeconds(duration);
         isUsingAbility = false;
         canUseAbility = true;
+        isAttacking = false;
+        isBlocking = false;
+        isReflecting = false;
         anim.SetBool("UsingAbility", false);
     }
 
@@ -372,9 +541,6 @@ public class Player : MonoBehaviour, IBumpable
             case AAbility.Jetpack:
                 Jetpack();
                 break;
-            case AAbility.BouncyShoes:
-                BouncyShoes();
-                break;
             default:
                 break;
         }
@@ -388,12 +554,6 @@ public class Player : MonoBehaviour, IBumpable
             case XAbility.Sword:
                 StartCoroutine(Sword());
                 break;
-            case XAbility.Axe:
-                Axe();
-                break;
-            case XAbility.Hammer:
-                StartCoroutine(Hammer());
-                break;
             default:
                 break;
         }
@@ -404,14 +564,8 @@ public class Player : MonoBehaviour, IBumpable
             case YAbility.None:
                 None();
                 break;
-            case YAbility.Missile:
-                Missile();
-                break;
-            case YAbility.PickUp:
-                PickUp();
-                break;
-            case YAbility.FireShield:
-                FireShield();
+            case YAbility.Blizzard:
+                StartCoroutine(Blizzard());
                 break;
             case YAbility.BubbleGun:
                 BubbleGun();
@@ -430,11 +584,8 @@ public class Player : MonoBehaviour, IBumpable
             case BAbility.ReflectiveShield:
                 ReflectiveShield();
                 break;
-            case BAbility.Barrier:
-                Barrier();
-                break;
-            case BAbility.Evade:
-                Evade();
+            case BAbility.Hammer:
+                StartCoroutine(Hammer());
                 break;
             default:
                 break;
@@ -450,9 +601,12 @@ public class Player : MonoBehaviour, IBumpable
     private void DefaultJump() {
         if(coyoteJump)
         {
+            print("I Jumped");
             anim.SetBool("JumpAnim", true);
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
-            coyoteJump = false;  
+            coyoteJump = false;
+
+            Manager.SoundManager.PlayJumpSound();
         }
     }
     private void DoubleJump()
@@ -469,6 +623,8 @@ public class Player : MonoBehaviour, IBumpable
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             print("Can Double Jump");
             coyoteJump = false;
+
+            Manager.SoundManager.PlayJumpSound();
         }
     }
     private void Jetpack()
@@ -479,22 +635,17 @@ public class Player : MonoBehaviour, IBumpable
             rb.velocity = new Vector2(rb.velocity.x, Manager.WorldOptions.jumpHeight);
             coyoteJump = false;
             canJetpack = true;
+
+            Manager.SoundManager.PlayJumpSound();
         }
         else if(canJetpack)
         {
             anim.SetBool("JumpAnim", false);
             canJetpack = false;
             usingJetpack = true;
-        }
-    }
-    private void BouncyShoes()
-    {
-        if (coyoteJump)
-        {
-            anim.SetBool("JumpAnim", true);
-            coyoteJump = false;
-            extraHeight = 0;
-            canHighJump = true;
+
+
+            Manager.SoundManager.PlayJetPackLoop();
         }
     }
     #endregion
@@ -509,16 +660,22 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        isAttacking = true;
         rb.velocity = new Vector2(Manager.WorldOptions.punchDistance * dir, 0);
 
+        //Sound
+        Manager.SoundManager.PlayDefaultPunch();
+
+
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
+        StartCoroutine(AbilityDuration(.2f));
+        xCooldown += Manager.WorldOptions.defaultPunchCooldownTime;
         print("DefaultPunch");
     }
     IEnumerator Sword()
     {
         //Animation:
-        abilityNumber = 1;
+        abilityNumber = 8;
         anim.SetFloat("AbilityNumber", abilityNumber);
         anim.SetBool("UsingAbility", true);
 
@@ -526,50 +683,39 @@ public class Player : MonoBehaviour, IBumpable
         rb.velocity = new Vector2(0, 0);
         rb.gravityScale = 0.1f;
         swordCharge = 0;
-        chargingSword = true;
-        
-        yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
-        chargingSword = false;
+        isChargingSword = true;
+        Manager.SoundManager.PlaySwordChargeUp();
+
+        var t = 0f;
+        var p = transform.GetChild(0).localPosition;
+        while (!Input.GetButtonUp("X" + "_P" + playerIndex) && !Input.GetKeyUp(KeyCode.Alpha2) ||
+            t > 2* Manager.WorldOptions.maxSwordCharge) {
+            //transform.position = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
+            transform.GetChild(0).localPosition = p + new Vector3(Mathf.Sin(t * swordCharge * 60) * swordCharge * .1f, 0, 0);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        transform.GetChild(0).localPosition = p;
+        //yield return new WaitUntil(() => Input.GetButtonUp("X" + "_P" + playerIndex));
+
+        //Animation:
+        abilityNumber = 1;
+        anim.SetFloat("AbilityNumber", abilityNumber);
+
+        isChargingSword = false;
+        isAttacking = true;
         rb.velocity = new Vector2(swordCharge * 40 * dir, 0);
         rb.gravityScale = 0;
+
+        Manager.SoundManager.PlaySwordSwing();
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(swordCharge * 0.5f));
         yield return new WaitUntil(() => !isUsingAbility);
         rb.gravityScale = startGravity;
+        xCooldown += Manager.WorldOptions.swordCooldownTime;
         print("Sword");
-    }
-    private void Axe()
-    {
-        //Animation:
-        abilityNumber = 2;
-        anim.SetFloat("AbilityNumber", abilityNumber);
-        anim.SetBool("UsingAbility", true);
-
-        //Ability Func:
-
-        //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
-        print("Axe");
-    }
-    IEnumerator Hammer()
-    {
-        //Animation:
-        abilityNumber = 3;
-        anim.SetFloat("AbilityNumber", abilityNumber);
-        anim.SetBool("UsingAbility", true);
-
-        //Ability Func:
-        slamPower = -1.2f;
-        canSlam = true;
-        coyoteJump = false;
-        yield return new WaitUntil(() => coyoteJump);
-        canSlam = false;
-
-        //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.2f));
-        print("Hammer");
-    }
+    }  
     #endregion
 
     //B Abilities:
@@ -582,6 +728,9 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        isBlocking = true;
+
+        Manager.SoundManager.PlayDefaultBlock();
 
         //CoolDown And Debug:
         StartCoroutine(AbilityDuration(0.5f));
@@ -595,36 +744,36 @@ public class Player : MonoBehaviour, IBumpable
         anim.SetBool("UsingAbility", true);
 
         //Ability Func:
+        Manager.SoundManager.PlayReflectiveShield();
+        isReflecting = true;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(0.5f));
+        StartCoroutine(AbilityDuration(.7f));
+        bCooldown += Manager.WorldOptions.reflectiveCooldownTime;
         print("ReflectiveShield");
     }
-    private void Barrier()
+    IEnumerator Hammer()
     {
         //Animation:
-        abilityNumber = 6;
+        abilityNumber = 3;
         anim.SetFloat("AbilityNumber", abilityNumber);
         anim.SetBool("UsingAbility", true);
 
-        //Ability Func:
-
-        //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
-        print("Barrier");
-    }
-    private void Evade()
-    {
-        //Animation:
-        abilityNumber = 7;
-        anim.SetFloat("AbilityNumber", abilityNumber);
-        anim.SetBool("UsingAbility", true);
+        Manager.SoundManager.PlayHammerSound();
 
         //Ability Func:
+        slamPower = -1.2f;
+        canSlam = true;
+        coyoteJump = false;
+        canUseAbility = false;
+        yield return new WaitUntil(() => coyoteJump);
+
+        canSlam = false;
 
         //CoolDown And Debug:
-        StartCoroutine(AbilityDuration(.5f));
-        print("Evade");
+        StartCoroutine(AbilityDuration(.2f));
+        xCooldown += Manager.WorldOptions.hammerCooldownTime;
+        print("Hammer");
     }
     #endregion
 
@@ -640,36 +789,22 @@ public class Player : MonoBehaviour, IBumpable
         //CoolDown and Debug:
         print("None");
     }
-    private void Missile()
-    {
-        if (yCooldown > 0)
-            return;
-        //Animation:
-
-        //Ability Func:
-        var missile = Instantiate(Manager.WorldOptions.missilePrefab, transform.position + Vector3.right * dir * 1.6f, transform.rotation);
-        missile.GetComponent<Projectile>().Initialize(dir, Manager.WorldOptions.missileSpeed);
-        //CoolDown and Debug:
-        yCooldown += missileCooldown;
-        print("Missile");
-    }
-    private void PickUp()
+    private IEnumerator Blizzard()
     {
         //Animation:
 
         //Ability Func:
+        isIcyFloor = true;
+        iceIndex = playerNumber;
+        print("Blizzard done by player" + playerNumber);
+        Manager.SoundManager.PlayBlizzardSound();
+        yield return new WaitForSeconds(Manager.WorldOptions.blizzardDuration);
+        isIcyFloor = false;
+        iceIndex = -1; 
+        print("Blizzard by player" + playerNumber + "Has stopped");
 
         //CoolDown and Debug:
-        print("PickUp");
-    }
-    private void FireShield()
-    {
-        //Animation:
-
-        //Ability Func:
-
-        //CoolDown and Debug:
-        print("FireShield");
+        yCooldown += Manager.WorldOptions.blizzardCooldown;
     }
     private void BubbleGun()
     {
@@ -686,4 +821,13 @@ public class Player : MonoBehaviour, IBumpable
     }
     #endregion
     #endregion
+
+    private void OnDrawGizmosSelected() {
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(
+            transform.position + Vector3.down * groundedYOffset + Vector3.right * groundedXOffset,
+            transform.position + Vector3.down * groundedYOffset + Vector3.left * groundedXOffset
+            );
+    }
 }

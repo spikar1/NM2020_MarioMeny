@@ -94,16 +94,19 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
     public void Bumped(Player bumpee, Vector2 collisionVector) {
         //Invoke Unity Events
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().name == "Init Scene")
         {
             if(bumpee.playerNumber.ToString() == "1")
                 StartCoroutine(WaitBeforeEvents());
         }
-        else if(SceneManager.GetActiveScene().buildIndex == 5)
+        else if(SceneManager.GetActiveScene().name == "WinScreen")
         {
+            StockCanvas stockCanvas = GameObject.FindGameObjectWithTag("StockCanvas").GetComponent<StockCanvas>();
+            stockCanvas.SelfDestruct();
+
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             Destroy(player);
-            manager.GetComponent<Manager>().sceneLoader.LoadScene(0);
+            manager.GetComponent<Manager>().sceneLoader.LoadScene("Init Scene");
         }
         else
         {
@@ -116,6 +119,7 @@ public class SelectionBox : MonoBehaviour, IBumpable
             {
                 canGetAbility = false;
                 bumpee.LooseStock();
+                UpdatePlayersAlive();
 
                 switch (abilityType)
                 {
@@ -261,5 +265,15 @@ public class SelectionBox : MonoBehaviour, IBumpable
 
         transform.position = Vector2.MoveTowards(transform.position, startPos + (offset * decayingOffset), 0.1f);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, (offset.x * -30) * decayingOffset), 1f);
+    }
+
+    private void UpdatePlayersAlive()
+    {
+        GameObject selectionChecker = GameObject.FindGameObjectWithTag("CheckSelection");
+        var selectionCheck = selectionChecker.GetComponent<CheckSelection>();
+        if(selectionCheck != null)
+        {
+            selectionCheck.checkDeadPlayers();
+        }
     }
 }

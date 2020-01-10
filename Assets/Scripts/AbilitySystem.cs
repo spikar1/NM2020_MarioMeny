@@ -4,19 +4,19 @@ using UnityEngine;
 
 public enum AAbility
 {
-    DefaultJump, DoubleJump, Jetpack, BouncyShoes
+    DefaultJump, DoubleJump, Jetpack
 }
 public enum XAbility
 {
-    DefaultPunch, Sword, Axe, Hammer
+    DefaultPunch, Sword
 }
 public enum YAbility
 {
-    None, Missile, PickUp, FireShield, BubbleGun
+    None, Blizzard, BubbleGun
 }
 public enum BAbility
 {
-    DefaultBlock, ReflectiveShield, Barrier, Evade
+    DefaultBlock, ReflectiveShield, Hammer
 }
 
 static public class AbilityExtensions

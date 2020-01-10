@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class PlayerSpawner : MonoBehaviour
     KeyCode kc1, kc2, kc3, kc4;
     bool pla1, pla2, pla3, pla4;
     private bool plaDebug;
+    public Transform[] positions;
 
     private void Awake()
     {
@@ -37,7 +39,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         if(Input.GetButtonDown("START") && playerCount < 4)
         {
-
+            
             if(Input.GetKeyDown(kc1) && pla1)
             {
                 pla1 = false;
@@ -74,12 +76,15 @@ public class PlayerSpawner : MonoBehaviour
 
     void SpawnPlayer(int index, int number)
     {
-        GameObject clone = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        var p = transform.position; //old spawner position
+        p = positions[number - 1].position; //comment this out to get old version
+        GameObject clone = Instantiate(playerPrefab, p, Quaternion.identity);
         clone.GetComponent<Player>().playerIndex = index.ToString();
         clone.GetComponent<Player>().playerNumber = number;
 
         stockCanvas.PlayerJoined(number, clone.GetComponent<Player>().stockCount);
     }
+
 
     private void OnGUI()
     {

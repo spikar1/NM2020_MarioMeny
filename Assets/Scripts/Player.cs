@@ -18,8 +18,7 @@ public class Player : MonoBehaviour, IBumpable
     public int stockCount, playerNumber = 1;
     public bool playerIsDead;
 
-    [SerializeField]
-    Sprite[] splatterSprites;
+    public GameObject splatterPrefab;
 
     //Ref:
     [HideInInspector]
@@ -370,14 +369,16 @@ public class Player : MonoBehaviour, IBumpable
     private void OnCollisionEnter2D(Collision2D c) {
 
         if (!c.GetContact(0).collider.GetComponent<Player>()) {
-            var spr = splatterSprites[Random.Range(0, splatterSprites.Length)];
+            /*var spr = splatterSprites[Random.Range(0, splatterSprites.Length)];
             var o = new GameObject();
             var sr = o.AddComponent<SpriteRenderer>();
             sr.sprite = spr;
             sr.sortingLayerName = "Ground";
             sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-            o.transform.position = c.GetContact(0).point;
-
+            o.transform.position = c.GetContact(0).point;*/
+            Quaternion q = Quaternion.Euler(0, 0, Random.Range(0f, 359f));
+            GameObject go = Instantiate(splatterPrefab, c.GetContact(0).point, q);
+            go.GetComponent<SpriteRenderer>().color = Manager.WorldOptions.playerColors[playerNumber - 1];
         }
 
         if (Manager.WorldOptions.bounceGameplay && rb.velocity.y > -1f && rb.velocity.y < 5f ||

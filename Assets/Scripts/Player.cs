@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 using Random = UnityEngine.Random;
@@ -192,6 +193,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
         horizontalInput = Input.GetAxisRaw("Horizontal_P" + playerIndex);
+        anim.SetFloat("HorizontalMovement", Mathf.Abs(horizontalInput));
         if (Manager.debugMode)
         {
             if (Input.GetKey(KeyCode.A))
@@ -357,7 +359,7 @@ public class Player : MonoBehaviour, IBumpable
         if (isUsingAbility)
             return;
         rb.velocity = new Vector2(direction * Manager.WorldOptions.maxSpeed, rb.velocity.y);
-        anim.SetFloat("HorizontalMovement", horizontalInput);
+
     }
     private void Accelerate(float direction) {
         if (isUsingAbility)
@@ -371,7 +373,7 @@ public class Player : MonoBehaviour, IBumpable
             else if (Mathf.Abs(rb.velocity.x) < Manager.WorldOptions.maxSpeed)
                 canMove = true;
 
-            anim.SetFloat("HorizontalMovement", horizontalInput);
+            anim.SetFloat("HorizontalMovement", Mathf.Abs(horizontalInput));
 
             var acc = Mathf.Sign(rb.velocity.x) == Mathf.Sign(direction) ? Manager.WorldOptions.acceleration : Manager.WorldOptions.deaccelerationSpeed;
             if (isIcyFloor && iceIndex != playerNumber && Grounded)
@@ -451,7 +453,7 @@ public class Player : MonoBehaviour, IBumpable
 
 
     private void Land() {
-        
+        anim.SetFloat("IsPartying", SceneManager.GetActiveScene().name == "WinScreen" ? 1 : 0);
     }
 
     private void OnTriggerStay2D(Collider2D col) {
@@ -527,6 +529,7 @@ public class Player : MonoBehaviour, IBumpable
 
     public void BouncyDamage(Vector2 dir)
     {
+        StopCoroutine(DamageSprite(0.2f));
         if (isBlocking)
         {
             StartCoroutine(DamageSprite(0.2f));
@@ -565,7 +568,7 @@ public class Player : MonoBehaviour, IBumpable
 
     IEnumerator DamageSprite(float time)
     {
-        Color startColor = rend.color;
+        Color startColor = Manager.WorldOptions.playerColors[playerNumber-1];
         rend.color = Color.white;
         print(rend.color);
         yield return new WaitForSeconds(time);

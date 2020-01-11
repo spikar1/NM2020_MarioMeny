@@ -88,7 +88,7 @@ public class StockCanvas : MonoBehaviour
                 }
                 else
                 {
-                    tex.text = $"P{playerNumber}:\nDEAD";
+                    tex.text = $"P{playerNumber}:\n0";
                 }
             }
         }

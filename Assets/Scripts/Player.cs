@@ -476,9 +476,11 @@ public class Player : MonoBehaviour, IBumpable
 
         if (Manager.WorldOptions.bounceGameplay) {
             if (canSlam) {
-                //Insert slamming here
+                print("SLAM");
+                player.BouncyDamage(Vector3.down);
+                rb.velocity = new Vector2(rb.velocity.x, 100);
             }
-            if (player.isReflecting) {
+            else if (player.isReflecting) {
                 BouncyDamage((transform.position - player.transform.position).normalized);
             }
             else {
@@ -900,6 +902,7 @@ public class Player : MonoBehaviour, IBumpable
         abilityNumber = 3;
         anim.SetFloat("AbilityNumber", abilityNumber);
         anim.SetBool("UsingAbility", true);
+        isAttacking = true;
 
         Manager.SoundManager.PlayHammerSound();
 

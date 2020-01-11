@@ -22,6 +22,7 @@ public class Manager : MonoBehaviour
 
     public static SoundManager SoundManager => Instance._soundManager;
 
+
     private void Awake() {
 
         if (!instance)
@@ -81,6 +82,10 @@ public class Manager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             debugMode = !debugMode;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            sceneLoader.LoadScene("InitScene");
         }
     }
 

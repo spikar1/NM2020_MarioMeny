@@ -161,7 +161,7 @@ public class Player : MonoBehaviour, IBumpable
                 t = 0;
                 Quaternion q = Quaternion.Euler(0, 0, Random.Range(-5f, 5));
                 GameObject go = Instantiate(goopPrefab, transform.position + Vector3.down * .55f, q);
-                go.transform.localScale = Vector3.one * 1f;
+                go.transform.localScale = Vector3.one * 1.2f;
                 go.GetComponent<SpriteRenderer>().color = Manager.WorldOptions.playerColors[playerNumber - 1];
             }
         }
@@ -416,6 +416,7 @@ public class Player : MonoBehaviour, IBumpable
             o.transform.position = c.GetContact(0).point;*/
             Quaternion q = Quaternion.Euler(0, 0, Random.Range(0f, 359f));
             GameObject go = Instantiate(splatterPrefab, c.GetContact(0).point, q);
+            go.transform.localScale = Vector3.one * 1.4f;
             go.GetComponent<SpriteRenderer>().color = Manager.WorldOptions.playerColors[playerNumber - 1];
         }
 

@@ -66,7 +66,7 @@ public class StockCanvas : MonoBehaviour
             }
         }*/
     }
-
+    Image[] imgs;
     public void UpdatePlayerStock(int playerNumber, int playerStock)
     {
         for (int i = 0; i < slots.Length; i++)
@@ -78,12 +78,12 @@ public class StockCanvas : MonoBehaviour
                 if (playerStock > 0)
                 {
                     tex.text = $"P{playerNumber}:\n{playerStock}";
-                    Image[] images = slots[i].GetComponentsInChildren<Image>();
-                    foreach (Image image in images)
+                    imgs = slots[i].GetComponentsInChildren<Image>();
+                    foreach (Image image in imgs)
                     {
                         if (image.gameObject.transform.parent.transform.parent != null)
                         {
-                            StartCoroutine(DamageImage(image, 0.3f, slots[i], 1f));
+                            StartCoroutine(DamageImage(image, 0.3f, slots[i], 1f, Manager.WorldOptions.playerColors[playerNumber-1]));
                         }
                     }
 
@@ -134,9 +134,11 @@ public class StockCanvas : MonoBehaviour
         Destroy(gameObject);
     }
 
-    IEnumerator DamageImage(Image image, float damageTime, GameObject parent, float textTime)
+    IEnumerator DamageImage(Image image, float damageTime, GameObject parent, float textTime, Color c)
     {
-        Color startColor = image.color;
+        Color startColor = c;
+
+        
         GameObject clone = Instantiate(textPrefab, parent.transform.position + new Vector3(40,-20,0), Quaternion.identity);
         clone.transform.parent = parent.transform;
         clone.GetComponent<TextMeshProUGUI>().color = startColor;

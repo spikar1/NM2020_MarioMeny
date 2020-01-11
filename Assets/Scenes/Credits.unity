@@ -1671,12 +1671,12 @@ PrefabInstance:
     - target: {fileID: 3929309793152757270, guid: ef812e644665be24c91190156b28ff71,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.904
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 3929309793152757270, guid: ef812e644665be24c91190156b28ff71,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.59
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 3929309793152757270, guid: ef812e644665be24c91190156b28ff71,
         type: 3}
@@ -1726,12 +1726,12 @@ PrefabInstance:
     - target: {fileID: 3929309793152757270, guid: ef812e644665be24c91190156b28ff71,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 21.808569
+      value: 19.67133
       objectReference: {fileID: 0}
     - target: {fileID: 3929309793152757270, guid: ef812e644665be24c91190156b28ff71,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 10.48
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef812e644665be24c91190156b28ff71, type: 3}
@@ -3063,7 +3063,7 @@ MonoBehaviour:
     Dag-Erling
     Lanes Jensen
 
-    Lars '
+    Lars Sparby'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3132,10 +3132,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1308202621}
-    characterCount: 73
+    characterCount: 79
     spriteCount: 0
     spaceCount: 11
-    wordCount: 11
+    wordCount: 12
     linkCount: 0
     lineCount: 5
     pageCount: 1
@@ -3320,7 +3320,7 @@ Transform:
   - {fileID: 285599210}
   - {fileID: 171929700}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1869174411
 GameObject:

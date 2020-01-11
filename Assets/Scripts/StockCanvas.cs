@@ -9,6 +9,8 @@ public class StockCanvas : MonoBehaviour
     public TextMeshProUGUI[] textPros;
     public GameObject[] slots;
     public GameObject textPrefab;
+    public Transform[] transforms;
+
 
     static StockCanvas instance = null;
     private void Awake()
@@ -146,6 +148,14 @@ public class StockCanvas : MonoBehaviour
 
         yield return new WaitForSeconds(textTime);
         Destroy(clone);
+    }
+
+    public void UpdateObjectPos()
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].transform.position = transforms[i].position;
+        }
     }
 
 }
